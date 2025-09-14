@@ -37,7 +37,7 @@ export const getFtNonce = (stxAddress: string) =>
       if (data.type === ClarityType.ResponseOk) {
         const inner = (data as ResponseOkCV<ClarityValue>).value
         if (inner.type === ClarityType.UInt) {
-          return { value: Number((inner as UIntCV).value) }
+          return { value: parseInt((inner as UIntCV).value.toString()) }
         }
       }
       return { value: null }
