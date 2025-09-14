@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google"
 
 import "./globals.css"
 
+import { QueryProvider } from "@/providers/query-provider"
 import { WalletProvider } from "@/providers/wallet-provider"
 
 const geistMono = Geist_Mono({
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistMono.variable} antialiased`}>
-        <WalletProvider>{children}</WalletProvider>
+        <WalletProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </WalletProvider>
       </body>
     </html>
   )
