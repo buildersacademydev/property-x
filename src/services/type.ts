@@ -12,3 +12,14 @@ interface Chain_tip {
   index_block_hash: string
   burn_block_height: number
 }
+
+export type TNetwork = "testnet" | "mainnet" | "devnet" | "mocknet" | undefined
+
+export interface TFtNonceResponse {
+  type: string
+  value: Value
+}
+interface Value {
+  type: string
+  value: string
+}
