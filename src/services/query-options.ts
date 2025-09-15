@@ -8,10 +8,10 @@ import {
   uintCV,
   UIntCV,
 } from "@stacks/transactions"
-import { queryOptions } from "@tanstack/react-query"
+import { queryOptions, UseQueryOptions } from "@tanstack/react-query"
 
 import { ApiService } from "./api"
-import { TNetwork } from "./type"
+import { TFtBalancesResponse, TNetwork, TWhiteListedBalances } from "./type"
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ""
 const NETWORK = process.env.NEXT_PUBLIC_NETWORK || "testnet"
@@ -68,11 +68,21 @@ export const getFtListing = (key: number) => {
   })
 }
 
-export const isFtWhitelisted = (
-  ftContractAddress: string,
-  ftContractName: string,
+export const isFtWhitelisted = ({
+  ftBalance,
+  stxAddress,
+}: {
+  ftBalance: TFtBalancesResponse["results"][number]
   stxAddress: string
-) => {
+}): UseQueryOptions<
+  ClarityValue,
+  Error,
+  TWhiteListedBalances | null,
+  string[]
+> => {
+  const ftContract = ftBalance.token.split("::")[0]
+  const [ftContractAddress, ftContractName] = ftContract.split(".")
+
   return queryOptions({
     queryKey: ["is-ft-whitelisted", ftContractAddress, ftContractName],
     queryFn: async () =>
@@ -84,16 +94,18 @@ export const isFtWhitelisted = (
         senderAddress: stxAddress,
         network: NETWORK as TNetwork,
       }),
-    select: (data) => {
-      if (data.type === ClarityType.ResponseOk) {
-        const inner = (data as ResponseOkCV<ClarityValue>).value
-        if (inner.type === ClarityType.BoolTrue) {
-          return { value: true }
-        } else if (inner.type === ClarityType.BoolFalse) {
-          return { value: false }
+    select: (data): TWhiteListedBalances | null => {
+      if (data.type) {
+        return {
+          token: ftBalance.token,
+          contractAddress: ftContractAddress,
+          contractName: ftContractName,
+          balance: ftBalance.balance,
+          name: ftBalance.token.split("::")[1],
         }
+      } else {
+        return null
       }
-      return { value: false }
     },
   })
 }
@@ -131,7 +143,8 @@ export const getTokenMetadata = (
 
 export const getFtImageUrl = (
   ftContractAddress: string,
-  ftContractName: string
+  ftContractName: string,
+  whitelistedData?: TWhiteListedBalances | null
 ) => {
   return queryOptions({
     queryKey: ["ft-image-url", ftContractAddress, ftContractName],
@@ -144,27 +157,41 @@ export const getFtImageUrl = (
         senderAddress: CONTRACT_ADDRESS,
         network: NETWORK as TNetwork,
       }),
-    select: async (data) => {
+    select: (data) => {
       if (data.type === ClarityType.ResponseOk) {
         const inner = (data as ResponseOkCV<ClarityValue>).value
-        if (
-          inner.type === ClarityType.StringASCII ||
-          inner.type === ClarityType.StringUTF8
-        ) {
-          const url = inner.value as string
-          try {
-            const json = await ApiService.fetchJson<any>(url)
-            console.log("image json", json)
-            const image =
-              json?.image || json?.image_url || json?.data?.image || null
-            return { value: { url, metadata: json, image } }
-          } catch (e) {
-            console.error("Get Ft image fetchJson error:", e)
-            return { value: { url, metadata: null, image: null } }
+        if (inner.type === ClarityType.OptionalSome) {
+          if (
+            inner.value.type === ClarityType.StringUTF8 ||
+            inner.value.type === ClarityType.StringASCII
+          ) {
+            const url = inner.value.value
+            if (!Boolean(whitelistedData)) {
+              return { url }
+            } else {
+              return { url, whitelistedData }
+            }
           }
         }
       }
-      return { value: null }
+      return null
+    },
+  })
+}
+
+export const getOwnedNfts = (
+  url: string,
+  whitelistedData: TWhiteListedBalances
+) => {
+  return queryOptions({
+    queryKey: ["owned-nfts", url],
+    queryFn: async () => ApiService.getTestCoin(url),
+    select: (data) => {
+      return {
+        ...whitelistedData,
+        imageUrl: data,
+        isListed: false,
+      }
     },
   })
 }

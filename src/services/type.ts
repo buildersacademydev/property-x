@@ -47,3 +47,26 @@ interface ResultsItem {
   token: string
   balance: string
 }
+
+export type TWhiteListedBalances = ResultsItem & {
+  name: string
+  contractAddress: string
+  contractName: string
+}
+
+export interface TTestCoin {
+  name: string
+  description: string
+  image: string
+  asset: Asset
+}
+interface Asset {
+  name: string
+  image: string
+  location: string
+  valuation: string
+  tokens: string
+  apr: string
+  description: string
+  staking: string
+}

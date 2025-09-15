@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/config/api-client"
 
-import { TBlockHeightResponse, TFtBalancesResponse } from "./type"
+import { TBlockHeightResponse, TFtBalancesResponse, TTestCoin } from "./type"
 
 export class ApiService {
   private static readonly BASE_PATH = "https://api.testnet.hiro.so/extended"
@@ -17,8 +17,8 @@ export class ApiService {
     return response.data
   }
 
-  static async fetchJson<T = any>(url: string): Promise<T> {
+  static async getTestCoin(url: string): Promise<TTestCoin> {
     const response = await apiClient.get(url)
-    return response.data as T
+    return response.data
   }
 }

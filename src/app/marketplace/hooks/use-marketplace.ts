@@ -2,10 +2,14 @@ import { useWallet } from "@/providers/wallet-provider"
 import {
   getBlockHeight,
   getFtBalances,
+  getFtImageUrl,
   getFtListing,
   getFtNonce,
+  getOwnedNfts,
   getTokenMetadata,
+  isFtWhitelisted,
 } from "@/services/query-options"
+import { TWhiteListedBalances } from "@/services/type"
 import { useQueries, useQuery } from "@tanstack/react-query"
 import { range } from "@/lib/utils"
 
@@ -13,7 +17,6 @@ import { getProcessedListing } from "../helper"
 
 export function useMarketplace() {
   const { connected, stxAddress } = useWallet()
-  console.log("stxAddress", stxAddress)
   const { data: blockHeightData, isSuccess: blockHeightSuccess } = useQuery({
     ...getBlockHeight(),
     enabled: connected,
@@ -76,16 +79,56 @@ export function useMarketplace() {
     enabled: connected && !!stxAddress,
   })
 
-  // const filterownedNfts = useQueries({
-  //     queries: ftBalances?.results.map((ft) => {
-  //         const ftContract = ft.token.split('::')[0];
-  //         const [ftContractAddress, ftContractName] = ftContract.split('.');
+  const ftWhiteListedQueries = useQueries({
+    queries:
+      ftBalancesSuccess && ftBalances
+        ? ftBalances.results.map((ftBalance) => ({
+            ...isFtWhitelisted({ ftBalance, stxAddress: stxAddress || "" }),
+            enabled: connected && !!stxAddress && ftBalancesSuccess,
+          }))
+        : [],
+    combine: (results) => {
+      return {
+        data: results.filter((r) => r.data !== null),
+        isSuccess: results.every((r) => r.isSuccess),
+      }
+    },
+  })
 
-  //         return [
-  //             {}
-  //         ]
-  //     }) || [],
-  // })
+  const ftImageUrls = useQueries({
+    queries:
+      ftWhiteListedQueries.data?.map((whitelisted) => ({
+        ...getFtImageUrl(
+          whitelisted.data?.contractAddress || "",
+          whitelisted.data?.contractName || "",
+          whitelisted.data
+        ),
+        enabled: connected && ftWhiteListedQueries.isSuccess,
+      })) ?? [],
+    combine: (results) => {
+      return {
+        isSuccess: results.every((d) => d.isSuccess),
+        data: results.map((d) => d.data),
+      }
+    },
+  })
+
+  const ownedNftsWithImages = useQueries({
+    queries:
+      ftImageUrls.data?.map((ftImageUrl) => ({
+        ...getOwnedNfts(
+          ftImageUrl?.url || "",
+          ftImageUrl?.whitelistedData as TWhiteListedBalances
+        ),
+        enabled: connected && ftImageUrls.isSuccess,
+      })) ?? [],
+    combine: (results) => {
+      return {
+        isSuccess: results.every((d) => d.isSuccess),
+        data: results.map((d) => d.data),
+      }
+    },
+  })
 
   const filterMarketplace = ftListingsQueries.data.filter(
     (listing) => !listing.isUserListing
@@ -98,6 +141,7 @@ export function useMarketplace() {
     isLoading: ftListingsQueries.loading,
     marketplaceData: filterMarketplace,
     userListingsData: filterUserListings,
+    ownedNftsWithImages: ownedNftsWithImages.data,
     connected,
   }
 }
