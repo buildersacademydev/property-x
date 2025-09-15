@@ -23,3 +23,27 @@ interface Value {
   type: string
   value: string
 }
+
+export interface TFtListing {
+  id: number
+  tokenAmount: number
+  maker: string | null
+  taker: string | null
+  ftAssetContract: `${string}.${string}` | null
+  expiry: number
+  price: number
+  paymentAssetContract: string | null
+  type: string
+  isUserListing: boolean
+}
+
+export interface TFtBalancesResponse {
+  limit: number
+  offset: number
+  total: number
+  results: ResultsItem[]
+}
+interface ResultsItem {
+  token: string
+  balance: string
+}
