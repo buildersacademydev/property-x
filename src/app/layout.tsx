@@ -3,8 +3,7 @@ import { Geist_Mono } from "next/font/google"
 
 import "./globals.css"
 
-import { QueryProvider } from "@/providers/query-provider"
-import { WalletProvider } from "@/providers/wallet-provider"
+import RootProviders from "@/providers/root-providers"
 import Footer from "@/components/common/footer"
 import Nav from "@/components/common/nav"
 
@@ -29,13 +28,11 @@ export default function RootLayout({
         className={`${geistMono.variable} dark bg-background text-foreground
           antialiased`}
       >
-        <WalletProvider>
-          <QueryProvider>
-            <Nav />
-            {children}
-            <Footer />
-          </QueryProvider>
-        </WalletProvider>
+        <RootProviders>
+          <Nav />
+          {children}
+          <Footer />
+        </RootProviders>
       </body>
     </html>
   )
