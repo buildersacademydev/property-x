@@ -48,9 +48,6 @@ export function useTokenListings({ variant }: UseTokenListingsProps) {
     },
   })
 
-  console.log("imageUrlQueries", imageUrlQueries.data)
-
-  // Build metadata queries with index tracking (robust for any listings length and missing data)
   const nameIndexPerListing: (number | null)[] = []
   const symbolIndexPerListing: (number | null)[] = []
   const tokenMetadataQueryOptions: any[] = []
@@ -86,7 +83,6 @@ export function useTokenListings({ variant }: UseTokenListingsProps) {
     queryCursor += 1
   })
 
-  // Image detail queries with index tracking
   const imageDetailIndexPerListing: (number | null)[] = []
   const imageDetailQueryOptions: any[] = []
   const imageDetailOffset = tokenMetadataQueryOptions.length
@@ -110,7 +106,7 @@ export function useTokenListings({ variant }: UseTokenListingsProps) {
       const isSuccess = results.every((r) => r.isSuccess)
       const isLoading = results.some((r) => r.isLoading)
 
-      const aggregated = listings.map((_, idx) => {
+      const aggregated = listings.map((item, idx) => {
         const nameRes =
           nameIndexPerListing[idx] != null
             ? results[nameIndexPerListing[idx] as number]
@@ -123,9 +119,9 @@ export function useTokenListings({ variant }: UseTokenListingsProps) {
           imageDetailIndexPerListing[idx] != null
             ? results[imageDetailIndexPerListing[idx] as number]
             : undefined
-        const imageUrl =
-          (imageRes?.data as any)?.image || (imageRes?.data as any)?.url || null
+        const imageUrl = imageRes?.data
         return {
+          ...item,
           name: (nameRes?.data as any)?.value ?? null,
           symbol: (symbolRes?.data as any)?.value ?? null,
           imageUrl,
@@ -139,8 +135,6 @@ export function useTokenListings({ variant }: UseTokenListingsProps) {
       }
     },
   })
-
-  console.log("metadataQueries", metadataQueries.data)
 
   return {
     isLoading: metadataQueries.isLoading || imageUrlQueries.isLoading,
