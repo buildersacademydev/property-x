@@ -110,16 +110,22 @@ export const isFtWhitelisted = ({
   })
 }
 
-export const getTokenMetadata = (
-  metadataType: "get-name" | "get-symbol",
-  contractName: string,
+export const getTokenMetadata = ({
+  metadataType,
+  contractName,
+  contractAddress,
+  stxAddress,
+}: {
+  metadataType: "get-name" | "get-symbol"
+  contractName: string
+  contractAddress: string
   stxAddress: string
-) => {
+}) => {
   return queryOptions({
-    queryKey: ["token-metadata", metadataType, CONTRACT_ADDRESS, contractName],
+    queryKey: ["token-metadata", metadataType, contractAddress, contractName],
     queryFn: async () =>
       await fetchCallReadOnlyFunction({
-        contractAddress: CONTRACT_ADDRESS,
+        contractAddress,
         contractName,
         functionName: metadataType,
         functionArgs: [],
@@ -193,5 +199,13 @@ export const getOwnedNfts = (
         isListed: false,
       }
     },
+  })
+}
+
+export const getImageDetail = (url: string) => {
+  return queryOptions({
+    queryKey: ["image-detail", url],
+    queryFn: async () => ApiService.getTestCoin(url),
+    enabled: Boolean(url),
   })
 }

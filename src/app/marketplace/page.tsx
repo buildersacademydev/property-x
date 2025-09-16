@@ -12,12 +12,10 @@ import { range } from "@/lib/utils"
 
 import { getProcessedListing } from "./helper"
 import { useMarketplace } from "./hooks/use-marketplace"
+import { useTokenListings } from "./hooks/use-token-listings"
 
 const Page = () => {
-  const { connected } = useMarketplace()
-
-  if (!connected) return <div>Please connect your wallet</div>
-
+  const x = useTokenListings({ variant: "marketplace" })
   // const marketplaceListings = ftListingsQueries.data.filter(listing => !listing.isUserListing);
 
   return (

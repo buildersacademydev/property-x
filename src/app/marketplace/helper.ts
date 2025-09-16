@@ -1,4 +1,3 @@
-import { TFtListing } from "@/services/type"
 import { ClarityValue, TupleData } from "@stacks/transactions"
 
 export const getProcessedListing = ({
@@ -41,14 +40,37 @@ export const getProcessedListing = ({
   }
 }
 
-// export const getEnrichedMarketplaceListings = ({ marketplaceListings }: { marketplaceListings: TFtListing[] }) => {
-//     return marketplaceListings.map(async (listing) => {
-//         const assetContract = listing.ftAssetContract;
-//         if (!assetContract) return listing;
-//         const [assetContractAddress, assetContractName] = assetContract.split('.');
-//         const name = await getTokenName(assetContractAddress, assetContractName);
-//         const imageUrl = await getFtImageUrl(assetContractAddress, assetContractName);
-//         const symbol = await getTokenSymbol(assetContractAddress, assetContractName);
-//         return { ...listing, name, imageUrl, symbol };
-//     })
-// };
+export const hasToken = (item: any): item is { b: string } => "b" in item
+export const hasFtAssetContract = (item: any): item is { a: string } =>
+  "a" in item
+
+export const getContractInfo = (
+  item: any,
+  variant: "marketplace" | "userListings" | "ownedNfts"
+) => {
+  let contractAddress = ""
+  let contractName = ""
+
+  if (variant === "marketplace" || variant === "userListings") {
+    const ftAsset: string | null | undefined = item?.ftAssetContract
+    if (ftAsset) {
+      const [addr, name] = ftAsset.split(".")
+      contractAddress = addr || ""
+      contractName = name || ""
+    }
+  } else if (variant === "ownedNfts") {
+    // ownedNfts entries come from ownedNftsData which is based on whitelisted data enriched with imageUrl
+    if (item?.contractAddress && item?.contractName) {
+      contractAddress = item.contractAddress
+      contractName = item.contractName
+    } else if (typeof item?.token === "string") {
+      // token like "SP123.contract::TOKEN" -> take the contract part before '::'
+      const contractPart = item.token.split("::")[0]
+      const [addr, name] = contractPart.split(".")
+      contractAddress = addr || ""
+      contractName = name || ""
+    }
+  }
+
+  return { contractAddress, contractName }
+}

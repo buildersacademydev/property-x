@@ -6,7 +6,6 @@ import {
   getFtListing,
   getFtNonce,
   getOwnedNfts,
-  getTokenMetadata,
   isFtWhitelisted,
 } from "@/services/query-options"
 import { TWhiteListedBalances } from "@/services/type"
@@ -141,7 +140,8 @@ export function useMarketplace() {
     isLoading: ftListingsQueries.loading,
     marketplaceData: filterMarketplace,
     userListingsData: filterUserListings,
-    ownedNftsWithImages: ownedNftsWithImages.data,
+    ownedNftsData: ownedNftsWithImages.data,
     connected,
+    stxAddress,
   }
 }
