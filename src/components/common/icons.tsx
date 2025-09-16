@@ -1,0 +1,43 @@
+import {
+  ArrowRight,
+  Award,
+  Bitcoin,
+  Building,
+  CheckCircle,
+  ChevronUp,
+  Clock,
+  DollarSign,
+  Download,
+  ExternalLink,
+  Menu,
+  Play,
+  Shield,
+  Target,
+  TrendingUp,
+  Users,
+  Wallet,
+  X,
+} from "lucide-react"
+
+export const Icons = {
+  x: X,
+  arrowRight: ArrowRight,
+  shield: Shield,
+  bitcoin: Bitcoin,
+  building: Building,
+  users: Users,
+  trendingUp: TrendingUp,
+  clock: Clock,
+  checkCircle: CheckCircle,
+  play: Play,
+  download: Download,
+  award: Award,
+  target: Target,
+  dollarSign: DollarSign,
+  menu: Menu,
+  chevronUp: ChevronUp,
+  externalLink: ExternalLink,
+  wallet: Wallet,
+} as const
+
+export type TIconName = keyof typeof Icons
