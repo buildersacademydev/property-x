@@ -13,7 +13,7 @@ type ConnectWalletProps = ComponentPropsWithoutRef<typeof Button> & {
   isNav?: boolean
 }
 
-const ConnectWallet = (props: ConnectWalletProps) => {
+const ConnectWallet = ({ isNav = false, ...props }: ConnectWalletProps) => {
   const router = useRouter()
   const { getConnect, connected, getDisconnect } = useWallet()
   const [hovered, setHovered] = useState(false)
@@ -72,7 +72,7 @@ const ConnectWallet = (props: ConnectWalletProps) => {
         )}
         <span>{connected ? "Explore Marketplace" : "Connect Wallet"}</span>
       </Button>
-      {connected && props.isNav ? (
+      {connected && isNav ? (
         <Button
           variant="destructive"
           size="icon"

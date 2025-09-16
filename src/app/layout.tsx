@@ -5,6 +5,8 @@ import "./globals.css"
 
 import { QueryProvider } from "@/providers/query-provider"
 import { WalletProvider } from "@/providers/wallet-provider"
+import Footer from "@/components/common/footer"
+import Nav from "@/components/common/nav"
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -23,9 +25,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistMono.variable} dark bg-background text-foreground
+          antialiased`}
+      >
         <WalletProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <Nav />
+            {children}
+            <Footer />
+          </QueryProvider>
         </WalletProvider>
       </body>
     </html>

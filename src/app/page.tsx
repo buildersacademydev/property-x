@@ -1,6 +1,5 @@
 "use client"
 
-import HeroImage from "@/public/hero-image.webp"
 import type React from "react"
 import { useEffect, useState } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -13,39 +12,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import ConnectWallet from "@/components/common/connect-wallet"
-import Footer from "@/components/common/footer"
 import { Icons } from "@/components/common/icons"
-import Nav from "@/components/common/nav"
-import NextImage from "@/components/common/next-image"
 
 export default function PropertyXLanding() {
-  const [email, setEmail] = useState("")
   const [trancheSold, setTrancheSold] = useState(3420)
   const [activeTab, setActiveTab] = useState("features")
-  const [isScrolled, setIsScrolled] = useState(false)
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [animatedProgress, setAnimatedProgress] = useState(0)
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY > 50
-      setIsScrolled(scrolled)
       setShowScrollTop(window.scrollY > 1000)
     }
-
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -69,9 +51,7 @@ export default function PropertyXLanding() {
   }
 
   return (
-    <div className="dark min-h-screen bg-background text-foreground">
-      <Nav isScrolled={isScrolled} onNavigate={scrollToSection} />
-
+    <div className="min-h-screen">
       {showScrollTop && (
         <Button
           onClick={scrollToTop}
@@ -84,9 +64,7 @@ export default function PropertyXLanding() {
         </Button>
       )}
 
-      {/* Hero Section */}
-      <section id="hero" className="relative overflow-hidden">
-        {/* Decorative background for dark polish */}
+      <section id="hero" className="relative -mt-20 overflow-hidden">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div
             className="absolute inset-0
@@ -108,7 +86,6 @@ export default function PropertyXLanding() {
         >
           <div className="mx-auto max-w-6xl">
             <div className="grid items-center gap-12 lg:grid-cols-2">
-              {/* Left Column - Main Content */}
               <div
                 className="animate-in space-y-8 duration-1000
                   slide-in-from-left-8"
@@ -1386,8 +1363,6 @@ export default function PropertyXLanding() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   )
 }
