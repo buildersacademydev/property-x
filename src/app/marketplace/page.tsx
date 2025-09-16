@@ -1,6 +1,8 @@
 "use client"
 
+import { useWallet } from "@/providers/wallet-provider"
 import React from "react"
+import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,9 +19,25 @@ import NextImage from "@/components/common/next-image"
 import { useTokenListings } from "./hooks/use-token-listings"
 
 const Page = () => {
-  const { isLoading, isSucess, data } = useTokenListings({
+  const { connected } = useWallet()
+  const router = useRouter()
+  const { isLoading, data } = useTokenListings({
     variant: "marketplace",
   })
+
+  React.useEffect(() => {
+    if (!connected) {
+      router.push("/")
+    }
+  }, [connected, router])
+
+  if (!connected) {
+    return null
+  }
+
+  const handleBuyNow = () => {
+    alert("Buy Now functionality is not implemented yet.")
+  }
 
   return (
     <div className="container mx-auto min-h-screen px-4 py-12">
@@ -29,13 +47,6 @@ const Page = () => {
           <p className="mt-1 text-sm text-muted-foreground">
             Discover listed property tokens and start earning yield.
           </p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          {isLoading ? (
-            <span className="animate-pulse">Loading listings…</span>
-          ) : (
-            <span>{data?.length || 0} listings</span>
-          )}
         </div>
       </div>
 
@@ -169,7 +180,11 @@ const Page = () => {
                 </CardContent>
                 <CardFooter className="mt-auto flex flex-col gap-2 pt-0">
                   <div className="flex w-full gap-2">
-                    <Button className="flex-1" variant="default">
+                    <Button
+                      className="flex-1"
+                      variant="default"
+                      onClick={handleBuyNow}
+                    >
                       Buy Now
                     </Button>
                     <Button className="flex-1" variant="outline">

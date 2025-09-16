@@ -191,3 +191,9 @@
     letter-spacing: var(--tracking-normal);
   }
 }
+
+html,
+body {
+  overflow-x: hidden;
+  overflow-y: visible;
+}
