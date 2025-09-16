@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
+import ConnectWallet from "@/components/common/connect-wallet"
 import Footer from "@/components/common/footer"
 import { Icons } from "@/components/common/icons"
 import Nav from "@/components/common/nav"
@@ -84,29 +85,27 @@ export default function PropertyXLanding() {
       )}
 
       {/* Hero Section */}
-      <section
-        className="relative flex min-h-screen items-center justify-center
-          overflow-hidden"
-      >
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
+      <section id="hero" className="relative overflow-hidden">
+        {/* Decorative background for dark polish */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
           <div
-            className="absolute inset-0 bg-gradient-to-br from-primary/20
-              via-background/80 to-secondary/20"
+            className="absolute inset-0
+              bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.12),transparent_60%)]"
           />
-          <NextImage
-            src={HeroImage}
-            alt="Urban mixed-use building"
-            width={1920}
-            height={1080}
-            priority
-            className="h-full w-full object-cover opacity-10"
-            showSkeleton
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-background
+              via-background/80 to-background"
+          />
+          <div
+            className="absolute top-0 left-1/2 h-64 w-[120%] -translate-x-1/2
+              bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10
+              opacity-60 blur-3xl"
           />
         </div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 container mx-auto px-4 py-20 pt-32">
+        <div
+          className="relative z-10 container mx-auto px-4 pt-36 pb-24 md:pt-40
+            md:pb-28"
+        >
           <div className="mx-auto max-w-6xl">
             <div className="grid items-center gap-12 lg:grid-cols-2">
               {/* Left Column - Main Content */}
@@ -125,9 +124,9 @@ export default function PropertyXLanding() {
                   </Badge>
 
                   <h1
-                    className="animate-in text-4xl leading-tight font-bold
-                      text-balance delay-500 duration-1000 slide-in-from-left-6
-                      md:text-6xl"
+                    className="animate-in text-[clamp(2.4rem,6vw,3.75rem)]
+                      leading-[1.05] font-bold tracking-tight text-balance
+                      delay-500 duration-1000 slide-in-from-left-6"
                   >
                     Unlock Real Urban Returns —
                     <span className="text-primary">
@@ -138,8 +137,9 @@ export default function PropertyXLanding() {
                   </h1>
 
                   <p
-                    className="animate-in text-xl leading-relaxed text-pretty
-                      text-foreground delay-700 duration-1000
+                    className="max-w-xl animate-in
+                      text-[clamp(1.05rem,1.3vw,1.25rem)] leading-relaxed
+                      text-pretty text-foreground/90 delay-700 duration-1000
                       slide-in-from-left-4"
                   >
                     Invest in income-generating city assets through APT tokens
@@ -170,14 +170,11 @@ export default function PropertyXLanding() {
                   className="flex animate-in flex-col gap-4 delay-1100
                     duration-1000 slide-in-from-left-2 sm:flex-row"
                 >
-                  <Button
-                    size="lg"
-                    className="group w-full px-8 py-6 text-lg font-medium
-                      transition-all duration-300 hover:scale-105"
-                  >
-                    <Icons.wallet className="mr-2 h-6 w-6" />
-                    Connect Wallet
-                  </Button>
+                  <ConnectWallet
+                    size={"lg"}
+                    className="w-full px-10 py-6 text-lg font-medium
+                      transition-all duration-300 hover:scale-[1.03] sm:w-auto"
+                  />
                 </div>
               </div>
 
@@ -301,11 +298,9 @@ export default function PropertyXLanding() {
             </div> */}
 
             {/* Live Numbers */}
-            <div className="mb-16 grid gap-8 md:grid-cols-3">
+            {/* <div className="mb-16 grid gap-8 md:grid-cols-3">
               <Card
-                className="border-primary/20 bg-card/80 p-8 text-center
-                  backdrop-blur-sm transition-all duration-300 hover:scale-105
-                  hover:shadow-lg"
+                className="border-primary/15 bg-card/75 p-8 text-center backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-card/90"
               >
                 <div className="mb-4 flex items-center justify-center">
                   <Icons.building className="h-8 w-8 text-primary" />
@@ -315,9 +310,7 @@ export default function PropertyXLanding() {
               </Card>
 
               <Card
-                className="border-secondary/20 bg-card/80 p-8 text-center
-                  backdrop-blur-sm transition-all duration-300 hover:scale-105
-                  hover:shadow-lg"
+                className="border-secondary/15 bg-card/75 p-8 text-center backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-card/90"
               >
                 <div className="mb-4 flex items-center justify-center">
                   <Icons.dollarSign className="h-8 w-8 text-secondary" />
@@ -329,9 +322,7 @@ export default function PropertyXLanding() {
               </Card>
 
               <Card
-                className="border-chart-1/20 bg-card/80 p-8 text-center
-                  backdrop-blur-sm transition-all duration-300 hover:scale-105
-                  hover:shadow-lg"
+                className="border-chart-1/15 bg-card/75 p-8 text-center backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-card/90"
               >
                 <div className="mb-4 flex items-center justify-center">
                   <Icons.users className="h-8 w-8 text-chart-1" />
@@ -341,163 +332,162 @@ export default function PropertyXLanding() {
                   community investors joined waitlist
                 </p>
               </Card>
-            </div>
+            </div> */}
 
             {/* Video Testimonial & Case Study */}
-            <div className="grid items-start gap-12 lg:grid-cols-2">
-              {/* Video Testimonial */}
-              <Card
-                className="bg-card/80 backdrop-blur-sm transition-all
+            {/* <div className="grid items-start gap-12 lg:grid-cols-2">
+            <Card
+              className="bg-card/80 backdrop-blur-sm transition-all
                   duration-300 hover:shadow-lg"
-              >
-                <CardContent className="p-0">
-                  <div
-                    className="group relative aspect-video overflow-hidden
+            >
+              <CardContent className="p-0">
+                <div
+                  className="group relative aspect-video overflow-hidden
                       rounded-t-lg bg-muted"
-                  >
-                    <NextImage
-                      src="/placeholder.svg?height=300&width=500"
-                      alt="Video testimonial thumbnail"
-                      width={500}
-                      height={300}
-                      className="h-full w-full object-cover transition-transform
+                >
+                  <NextImage
+                    src="/placeholder.svg?height=300&width=500"
+                    alt="Video testimonial thumbnail"
+                    width={500}
+                    height={300}
+                    className="h-full w-full object-cover transition-transform
                         duration-500 group-hover:scale-105"
-                      showSkeleton
-                    />
-                    <div
-                      className="absolute inset-0 flex items-center
+                    showSkeleton
+                  />
+                  <div
+                    className="absolute inset-0 flex items-center
                         justify-center bg-black/20 transition-colors
                         group-hover:bg-black/30"
-                    >
-                      <Button
-                        size="lg"
-                        className="h-16 w-16 rounded-full p-0
+                  >
+                    <Button
+                      size="lg"
+                      className="h-16 w-16 rounded-full p-0
                           transition-transform duration-300 hover:scale-110"
-                        onClick={() => setIsVideoPlaying(true)}
-                      >
-                        <Icons.play className="ml-1 h-6 w-6" />
-                      </Button>
-                    </div>
-                    <Badge
-                      className="absolute top-4 left-4 animate-pulse bg-primary"
+                      onClick={() => setIsVideoPlaying(true)}
                     >
-                      60s Testimonial
-                    </Badge>
+                      <Icons.play className="ml-1 h-6 w-6" />
+                    </Button>
                   </div>
-                  <div className="p-6">
-                    <blockquote
-                      className="mb-4 text-lg text-muted-foreground italic"
-                    >
-                      &ldquo;PropertyX allowed us to access $220k in capital for
-                      critical repairs without losing ownership. The process was
-                      transparent and our tenants love the improvements.&rdquo;
-                    </blockquote>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="flex h-10 w-10 items-center justify-center
+                  <Badge
+                    className="absolute top-4 left-4 animate-pulse bg-primary"
+                  >
+                    60s Testimonial
+                  </Badge>
+                </div>
+                <div className="p-6">
+                  <blockquote
+                    className="mb-4 text-lg text-muted-foreground italic"
+                  >
+                    &ldquo;PropertyX allowed us to access $220k in capital for
+                    critical repairs without losing ownership. The process was
+                    transparent and our tenants love the improvements.&rdquo;
+                  </blockquote>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center
                           rounded-full bg-muted"
-                      >
-                        <span className="text-sm font-medium">MR</span>
-                      </div>
-                      <div>
-                        <p className="font-medium">Maria Rodriguez</p>
-                        <p className="text-sm text-muted-foreground">
-                          Property Owner, Brooklyn
-                        </p>
-                      </div>
+                    >
+                      <span className="text-sm font-medium">MR</span>
+                    </div>
+                    <div>
+                      <p className="font-medium">Maria Rodriguez</p>
+                      <p className="text-sm text-muted-foreground">
+                        Property Owner, Brooklyn
+                      </p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </CardContent>
+            </Card>
 
-              {/* Case Study Highlight */}
-              <Card
-                className="border-primary/20 bg-gradient-to-br from-primary/5
+            <Card
+              className="border-primary/20 bg-gradient-to-br from-primary/5
                   to-secondary/5 transition-all duration-300 hover:scale-105
                   hover:shadow-lg"
-              >
-                <CardHeader>
-                  <div className="mb-2 flex items-center gap-2">
-                    <Icons.award className="h-5 w-5 text-primary" />
-                    <Badge variant="secondary">Case Study</Badge>
-                  </div>
-                  <CardTitle className="text-2xl">
-                    HORIZ-APT Pilot Success
-                  </CardTitle>
-                  <CardDescription>
-                    Mixed-use building in Queens achieves funding target ahead
-                    of schedule
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div
-                      className="rounded-lg bg-background/50 p-4 text-center
+            >
+              <CardHeader>
+                <div className="mb-2 flex items-center gap-2">
+                  <Icons.award className="h-5 w-5 text-primary" />
+                  <Badge variant="secondary">Case Study</Badge>
+                </div>
+                <CardTitle className="text-2xl">
+                  HORIZ-APT Pilot Success
+                </CardTitle>
+                <CardDescription>
+                  Mixed-use building in Queens achieves funding target ahead
+                  of schedule
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div
+                    className="rounded-lg bg-background/50 p-4 text-center
                         transition-colors hover:bg-background/70"
-                    >
-                      <p className="text-2xl font-bold text-primary">38%</p>
-                      <p className="text-sm text-muted-foreground">
-                        of target in 14 days
-                      </p>
-                    </div>
-                    <div
-                      className="rounded-lg bg-background/50 p-4 text-center
+                  >
+                    <p className="text-2xl font-bold text-primary">38%</p>
+                    <p className="text-sm text-muted-foreground">
+                      of target in 14 days
+                    </p>
+                  </div>
+                  <div
+                    className="rounded-lg bg-background/50 p-4 text-center
                         transition-colors hover:bg-background/70"
-                    >
-                      <p className="text-2xl font-bold text-secondary">45%</p>
-                      <p className="text-sm text-muted-foreground">
-                        NOI distribution
-                      </p>
-                    </div>
+                  >
+                    <p className="text-2xl font-bold text-secondary">45%</p>
+                    <p className="text-sm text-muted-foreground">
+                      NOI distribution
+                    </p>
                   </div>
+                </div>
 
-                  <div className="space-y-3">
-                    <div
-                      className="flex items-center gap-3 transition-transform
+                <div className="space-y-3">
+                  <div
+                    className="flex items-center gap-3 transition-transform
                         duration-300 hover:translate-x-2"
-                    >
-                      <Icons.checkCircle
-                        className="h-5 w-5 flex-shrink-0 text-primary"
-                      />
-                      <span className="text-sm">
-                        0.02 BTC bonus distributed to early investors
-                      </span>
-                    </div>
-                    <div
-                      className="flex items-center gap-3 transition-transform
-                        duration-300 hover:translate-x-2"
-                    >
-                      <Icons.checkCircle
-                        className="h-5 w-5 flex-shrink-0 text-primary"
-                      />
-                      <span className="text-sm">
-                        Monthly cash flows automated via smart contract
-                      </span>
-                    </div>
-                    <div
-                      className="flex items-center gap-3 transition-transform
-                        duration-300 hover:translate-x-2"
-                    >
-                      <Icons.checkCircle
-                        className="h-5 w-5 flex-shrink-0 text-primary"
-                      />
-                      <span className="text-sm">
-                        Secondary market trading active within 30 days
-                      </span>
-                    </div>
+                  >
+                    <Icons.checkCircle
+                      className="h-5 w-5 flex-shrink-0 text-primary"
+                    />
+                    <span className="text-sm">
+                      0.02 BTC bonus distributed to early investors
+                    </span>
                   </div>
+                  <div
+                    className="flex items-center gap-3 transition-transform
+                        duration-300 hover:translate-x-2"
+                  >
+                    <Icons.checkCircle
+                      className="h-5 w-5 flex-shrink-0 text-primary"
+                    />
+                    <span className="text-sm">
+                      Monthly cash flows automated via smart contract
+                    </span>
+                  </div>
+                  <div
+                    className="flex items-center gap-3 transition-transform
+                        duration-300 hover:translate-x-2"
+                  >
+                    <Icons.checkCircle
+                      className="h-5 w-5 flex-shrink-0 text-primary"
+                    />
+                    <span className="text-sm">
+                      Secondary market trading active within 30 days
+                    </span>
+                  </div>
+                </div>
 
-                  <Alert className="border-primary/20 bg-primary/5">
-                    <Icons.target className="h-4 w-4" />
-                    <AlertDescription>
-                      <strong>Result:</strong> Property owner retained 100%
-                      equity while accessing $180k for renovations, increasing
-                      property value by 23% within 6 months.
-                    </AlertDescription>
-                  </Alert>
-                </CardContent>
-              </Card>
-            </div>
+                <Alert className="border-primary/20 bg-primary/5">
+                  <Icons.target className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>Result:</strong> Property owner retained 100%
+                    equity while accessing $180k for renovations, increasing
+                    property value by 23% within 6 months.
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </Card>
+          </div> 
+          */}
 
             {/* Metrics Bar */}
             <div
@@ -1118,16 +1108,16 @@ export default function PropertyXLanding() {
                   className="bg-card/80 p-6 backdrop-blur-sm transition-all
                     duration-300 hover:scale-105 hover:shadow-lg"
                 >
-                  <div className="mb-4">
-                    <NextImage
-                      src={testimonial.image || "/placeholder.svg"}
-                      alt={`${testimonial.name} testimonial`}
-                      width={64}
-                      height={64}
-                      className="mx-auto mb-4 h-16 w-16 rounded-full
-                        object-cover"
-                      showSkeleton
-                    />
+                  {/* Simplified avatar without image per request */}
+                  <div className="mb-4 flex items-center justify-center">
+                    <div
+                      className="flex h-16 w-16 items-center justify-center
+                        rounded-full bg-gradient-to-br from-primary/30
+                        to-secondary/30 text-lg font-semibold text-primary
+                        shadow-inner"
+                    >
+                      {testimonial.avatar}
+                    </div>
                   </div>
                   <div className="mb-4 flex items-center justify-center gap-1">
                     {[...Array(testimonial.rating)].map((_, i) => (
@@ -1158,31 +1148,7 @@ export default function PropertyXLanding() {
               ))}
             </div>
 
-            {/* Media Mentions */}
-            <Card className="bg-card/80 p-8 backdrop-blur-sm">
-              <h3 className="mb-8 text-center text-2xl font-semibold">
-                Featured In
-              </h3>
-              <div className="grid items-center gap-8 md:grid-cols-4">
-                {["TechCrunch", "Forbes", "CoinDesk", "Real Estate Weekly"].map(
-                  (publication, index) => (
-                    <div key={index} className="text-center">
-                      <div
-                        className="mx-auto mb-2 flex h-16 w-32 items-center
-                          justify-center rounded-lg bg-muted transition-colors
-                          hover:bg-muted/70"
-                      >
-                        <span
-                          className="text-sm font-medium text-muted-foreground"
-                        >
-                          {publication}
-                        </span>
-                      </div>
-                    </div>
-                  )
-                )}
-              </div>
-            </Card>
+            {/* Media Mentions removed per request */}
           </div>
         </div>
       </section>
@@ -1339,102 +1305,83 @@ export default function PropertyXLanding() {
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section
-        className="bg-gradient-to-br from-primary/10 via-background
-          to-secondary/10 py-20"
-      >
+      {/* Final CTA Section (Redesigned) */}
+      <section className="relative overflow-hidden py-24">
+        <div className="pointer-events-none absolute inset-0 -z-10 opacity-40">
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-primary/10
+              via-background to-secondary/10"
+          />
+          <div
+            className="absolute top-1/2 left-1/2 h-[600px] w-[600px]
+              -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20
+              blur-3xl"
+          />
+        </div>
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-4xl text-center">
+          <div className="mx-auto max-w-5xl text-center">
+            <Badge variant="secondary" className="mb-6">
+              Future of Property Yield
+            </Badge>
             <h2 className="mb-6 text-4xl font-bold text-balance md:text-5xl">
-              Ready to Unlock Your Property&apos;s Potential?
+              Ready to Tokenize or Invest with Confidence?
             </h2>
-            <p className="mb-12 text-xl text-pretty text-muted-foreground">
-              Join thousands of property owners and investors who are already
-              earning more with PropertyX
+            <p className="mx-auto mb-12 max-w-3xl text-xl text-muted-foreground">
+              Secure your position in the next evolution of urban real estate.
+              Whether you&apos;re unlocking capital from property or seeking
+              yield with on-chain transparency—PropertyX gives you both.
             </p>
-
-            {/* Urgency Elements */}
-            <div className="mb-12 grid gap-6 md:grid-cols-3">
-              <Card
-                className="border-secondary/20 bg-card/80 p-6 backdrop-blur-sm
-                  transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                <Icons.users className="mx-auto mb-4 h-8 w-8 text-secondary" />
-                <p className="mb-2 font-semibold">Limited Availability</p>
-                <p className="text-2xl font-bold text-secondary">
-                  {(10000 - trancheSold).toLocaleString()}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Spots remaining in launch cohort
-                </p>
-              </Card>
-
-              <Card
-                className="border-chart-1/20 bg-card/80 p-6 backdrop-blur-sm
-                  transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                <Icons.trendingUp className="mx-auto mb-4 h-8 w-8 text-chart-1" />
-                <p className="mb-2 font-semibold">Priority Access</p>
-                <p className="text-2xl font-bold text-chart-1">48hrs</p>
-                <p className="text-sm text-muted-foreground">
-                  Early access before public launch
-                </p>
-              </Card>
+            <div
+              className="mx-auto mb-12 grid max-w-4xl gap-6 text-left
+                sm:grid-cols-2"
+            >
+              {[
+                {
+                  icon: <Icons.checkCircle className="h-5 w-5 text-primary" />,
+                  title: "On-Chain, Audited Cash Flows",
+                  text: "Automated monthly distributions—no opaque intermediaries.",
+                },
+                {
+                  icon: <Icons.checkCircle className="h-5 w-5 text-primary" />,
+                  title: "Low Entry, High Clarity",
+                  text: "Access institutional-grade deals starting around $1K.",
+                },
+                {
+                  icon: <Icons.checkCircle className="h-5 w-5 text-primary" />,
+                  title: "BTC-Aligned Rewards",
+                  text: "Earn additional Bitcoin incentives for early support.",
+                },
+                {
+                  icon: <Icons.checkCircle className="h-5 w-5 text-primary" />,
+                  title: "Keep Ownership, Unlock Capital",
+                  text: "Raise funds without selling equity or taking on debt.",
+                },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="group flex items-start gap-4 rounded-lg border
+                    border-primary/10 bg-card/70 p-5 backdrop-blur-sm
+                    transition-colors hover:bg-card/90"
+                >
+                  <div
+                    className="mt-1 flex h-8 w-8 items-center justify-center
+                      rounded-full bg-primary/15"
+                  >
+                    {item.icon}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="font-medium">{item.title}</p>
+                    <p className="text-sm text-muted-foreground">{item.text}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-
-            {/* Multiple CTAs */}
-            <div className="space-y-6">
-              <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      size="lg"
-                      className="group px-12 py-6 text-lg transition-all
-                        duration-300 hover:scale-105"
-                    >
-                      Connect Wallet — Reserve Your Spot Now
-                      <Icons.arrowRight
-                        className="ml-2 h-5 w-5 transition-transform
-                          group-hover:translate-x-1"
-                      />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Reserve Your Launch Spot</DialogTitle>
-                      <DialogDescription>
-                        Get priority access to the first APT token drops and
-                        exclusive bonuses.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={() => {}} className="space-y-4">
-                      <div>
-                        <label
-                          htmlFor="final-email"
-                          className="mb-2 block text-sm font-medium"
-                        >
-                          Email Address
-                        </label>
-                        <input
-                          id="final-email"
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full rounded-md border border-input px-3
-                            py-2 focus:ring-2 focus:ring-primary
-                            focus:outline-none"
-                          placeholder="your@email.com"
-                          required
-                        />
-                      </div>
-                      <Button type="submit" className="w-full">
-                        Reserve My Priority Spot
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
+            <div className="flex flex-col items-center justify-center">
+              <ConnectWallet
+                size={"lg"}
+                className="w-full max-w-md px-10 py-7 text-lg font-medium
+                  shadow-xl transition-all duration-300 hover:scale-[1.03]"
+              />
             </div>
           </div>
         </div>

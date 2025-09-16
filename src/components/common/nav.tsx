@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 
+import ConnectWallet from "./connect-wallet"
 import { Icons } from "./icons"
 import Logo from "./logo"
 
@@ -12,9 +13,6 @@ interface NavProps {
 }
 
 const Nav: React.FC<NavProps> = ({ onNavigate, isScrolled }) => {
-  const MenuIcon = Icons.menu
-  const ArrowRight = Icons.arrowRight
-
   return (
     <nav
       className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
@@ -29,10 +27,8 @@ const Nav: React.FC<NavProps> = ({ onNavigate, isScrolled }) => {
 
           <div className="hidden items-center gap-6 md:flex">
             {[
-              { id: "features", label: "Features" },
-              { id: "how-it-works", label: "How It Works" },
-              { id: "testimonials", label: "Testimonials" },
-              { id: "faq", label: "FAQ" },
+              { id: "apts", label: "Your Apts" },
+              { id: "listings", label: "Your Listings" },
             ].map((link) => (
               <button
                 key={link.id}
@@ -42,17 +38,11 @@ const Nav: React.FC<NavProps> = ({ onNavigate, isScrolled }) => {
                 {link.label}
               </button>
             ))}
-            <Button size="sm" className="group">
-              Join Launch List
-              <ArrowRight
-                className="ml-1 h-4 w-4 transition-transform
-                  group-hover:translate-x-1"
-              />
-            </Button>
+            <ConnectWallet isNav />
           </div>
 
           <Button variant="ghost" size="sm" className="md:hidden">
-            <MenuIcon className="h-5 w-5" />
+            <Icons.menu className="h-5 w-5" />
           </Button>
         </div>
       </div>
