@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm || exit 1",
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "prepare": "husky",
