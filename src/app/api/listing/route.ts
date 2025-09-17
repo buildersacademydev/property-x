@@ -23,6 +23,9 @@ export async function POST(request: Request) {
         return event.type === "SmartContractEvent"
       })
 
+      // If no smart contract event is present, continue to the next transaction
+      if (!filteredEvent) continue
+
       const {
         action,
         sender: txSender,
@@ -46,7 +49,7 @@ export async function POST(request: Request) {
 
       console.log("extracted data: ", extracted)
 
-      return extracted
+      return Response.json(extracted)
     }
   }
 
@@ -60,4 +63,7 @@ export async function POST(request: Request) {
       return Response.json("")
     }
   }
+
+  // Fallback response when no relevant transactions were processed
+  return new Response(null, { status: 204 })
 }

@@ -54,7 +54,7 @@ const Page = () => {
         functionName: FUNCTION_NAME,
         functionArgs: args,
 
-        network: "devnet",
+        network: process.env.NEXT_PUBLIC_NETWORK || "devnet",
         postConditionMode: "allow",
       })
 
