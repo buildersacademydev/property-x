@@ -137,7 +137,8 @@ export function useTokenListings({ variant }: UseTokenListingsProps) {
   })
 
   return {
-    isLoading: metadataQueries.isLoading || imageUrlQueries.isLoading,
+    isLoading:
+      metadataQueries.isLoading || imageUrlQueries.isLoading || isLoading,
     isSucess: metadataQueries.isSuccess && imageUrlQueries.isSuccess,
     data: metadataQueries.data,
   }
