@@ -20,7 +20,7 @@ const ConnectWallet = ({ isNav = false, ...props }: ConnectWalletProps) => {
 
   const handleButtonClick = () => {
     if (!connected) {
-      getConnect()
+      // getConnect()
     } else if (connected) {
       router.push("/marketplace")
     }
