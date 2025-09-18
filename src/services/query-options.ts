@@ -1,3 +1,4 @@
+import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network"
 import {
   ClarityType,
   ClarityValue,
@@ -11,10 +12,16 @@ import {
 import { queryOptions, UseQueryOptions } from "@tanstack/react-query"
 
 import { ApiService } from "./api"
-import { TFtBalancesResponse, TNetwork, TWhiteListedBalances } from "./type"
+import { TFtBalancesResponse, TWhiteListedBalances } from "./type"
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ""
-const NETWORK = process.env.NEXT_PUBLIC_NETWORK || "testnet"
+const NETWORK_ENV = process.env.NEXT_PUBLIC_NETWORK
+const NETWORK =
+  NETWORK_ENV === "testnet"
+    ? STACKS_TESTNET
+    : NETWORK_ENV === "mainnet"
+      ? STACKS_MAINNET
+      : STACKS_DEVNET
 
 export const getBlockHeight = () => {
   return queryOptions({
@@ -47,7 +54,7 @@ export const getFtNonce = (stxAddress: string) => {
         functionName: "get-listing-ft-nonce",
         functionArgs: [],
         senderAddress: stxAddress,
-        network: NETWORK as TNetwork,
+        network: NETWORK,
       }),
     select: (data) => {
       if (data.type === ClarityType.ResponseOk) {
@@ -70,7 +77,7 @@ export const getFtListing = (key: number) => {
         contractName: "marketplace",
         mapName: "listings-ft",
         mapKey: uintCV(key),
-        network: NETWORK as TNetwork,
+        network: NETWORK,
       }),
   })
 }
@@ -99,7 +106,7 @@ export const isFtWhitelisted = ({
         functionName: "is-whitelisted",
         functionArgs: [contractPrincipalCV(ftContractAddress, ftContractName)],
         senderAddress: stxAddress,
-        network: NETWORK as TNetwork,
+        network: NETWORK,
       }),
     select: (data): TWhiteListedBalances | null => {
       if (data.type) {
@@ -137,7 +144,7 @@ export const getTokenMetadata = ({
         functionName: metadataType,
         functionArgs: [],
         senderAddress: stxAddress,
-        network: NETWORK as TNetwork,
+        network: NETWORK,
       }),
     select: (data) => {
       if (data.type === ClarityType.ResponseOk) {
@@ -168,7 +175,7 @@ export const getFtImageUrl = (
         functionName: "get-token-uri",
         functionArgs: [],
         senderAddress: CONTRACT_ADDRESS,
-        network: NETWORK as TNetwork,
+        network: NETWORK,
       }),
     select: (data) => {
       if (data.type === ClarityType.ResponseOk) {
