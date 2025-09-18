@@ -1,73 +1,64 @@
 "use client"
 
 import { useWallet } from "@/providers/wallet-provider"
+import { getFtBalances } from "@/services/query-options"
 import { STACKS_DEVNET } from "@stacks/network"
+import { Cl } from "@stacks/transactions"
+import { useQuery } from "@tanstack/react-query"
 import React from "react"
 import { Button } from "@/components/ui/button"
+
+import { getRequest } from "./get-request"
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ""
 const CONTRACT_NAME = "marketplace"
 const FUNCTION_NAME = "list-asset-ft"
 const NETWORK = STACKS_DEVNET
 
-const parseContractPrincipal = (contractString: string): [string, string] => {
-  const parts = contractString.split(".")
-  if (parts.length !== 2) {
-    throw new Error("Invalid contract format. Use: address.contractName")
-  }
-  return [parts[0], parts[1]]
-}
-
 const Page = () => {
-  const { connected, getConnect, getDisconnect } = useWallet()
+  const { connected, getConnect, getDisconnect, stxAddress } = useWallet()
+
+  const { data } = useQuery({
+    ...getFtBalances(stxAddress || ""),
+  })
+
+  function safeUint(value: string | number) {
+    const num = BigInt(value || 0)
+    return Cl.uint(num)
+  }
+
+  const ftArgs = [
+    Cl.contractPrincipal(CONTRACT_ADDRESS, "mock-token"),
+
+    Cl.tuple({
+      taker: Cl.none(),
+
+      amt: safeUint(100000),
+      expiry: safeUint(10000000),
+      price: safeUint(10),
+
+      "payment-asset-contract": Cl.none(),
+    }),
+  ]
+
+  const whiteArgs = [
+    Cl.contractPrincipal(CONTRACT_ADDRESS, "mock-token"),
+    Cl.bool(true),
+  ]
 
   const ftListings = async () => {
-    try {
-      const [contractAddress, contractName] = parseContractPrincipal(
-        `${CONTRACT_ADDRESS}.mock-token`
-      )
+    await getRequest({
+      args: ftArgs,
+      functionName: "list-asset-ft",
+    })
+  }
 
-      const { Cl, cvToJSON } = await import("@stacks/transactions")
-      const { request } = await import("@stacks/connect")
-
-      function safeUint(value: string | number) {
-        const num = BigInt(value || 0)
-        return Cl.uint(num)
-      }
-
-      const args = [
-        Cl.contractPrincipal(contractAddress, contractName),
-
-        Cl.tuple({
-          taker: Cl.none(),
-
-          amt: safeUint(1000000),
-          expiry: safeUint(1000),
-          price: safeUint(10),
-
-          "payment-asset-contract": Cl.none(),
-        }),
-      ]
-
-      const response = await request("stx_callContract", {
-        contract: `${CONTRACT_ADDRESS}.${CONTRACT_NAME}`,
-        functionName: FUNCTION_NAME,
-        functionArgs: args,
-
-        network: process.env.NEXT_PUBLIC_NETWORK || "devnet",
-        postConditionMode: "allow",
-      })
-
-      if (response) {
-        console.log("listing responce: ", response)
-      }
-    } catch (error) {
-      console.error("Error calling contract:", error)
-      alert(
-        "Error calling contract: " +
-          (error instanceof Error ? error.message : "Unknown error")
-      )
-    }
+  const whiteListings = async () => {
+    await getRequest({
+      args: whiteArgs,
+      functionName: "set-whitelisted",
+      postMode: false,
+    })
   }
 
   return (
@@ -80,9 +71,15 @@ const Page = () => {
         </Button>
       )}
       {connected ? (
-        <Button variant={"outline"} onClick={ftListings}>
-          FT Listings
-        </Button>
+        <div className="flex max-w-md flex-col gap-4 rounded-lg border p-12">
+          <Button variant={"outline"} onClick={ftListings}>
+            FT Listings
+          </Button>
+
+          <Button variant={"outline"} onClick={whiteListings}>
+            White Listings
+          </Button>
+        </div>
       ) : null}
     </div>
   )

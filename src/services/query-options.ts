@@ -23,6 +23,13 @@ export const getBlockHeight = () => {
   })
 }
 
+export const getAccountAssets = (stxAddress: string) => {
+  return queryOptions({
+    queryKey: ["account-assets", stxAddress],
+    queryFn: () => ApiService.getAccountAssets(stxAddress),
+  })
+}
+
 export const getFtBalances = (stxAddress: string) => {
   return queryOptions({
     queryKey: ["ft-balances", stxAddress],
