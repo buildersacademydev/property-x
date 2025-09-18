@@ -84,3 +84,8 @@ export interface TListingSchema {
   taker: null | string
   topic: string
 }
+
+export interface TWhiteListSchema {
+  isWhitelisted: boolean
+  whitelisted: string
+}

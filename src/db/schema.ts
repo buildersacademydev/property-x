@@ -1,4 +1,4 @@
-import { integer, pgTable, text } from "drizzle-orm/pg-core"
+import { boolean, integer, pgTable, text } from "drizzle-orm/pg-core"
 
 export const listings = pgTable("listings", {
   amount: integer("amount").notNull(),
@@ -10,4 +10,9 @@ export const listings = pgTable("listings", {
   price: integer("price").notNull(),
   taker: text("taker"),
   topic: text("topic").notNull(),
+})
+
+export const whiteListing = pgTable("whitelisting", {
+  whitelisted: text("whitelisted").primaryKey(),
+  isWhitelisted: boolean("is_whitelisted").notNull(),
 })

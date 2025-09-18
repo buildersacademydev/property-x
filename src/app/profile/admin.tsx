@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Cl } from "@stacks/transactions"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import React from "react"
@@ -23,9 +24,17 @@ import {
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
+import { getRequest } from "../test/get-request"
+
 // 1) Whitelist Token Contract
 const whitelistSchema = z.object({
-  contractAddress: z.string().min(1, "Contract address is required"),
+  contractAddress: z
+    .string()
+    .min(1, "Contract address is required")
+    .regex(
+      /^[a-zA-Z0-9]+\.{1}[a-zA-Z0-9_-]+$/,
+      "Contract address must be in the format: address.contractName"
+    ),
   isWhitelisted: z.enum(["true", "false"] as const),
 })
 
@@ -36,33 +45,37 @@ const marketplaceSchema = z.object({
 })
 
 const Admin = () => {
-  // Form 1: Whitelist
   const whitelistForm = useForm<z.infer<typeof whitelistSchema>>({
     resolver: zodResolver(whitelistSchema),
     defaultValues: { contractAddress: "", isWhitelisted: "true" },
     mode: "onChange",
   })
 
-  // Form 2: Marketplace update
   const marketplaceForm = useForm<z.infer<typeof marketplaceSchema>>({
     resolver: zodResolver(marketplaceSchema),
     defaultValues: { principal: "", role: "admin" },
     mode: "onChange",
   })
 
-  const onSubmitWhitelist = (values: z.infer<typeof whitelistSchema>) => {
-    // Submit handler placeholder
-    console.log("Whitelist submit", values)
+  const onSubmitWhitelist = async (values: z.infer<typeof whitelistSchema>) => {
+    const contract = values.contractAddress.split(".")
+    const args = [
+      Cl.contractPrincipal(contract[0], contract[1]),
+      Cl.bool(values.isWhitelisted === "true"),
+    ]
+    await getRequest({
+      args: args,
+      functionName: "set-whitelisted",
+      postMode: false,
+    })
   }
 
   const onSubmitMarketplace = (values: z.infer<typeof marketplaceSchema>) => {
-    // Submit handler placeholder
     console.log("Marketplace update submit", values)
   }
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      {/* Whitelist Token Contract */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold">

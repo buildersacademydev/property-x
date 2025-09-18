@@ -9,7 +9,10 @@
     "start": "next start",
     "lint": "eslint",
     "prepare": "husky",
-    "cn": "pnpm dlx shadcn@latest add"
+    "cn": "pnpm dlx shadcn@latest add",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push"
   },
   "engines": {
     "npm": "please-use-pnpm",
