@@ -32,17 +32,18 @@ const Page = () => {
 
     Cl.tuple({
       taker: Cl.none(),
-
       amt: safeUint(100000),
       expiry: safeUint(10000000),
       price: safeUint(10),
-
       "payment-asset-contract": Cl.none(),
     }),
   ]
 
   const whiteArgs = [
-    Cl.contractPrincipal(CONTRACT_ADDRESS, "mock-token"),
+    Cl.contractPrincipal(
+      "ST3FM52ANQES92X27AP9ZV9Z676MHP7QP2J79RTH9",
+      "bme030-0-reputation-token"
+    ),
     Cl.bool(true),
   ]
 

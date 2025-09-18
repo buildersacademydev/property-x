@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistMono.variable} dark min-h-dvh bg-background
+        className={`${geistMono.className} dark min-h-dvh bg-background
           text-foreground antialiased`}
       >
         <RootProviders>

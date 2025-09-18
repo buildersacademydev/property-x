@@ -1,4 +1,3 @@
-import util from "util"
 import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
 import { TListingSchema } from "@/services/type"
