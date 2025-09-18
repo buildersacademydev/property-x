@@ -70,3 +70,17 @@ interface Asset {
   description: string
   staking: string
 }
+
+// new ones
+
+export interface TListingSchema {
+  amount: number
+  "asset-contract": string
+  expiry: number
+  "listing-id": number
+  maker: string
+  "payment-asset-contract": null | string
+  price: number
+  taker: null | string
+  topic: string
+}
