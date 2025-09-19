@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm || exit 1",
     "dev": "next dev",
     "build": "next build",
+    "preinstall": "npx only-allow pnpm || exit 1",
     "start": "next start",
     "lint": "eslint",
     "prepare": "husky",
@@ -14,10 +14,11 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push"
   },
+  "packageManager": "pnpm@10.0.0",
   "engines": {
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": ">=8.0.0"
+    "pnpm": ">=10.0.0"
   },
   "dependencies": {
     "@hirosystems/chainhook-client": "^2.4.0",
