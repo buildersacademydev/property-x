@@ -1,6 +1,7 @@
 import { db } from "@/db/drizzle"
-import { whiteListing } from "@/db/schema" // Add your token URI table import
-import { TWhiteListSchema } from "@/services/type"
+import { assets, tcoins, whiteListing } from "@/db/schema"
+import { ApiService } from "@/services/api"
+import { TCoinSchema, TWhiteListSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network"
 import { fetchCallReadOnlyFunction } from "@stacks/transactions"
@@ -15,6 +16,111 @@ const NETWORK =
     : NETWORK_ENV === "mainnet"
       ? STACKS_MAINNET
       : STACKS_DEVNET
+
+async function saveTokenAndAssetData(contract: string, tokenData: TCoinSchema) {
+  try {
+    const [savedAsset] = await db
+      .insert(assets)
+      .values({
+        name: tokenData.asset.name,
+        image: tokenData.asset.image,
+        location: tokenData.asset.location,
+        valuation: tokenData.asset.valuation,
+        tokens: tokenData.asset.tokens,
+        apr: tokenData.asset.apr,
+        description: tokenData.asset.description,
+        staking: tokenData.asset.staking,
+      })
+      .returning({ id: assets.id })
+
+    if (!savedAsset) {
+      throw new Error("Failed to save asset data")
+    }
+
+    await db
+      .insert(tcoins)
+      .values({
+        contract: contract,
+        name: tokenData.name,
+        description: tokenData.description,
+        image: tokenData.image,
+        assetId: savedAsset.id,
+      })
+      .onConflictDoUpdate({
+        target: tcoins.contract,
+        set: {
+          name: tokenData.name,
+          description: tokenData.description,
+          image: tokenData.image,
+          assetId: savedAsset.id,
+        },
+      })
+
+    console.log(`Successfully saved token and asset data for ${contract}`)
+  } catch (error) {
+    console.error(`Error saving token and asset data for ${contract}:`, error)
+    throw error
+  }
+}
+
+async function processTokenUri(contract: string): Promise<boolean> {
+  try {
+    const contractParts = contract.split(".")
+
+    if (contractParts.length !== 2) {
+      console.warn(`Invalid contract format: ${contract}`)
+      return false
+    }
+
+    const getTokenUri = await fetchCallReadOnlyFunction({
+      contractAddress: contractParts[0],
+      contractName: contractParts[1],
+      functionName: "get-token-uri",
+      functionArgs: [],
+      senderAddress: CONTRACT_ADDRESS,
+      network: NETWORK,
+    })
+
+    if (getTokenUri.type !== "ok") {
+      console.warn(`Token URI call failed for ${contract}`)
+      return false
+    }
+
+    const tokenType =
+      getTokenUri.value.type === "some" && getTokenUri.value.value
+    const tokenUri =
+      tokenType && tokenType.type === "utf8" ? tokenType.value : null
+
+    if (!tokenUri) {
+      console.warn(`No valid token URI found for ${contract}`)
+      return false
+    }
+
+    const tokenData = await ApiService.getTestCoin(tokenUri)
+
+    if (!tokenData || !tokenData.asset) {
+      console.warn(`Invalid token data structure for ${contract}`)
+      return false
+    }
+
+    await saveTokenAndAssetData(contract, tokenData)
+    return true
+  } catch (error) {
+    console.error(`Error processing token URI for ${contract}:`, error)
+    return false
+  }
+}
+
+async function cleanupOrphanedData(deletedContracts: string[]) {
+  try {
+    await db.delete(tcoins).where(inArray(tcoins.contract, deletedContracts))
+    console.log(
+      `Cleaned up data for ${deletedContracts.length} delisted contracts`
+    )
+  } catch (error) {
+    console.error("Error cleaning up orphaned data:", error)
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -40,8 +146,8 @@ export async function POST(request: Request) {
       existingRecords.map((record) => [record.whitelisted, record])
     )
 
-    const toDelete = []
-    const toInsert = []
+    const toDelete: string[] = []
+    const toInsert: Array<{ whitelisted: string; isWhitelisted: boolean }> = []
 
     for (const value of validValues) {
       const existing = existingMap.get(value.whitelisted)
@@ -64,45 +170,44 @@ export async function POST(request: Request) {
       await db
         .delete(whiteListing)
         .where(inArray(whiteListing.whitelisted, toDelete))
+
+      await cleanupOrphanedData(toDelete)
+      console.log(`Removed ${toDelete.length} contracts from whitelist`)
     }
 
     if (toInsert.length > 0) {
       await db.insert(whiteListing).values(toInsert).onConflictDoNothing()
+      console.log(`Added ${toInsert.length} contracts to whitelist`)
 
-      for (const item of toInsert) {
-        try {
-          const contract = item.whitelisted.split(".")
+      const results = await Promise.allSettled(
+        toInsert.map((item) => processTokenUri(item.whitelisted))
+      )
 
-          if (contract.length !== 2) {
-            console.warn(`Invalid contract format: ${item.whitelisted}`)
-            continue
-          }
-          console.log("whitelist contract", contract)
+      const successCount = results.filter(
+        (result) => result.status === "fulfilled" && result.value === true
+      ).length
 
-          const getTokenUri = await fetchCallReadOnlyFunction({
-            contractAddress: contract[0],
-            contractName: contract[1],
-            functionName: "get-token-uri",
-            functionArgs: [],
-            senderAddress: CONTRACT_ADDRESS,
-            network: NETWORK,
-          })
-
-          console.log("network", NETWORK)
-
-          console.log("Whitelist token uri", getTokenUri)
-        } catch (error) {
-          console.error(
-            `Error fetching token URI for ${item.whitelisted}:`,
-            error
-          )
-        }
-      }
+      console.log(
+        `Successfully processed token data for ${successCount}/${toInsert.length} contracts`
+      )
     }
 
-    return new Response("Listing successful", { status: 200 })
+    return new Response(
+      JSON.stringify({
+        message: "Processing completed successfully",
+        added: toInsert.length,
+        removed: toDelete.length,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    )
   } catch (error) {
     console.error("Error processing whitelist:", error)
-    return new Response("Internal Server Error", { status: 500 })
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
   }
 }
