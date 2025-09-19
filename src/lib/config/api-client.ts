@@ -3,7 +3,6 @@ import axios, {
   CanceledError,
   InternalAxiosRequestConfig,
 } from "axios"
-import { toast } from "sonner"
 
 import ERROR_MESSAGES from "./custom-errors"
 
@@ -33,14 +32,6 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // const accessToken = isServer()
-    //     ? null
-    //     : storage.getToken()
-
-    // if (accessToken && config.headers) {
-    //     config.headers.Authorization = `Bearer ${accessToken}`;
-    // }
-
     return config
   },
   (error) => {

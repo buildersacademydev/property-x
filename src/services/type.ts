@@ -13,8 +13,6 @@ interface Chain_tip {
   burn_block_height: number
 }
 
-export type TNetwork = "testnet" | "mainnet" | "devnet" | "mocknet" | undefined
-
 export interface TFtNonceResponse {
   type: string
   value: Value
@@ -44,7 +42,7 @@ export interface TFtBalancesResponse {
   results: ResultsItem[]
 }
 interface ResultsItem {
-  token: string
+  token: `${string}.${string}::${string}`
   balance: string
 }
 
@@ -105,4 +103,27 @@ interface Asset {
   apr: string
   description: string
   staking: string
+}
+
+export interface TPostBalancesWhitelistResponse {
+  balance: string
+  contract: string
+  tokenName: string
+  tcoin: {
+    name: string
+    description: string
+    image: string
+    assetId: string
+  }
+  asset: {
+    id: string
+    name: string
+    image: string
+    location: string
+    valuation: number | string
+    tokens: number | string
+    apr: number | string
+    description: string
+    staking: boolean
+  } | null
 }

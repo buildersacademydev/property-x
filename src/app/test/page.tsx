@@ -1,14 +1,13 @@
 "use client"
 
 import { useWallet } from "@/providers/wallet-provider"
+import { getRequest } from "@/services/api"
 import { getFtBalances } from "@/services/query-options"
 import { STACKS_DEVNET } from "@stacks/network"
 import { Cl } from "@stacks/transactions"
 import { useQuery } from "@tanstack/react-query"
 import React from "react"
 import { Button } from "@/components/ui/button"
-
-import { getRequest } from "./get-request"
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ""
 const CONTRACT_NAME = "marketplace"
@@ -17,10 +16,6 @@ const NETWORK = STACKS_DEVNET
 
 const Page = () => {
   const { connected, getConnect, getDisconnect, stxAddress } = useWallet()
-
-  const { data } = useQuery({
-    ...getFtBalances(stxAddress || ""),
-  })
 
   function safeUint(value: string | number) {
     const num = BigInt(value || 0)

@@ -1,5 +1,6 @@
 "use client"
 
+import { getRequest } from "@/services/api"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Cl } from "@stacks/transactions"
 import { useForm } from "react-hook-form"
@@ -24,9 +25,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import { getRequest } from "../test/get-request"
-
-// 1) Whitelist Token Contract
 const whitelistSchema = z.object({
   contractAddress: z
     .string()
@@ -38,7 +36,6 @@ const whitelistSchema = z.object({
   isWhitelisted: z.enum(["true", "false"] as const),
 })
 
-// 2) Update Marketplace Contract
 const marketplaceSchema = z.object({
   principal: z.string().min(1, "Principal is required"),
   role: z.enum(["admin", "fulfill"] as const),

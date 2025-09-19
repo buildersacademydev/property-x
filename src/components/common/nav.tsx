@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import ConnectWallet from "./connect-wallet"
 import { Icons } from "./icons"
 import Logo from "./logo"
+import { NextLink } from "./next-link"
 
 const Nav = () => {
   return (
@@ -23,15 +24,18 @@ const Nav = () => {
 
           <div className="hidden items-center gap-6 md:flex">
             {[
-              { id: "apts", label: "Your Apts" },
-              { id: "listings", label: "Your Listings" },
+              { label: "Your Apts", href: "your-apts" },
+              { label: "Your Listings", href: "your-listings" },
             ].map((link) => (
-              <button
-                key={link.id}
-                className="text-sm transition-colors hover:text-primary"
+              <Button
+                variant={"ghost"}
+                key={link.href}
+                className="text-sm transition-colors hover:font-bold
+                  hover:text-primary"
+                asChild
               >
-                {link.label}
-              </button>
+                <NextLink href={`/${link.href}`}>{link.label}</NextLink>
+              </Button>
             ))}
             <ConnectWallet isNav />
           </div>
