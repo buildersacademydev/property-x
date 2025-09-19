@@ -43,6 +43,7 @@ const Apts = () => {
             const name = item.asset?.name || item.tcoin?.name || "Unknown Asset"
             const location = item.asset?.location || "—"
             const balanceNum = Number(item.balance)
+            const contract = item.contract || ""
 
             return (
               <Card
@@ -113,7 +114,9 @@ const Apts = () => {
 
                     <div className="mt-6 flex flex-col gap-4 sm:flex-row">
                       <Button className="flex-1" asChild>
-                        <NextLink href={`/your-apts/list-apt`}>
+                        <NextLink
+                          href={`/your-apts/${encodeURIComponent(contract)}`}
+                        >
                           List for Sale
                         </NextLink>
                       </Button>
