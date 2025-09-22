@@ -1,12 +1,6 @@
 import { z } from "zod"
 
-const envSchema = z.object({
-  CONTRACT_ADDRESS: z
-    .string()
-    .length(41, "Contract address must be exactly 41 characters"),
-
-  NETWORK: z.enum(["devnet", "testnet", "mainnet"]),
-
+const serverSchema = z.object({
   DATABASE_URL: z
     .string()
     .url("DATABASE_URL must be a valid URL")
@@ -15,20 +9,60 @@ const envSchema = z.object({
     }),
 })
 
-const _env = {
-  CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-  NETWORK: process.env.NEXT_PUBLIC_NETWORK,
-  DATABASE_URL: process.env.DATABASE_URL,
+const clientSchema = z.object({
+  CONTRACT_ADDRESS: z
+    .string()
+    .length(
+      41,
+      "Contract address must be exactly 41 characters (including 0x)"
+    ),
+  NETWORK: z.enum(["devnet", "testnet", "mainnet"]),
+})
+
+const validateServerEnv = () => {
+  const serverEnv = {
+    DATABASE_URL: process.env.DATABASE_URL,
+  }
+
+  const result = serverSchema.safeParse(serverEnv)
+
+  if (!result.success) {
+    console.error("❌ Invalid server environment variables:")
+    result.error.issues.forEach((issue) => {
+      console.error(`  - ${issue.path.join(".")}: ${issue.message}`)
+    })
+    throw new Error("Invalid server environment variables")
+  }
+
+  return result.data
 }
 
-const parsedEnv = envSchema.safeParse(_env)
+const validateClientEnv = () => {
+  const clientEnv = {
+    CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    NETWORK: process.env.NEXT_PUBLIC_NETWORK,
+  }
 
-if (!parsedEnv.success) {
-  console.error(
-    "❌ Invalid environment variables:",
-    parsedEnv.error.flatten().fieldErrors
-  )
-  throw new Error("Invalid environment variables")
+  const result = clientSchema.safeParse(clientEnv)
+
+  if (!result.success) {
+    console.error("❌ Invalid client environment variables:")
+    result.error.issues.forEach((issue) => {
+      console.error(`  - ${issue.path.join(".")}: ${issue.message}`)
+      console.error(
+        `  - Current value:`,
+        clientEnv[issue.path[0] as keyof typeof clientEnv]
+      )
+    })
+    throw new Error("Invalid client environment variables")
+  }
+
+  return result.data
 }
 
-export const env = parsedEnv.data
+export const env = {
+  ...(typeof window === "undefined" ? validateServerEnv() : {}),
+  ...validateClientEnv(),
+} as z.infer<typeof serverSchema> & z.infer<typeof clientSchema>
+
+export type Env = typeof env
