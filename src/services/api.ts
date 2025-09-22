@@ -1,6 +1,6 @@
 import { request } from "@stacks/connect"
-import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network"
 import { apiClient } from "@/lib/config/api-client"
+import { env } from "@/lib/config/env"
 
 import {
   TFtBalancesResponse,
@@ -8,19 +8,11 @@ import {
   TTestCoin,
 } from "./type"
 
-const NETWORK_ENV = process.env.NEXT_PUBLIC_NETWORK
-const NETWORK =
-  NETWORK_ENV === "testnet"
-    ? STACKS_TESTNET
-    : NETWORK_ENV === "mainnet"
-      ? STACKS_MAINNET
-      : STACKS_DEVNET
-
 export class ApiService {
   private static readonly BASE_PATH =
-    NETWORK === STACKS_TESTNET
+    env.NETWORK === "testnet"
       ? "https://api.testnet.hiro.so/extended"
-      : NETWORK === STACKS_MAINNET
+      : env.NETWORK === "mainnet"
         ? "https://api.hiro.so/extended"
         : "http://localhost:3999/extended"
 
@@ -55,7 +47,6 @@ export class ApiService {
   }
 }
 
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ""
 const CONTRACT_NAME = "marketplace"
 
 export const getRequest = async ({
@@ -69,10 +60,10 @@ export const getRequest = async ({
 }) => {
   try {
     const response = await request("stx_callContract", {
-      contract: `${CONTRACT_ADDRESS}.${CONTRACT_NAME}`,
+      contract: `${env.CONTRACT_ADDRESS}.${CONTRACT_NAME}`,
       functionName: functionName,
       functionArgs: args,
-      network: NETWORK,
+      network: env.NETWORK,
       postConditionMode: postMode ? "allow" : "deny",
     })
     return response

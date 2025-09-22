@@ -6,16 +6,8 @@ import { StacksPayload } from "@hirosystems/chainhook-client"
 import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network"
 import { fetchCallReadOnlyFunction } from "@stacks/transactions"
 import { inArray } from "drizzle-orm"
+import { env } from "@/lib/config/env"
 import { processRouteTransactions } from "@/lib/utils"
-
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ""
-const NETWORK_ENV = process.env.NEXT_PUBLIC_NETWORK
-const NETWORK =
-  NETWORK_ENV === "testnet"
-    ? STACKS_TESTNET
-    : NETWORK_ENV === "mainnet"
-      ? STACKS_MAINNET
-      : STACKS_DEVNET
 
 async function saveTokenAndAssetData(contract: string, tokenData: TCoinSchema) {
   try {
@@ -77,8 +69,8 @@ async function processTokenUri(contract: string): Promise<boolean> {
       contractName: contractParts[1],
       functionName: "get-token-uri",
       functionArgs: [],
-      senderAddress: CONTRACT_ADDRESS,
-      network: NETWORK,
+      senderAddress: env.CONTRACT_ADDRESS,
+      network: env.NETWORK,
     })
 
     if (getTokenUri.type !== "ok") {

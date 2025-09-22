@@ -14,7 +14,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push"
   },
-  "packageManager": "pnpm@10.0.0",
+  "packageManager": "pnpm@10.17.0",
   "engines": {
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
