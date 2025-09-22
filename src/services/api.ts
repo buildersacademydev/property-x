@@ -3,6 +3,7 @@ import { apiClient } from "@/lib/config/api-client"
 import { env } from "@/lib/config/env"
 
 import {
+  TBlockHeightResponse,
   TFtBalancesResponse,
   TPostBalancesWhitelistResponse,
   TTestCoin,
@@ -15,6 +16,11 @@ export class ApiService {
       : env.NETWORK === "mainnet"
         ? "https://api.hiro.so/extended"
         : "http://localhost:3999/extended"
+
+  static async getBlockHeight(): Promise<TBlockHeightResponse> {
+    const response = await apiClient.get(`${this.BASE_PATH}`)
+    return response.data
+  }
 
   static async getAccountAssets(stxAddress: string): Promise<void> {
     const response = await apiClient.get(

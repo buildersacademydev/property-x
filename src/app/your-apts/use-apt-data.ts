@@ -1,6 +1,6 @@
 import { useWallet } from "@/providers/wallet-provider"
 import { postBalancesWhitelist } from "@/services/mutation-options"
-import { getFtBalances } from "@/services/query-options"
+import { getBlockHeight, getFtBalances } from "@/services/query-options"
 import { TPostBalancesWhitelistResponse } from "@/services/type"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import React from "react"
@@ -21,6 +21,11 @@ export function useAptData() {
     enabled: connected && !!stxAddress,
     staleTime: 5 * 60 * 1000,
     retry: 2,
+  })
+
+  const { data: blockHeightData, isSuccess: blockHeightSuccess } = useQuery({
+    ...getBlockHeight(),
+    enabled: connected,
   })
 
   const whitelistMutation = useMutation({
@@ -57,7 +62,10 @@ export function useAptData() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, data])
 
+  const currentBlockHeight = blockHeightData?.chain_tip.block_height
+
   return {
+    currentBlockHeight,
     items: whitelistQuery.data?.items ?? whitelistMutation.data?.items ?? [],
     isLoading: whitelistMutation.isPending,
     isSuccess: whitelistQuery.isSuccess && whitelistMutation.isSuccess,

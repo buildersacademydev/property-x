@@ -67,11 +67,22 @@ async function processTokenUri(contract: string): Promise<boolean> {
     const getTokenUri = await fetchCallReadOnlyFunction({
       contractAddress: contractParts[0],
       contractName: contractParts[1],
-      functionName: "get-token-uri",
+      functionName: "get-token-uri", // get-decimal
       functionArgs: [],
       senderAddress: env.CONTRACT_ADDRESS,
       network: env.NETWORK,
     })
+
+    const u8u6 = await fetchCallReadOnlyFunction({
+      contractAddress: contractParts[0],
+      contractName: contractParts[1],
+      functionName: "get-decimals",
+      functionArgs: [],
+      senderAddress: env.CONTRACT_ADDRESS,
+      network: env.NETWORK,
+    })
+
+    console.log("u8u6", u8u6)
 
     if (getTokenUri.type !== "ok") {
       console.warn(`Token URI call failed for ${contract}`)

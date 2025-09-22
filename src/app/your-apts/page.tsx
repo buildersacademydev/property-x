@@ -7,10 +7,11 @@ import { Card } from "@/components/ui/card"
 import { Icons } from "@/components/common/icons"
 import { NextLink } from "@/components/common/next-link"
 
+import { ListForSaleDialog } from "./_components/list-for-sale"
 import { useAptData } from "./use-apt-data"
 
 const Apts = () => {
-  const { items, isLoading } = useAptData()
+  const { currentBlockHeight, items, isLoading } = useAptData()
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -113,13 +114,12 @@ const Apts = () => {
                     </div>
 
                     <div className="mt-6 flex flex-col gap-4 sm:flex-row">
-                      <Button className="flex-1" asChild>
-                        <NextLink
-                          href={`/your-apts/${encodeURIComponent(contract)}`}
-                        >
-                          List for Sale
-                        </NextLink>
-                      </Button>
+                      {currentBlockHeight ? (
+                        <ListForSaleDialog
+                          contract={contract}
+                          currentBlockHeight={currentBlockHeight}
+                        />
+                      ) : null}
                       <Button className="flex-1" variant="outline">
                         Stake APT
                       </Button>

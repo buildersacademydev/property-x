@@ -2,7 +2,7 @@ import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
 import { TListingSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
-import { processRouteTransactions } from "@/lib/utils"
+import { debugConsole, processRouteTransactions } from "@/lib/utils"
 
 export async function POST(request: Request) {
   const payload: StacksPayload = await request.json()
@@ -11,19 +11,22 @@ export async function POST(request: Request) {
     transactions,
   })
 
-  await db.insert(listings).values(
-    processedValues.map((values) => ({
-      amount: values.amount,
-      assetContract: values["asset-contract"],
-      expiry: values.expiry,
-      listingId: values["listing-id"],
-      maker: values.maker,
-      paymentAssetContract: values["payment-asset-contract"],
-      price: values.price,
-      taker: values.taker,
-      topic: values.topic,
-    }))
-  )
+  console.log("transactions Values: ", debugConsole(transactions))
+  console.log("processedValues: ", processedValues)
+
+  // await db.insert(listings).values(
+  //   processedValues.map((values) => ({
+  //     amount: values.amount,
+  //     assetContract: values["asset-contract"],
+  //     expiry: values.expiry,
+  //     listingId: values["listing-id"],
+  //     maker: values.maker,
+  //     paymentAssetContract: values["payment-asset-contract"],
+  //     price: values.price,
+  //     taker: values.taker,
+  //     topic: values.topic,
+  //   }))
+  // )
 
   return new Response("Listing successful", { status: 200 })
 }

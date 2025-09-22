@@ -1,4 +1,6 @@
+import util from "util"
 import { StacksPayload } from "@hirosystems/chainhook-client"
+import { Cl } from "@stacks/transactions"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -34,4 +36,13 @@ export function processRouteTransactions<T>({
   })
 
   return values
+}
+
+export function safeUint(value: string | number) {
+  const num = BigInt(value || 0)
+  return Cl.uint(num)
+}
+
+export function debugConsole(args: any) {
+  return util.inspect(args, { depth: null, colors: true })
 }
