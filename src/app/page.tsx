@@ -119,7 +119,6 @@ export default function PropertyXLanding() {
                   </p>
                 </div>
 
-                {/* Trust Indicators */}
                 <div
                   className="flex animate-in flex-wrap gap-2 text-sm
                     text-muted-foreground delay-900 duration-1000 fade-in"
@@ -135,7 +134,6 @@ export default function PropertyXLanding() {
                   </div>
                 </div>
 
-                {/* CTAs */}
                 <div
                   className="flex animate-in flex-col gap-4 delay-1100
                     duration-1000 slide-in-from-left-2 sm:flex-row"
@@ -148,7 +146,6 @@ export default function PropertyXLanding() {
                 </div>
               </div>
 
-              {/* Right Column - Token Dashboard Preview */}
               <div
                 className="animate-in space-y-6 delay-500 duration-1000
                   slide-in-from-right-8"

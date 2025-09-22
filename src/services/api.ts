@@ -3,7 +3,6 @@ import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network"
 import { apiClient } from "@/lib/config/api-client"
 
 import {
-  TBlockHeightResponse,
   TFtBalancesResponse,
   TPostBalancesWhitelistResponse,
   TTestCoin,
@@ -24,11 +23,6 @@ export class ApiService {
       : NETWORK === STACKS_MAINNET
         ? "https://api.hiro.so/extended"
         : "http://localhost:3999/extended"
-
-  static async getBlockHeight(): Promise<TBlockHeightResponse> {
-    const response = await apiClient.get(`${this.BASE_PATH}`)
-    return response.data
-  }
 
   static async getAccountAssets(stxAddress: string): Promise<void> {
     const response = await apiClient.get(

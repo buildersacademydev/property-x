@@ -26,6 +26,7 @@ const Nav = () => {
             {[
               { label: "Your Apts", href: "your-apts" },
               { label: "Your Listings", href: "your-listings" },
+              { label: "Profile", href: "profile" },
             ].map((link) => (
               <Button
                 variant={"ghost"}
