@@ -1,4 +1,5 @@
 import { request } from "@stacks/connect"
+import { toast } from "sonner"
 import { apiClient } from "@/lib/config/api-client"
 import { env } from "@/lib/config/env"
 
@@ -75,7 +76,7 @@ export const getRequest = async ({
     return response
   } catch (error) {
     console.error("Error calling contract:", error)
-    alert(
+    toast.error(
       "Error calling contract: " +
         (error instanceof Error ? error.message : "Unknown error")
     )

@@ -22,7 +22,7 @@ const ConnectWallet = ({ isNav = false, ...props }: ConnectWalletProps) => {
     if (!connected) {
       getConnect()
     } else if (connected) {
-      router.push("/marketplace")
+      router.push("/explore")
     }
   }
 

@@ -1,7 +1,9 @@
-import { Slot } from "@radix-ui/react-slot"
+import { Slot, Slottable } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
 import { cn } from "@/lib/utils"
+
+import { Icons } from "../common/icons"
 
 const buttonVariants = cva(
   `inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm
@@ -46,20 +48,37 @@ function Button({
   className,
   variant,
   size,
+  loading = false,
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    loading?: boolean
   }) {
   const Comp = asChild ? Slot : "button"
+  const buttonClasses = cn(buttonVariants({ variant, size, className }))
+
+  if (asChild) {
+    return (
+      <Comp data-slot="button" className={buttonClasses} {...props}>
+        {props.children}
+      </Comp>
+    )
+  }
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={buttonClasses}
+      disabled={loading || props.disabled}
       {...props}
-    />
+    >
+      <Slottable>
+        {loading && <Icons.spinner size={16} className="mr-2" />}
+        {props.children}
+      </Slottable>
+    </Comp>
   )
 }
 

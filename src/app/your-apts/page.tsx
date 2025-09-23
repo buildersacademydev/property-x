@@ -105,7 +105,7 @@ const Apts = () => {
                           <p className="font-medium">{tokenName}</p>
                         </div>
                         <div>
-                          <p className="text-muted-foreground">Tokens Owned</p>
+                          <p className="text-muted-foreground">Balance</p>
                           <p className="font-medium">
                             {formatNumber(balanceNum)}
                           </p>

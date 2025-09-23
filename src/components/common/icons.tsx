@@ -9,6 +9,7 @@ import {
   DollarSign,
   Download,
   ExternalLink,
+  Loader2,
   LucideProps,
   Menu,
   Play,
@@ -51,6 +52,9 @@ export const Icons = {
   unplug: (props: IconProps) => <Unplug {...props} />,
   store: (props: IconProps) => <Store {...props} />,
   power: (props: IconProps) => <Power {...props} />,
+  spinner: (props: IconProps) => (
+    <Loader2 {...props} className="animate-spin" />
+  ),
 } as const
 
 export type TIconName = keyof typeof Icons

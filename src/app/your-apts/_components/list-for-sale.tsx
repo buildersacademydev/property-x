@@ -1,8 +1,11 @@
 "use client"
 
 import { getRequest } from "@/services/api"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Cl } from "@stacks/transactions"
+import { useForm } from "react-hook-form"
 import { toast } from "sonner"
+import * as z from "zod"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { env } from "@/lib/config/env"
@@ -16,6 +19,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+const formSchema = z.object({
+  listingPrice: z.number().positive("Enter a valid price > 0"),
+  amount: z.number().positive("Enter a valid amount > 0"),
+  paymentAsset: z.string(),
+  listingDuration: z.string(),
+  targetBuyer: z.string().optional(),
+})
+
+type FormValues = z.infer<typeof formSchema>
 
 type Props = {
   contract: string
@@ -27,40 +56,42 @@ export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    if (loading) return
-    const form = e.currentTarget
-    const fd = new FormData(form)
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      listingPrice: 0,
+      amount: 0,
+      paymentAsset: "STX",
+      listingDuration: "20927",
+      targetBuyer: "",
+    },
+  })
 
-    const price = Number(fd.get("listingPrice") || 0)
-    const amount = Number(fd.get("amount") || 0)
-    const paymentAsset = String(fd.get("paymentAsset") || "STX")
-    const listingDuration = String(fd.get("listingDuration") || "7 days")
-    const targetBuyer = String(fd.get("targetBuyer") || "").trim()
+  async function onSubmit(values: FormValues) {
+    if (loading) return
+
     if (!contract) return toast.error("Missing asset contract")
-    if (!isFinite(price) || price <= 0)
-      return toast.error("Enter a valid price > 0")
-    if (!Number.isFinite(amount) || amount <= 0)
-      return toast.error("Enter a valid amount > 0")
 
     try {
       setLoading(true)
-      const finalPrice = paymentAsset !== "STX" ? price * 100 : price
+      const finalPrice =
+        values.paymentAsset !== "STX"
+          ? values.listingPrice * 100
+          : values.listingPrice
       const ftArgs = [
         Cl.contractPrincipal(env.CONTRACT_ADDRESS, "mock-token"),
         Cl.tuple({
           taker: Cl.none(),
-          amt: safeUint(amount * 1000000),
-          expiry: safeUint(currentBlockHeight + listingDuration),
+          amt: safeUint(values.amount * 1000000),
+          expiry: safeUint(currentBlockHeight + Number(values.listingDuration)),
           price: safeUint(finalPrice),
           "payment-asset-contract":
-            paymentAsset === "STX"
+            values.paymentAsset === "STX"
               ? Cl.none()
-              : Cl.some(Cl.principal(paymentAsset)),
+              : Cl.some(Cl.principal(values.paymentAsset)),
         }),
       ]
-      await getRequest({
+      const res = await getRequest({
         args: ftArgs,
         functionName: "list-asset-ft",
       })
@@ -68,10 +99,8 @@ export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
       router.push("/your-listing")
     } catch (err: any) {
       toast.error(String(err?.message || err || "Failed to create listing"))
-      setLoading(false)
     } finally {
       setLoading(false)
-      setOpen(false)
     }
   }
 
@@ -87,99 +116,144 @@ export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
             Set your listing details and publish.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit} className="grid gap-4">
-          <input type="hidden" name="assetContract" value={contract} />
-
-          <div className="grid gap-2">
-            <label className="text-sm font-medium">Listing Price</label>
-            <input
-              className="rounded-md border bg-background px-3 py-2"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+            <FormField
+              control={form.control}
               name="listingPrice"
-              type="number"
-              step="any"
-              required
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Listing Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      step="any"
+                      placeholder="Enter price"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="grid gap-2">
-            <label className="text-sm font-medium">Amount</label>
-            <input
-              className="rounded-md border bg-background px-3 py-2"
+            <FormField
+              control={form.control}
               name="amount"
-              type="number"
-              required
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter amount"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="grid gap-2">
-            <label className="text-sm font-medium">
-              FT Asset Contract Address
-            </label>
-            <input
-              className="rounded-md border bg-muted px-3 py-2
-                text-muted-foreground"
-              type="text"
-              disabled
-              value="ST3Y14WTFX25M75376066Q8V5YY1RCBCDE0KC5MBF.tech"
-              readOnly
-            />
-          </div>
+            <div className="grid gap-2">
+              <label className="text-sm font-medium">
+                FT Asset Contract Address
+              </label>
+              <Input
+                className="bg-muted text-muted-foreground"
+                type="text"
+                disabled
+                value="ST3Y14WTFX25M75376066Q8V5YY1RCBCDE0KC5MBF.tech"
+                readOnly
+              />
+            </div>
 
-          <div className="grid gap-2">
-            <label className="text-sm font-medium">Payment Asset</label>
-            <select
-              className="rounded-md border bg-background px-3 py-2"
+            <FormField
+              control={form.control}
               name="paymentAsset"
-              defaultValue="STX"
-            >
-              <option value="STX">STX</option>
-              <option value="SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token">
-                SBTC
-              </option>
-              <option value="SPN5AKG35QZSK2M8GAMR4AFX45659RJHDW353HSG.usdh-token-v1">
-                USDC
-              </option>
-            </select>
-          </div>
-
-          <div className="grid gap-2">
-            <label className="text-sm font-medium">Listing Duration</label>
-            <select
-              className="rounded-md border bg-background px-3 py-2"
-              name="listingDuration"
-              defaultValue="7 days"
-            >
-              <option value="20927">7 Days</option>
-              <option value="41855">14 Days</option>
-              <option value="89689">30 Days</option>
-              <option value="179377">60 Days</option>
-              <option value="269066">90 Days</option>
-            </select>
-          </div>
-
-          <div className="grid gap-2">
-            <label className="text-sm font-medium">
-              Target Buyer (optional)
-            </label>
-            <input
-              className="rounded-md border bg-background px-3 py-2"
-              name="targetBuyer"
-              type="text"
-              placeholder="Stacks address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Payment Asset</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select payment asset" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="STX">STX</SelectItem>
+                      <SelectItem value="SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token">
+                        SBTC
+                      </SelectItem>
+                      <SelectItem value="SPN5AKG35QZSK2M8GAMR4AFX45659RJHDW353HSG.usdh-token-v1">
+                        USDC
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="flex gap-3 pt-2">
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={loading}
-              aria-busy={loading}
-            >
-              {loading ? "Listing..." : "List"}
-            </Button>
-          </div>
-        </form>
+            <FormField
+              control={form.control}
+              name="listingDuration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Listing Duration</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select duration" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="20927">7 Days</SelectItem>
+                      <SelectItem value="41855">14 Days</SelectItem>
+                      <SelectItem value="89689">30 Days</SelectItem>
+                      <SelectItem value="179377">60 Days</SelectItem>
+                      <SelectItem value="269066">90 Days</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="targetBuyer"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Target Buyer (optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Stacks address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex gap-3 pt-2">
+              <Button
+                type="submit"
+                className="flex-1"
+                disabled={loading}
+                loading={loading}
+              >
+                List Apt
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )
