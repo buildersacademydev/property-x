@@ -46,3 +46,7 @@ export function safeUint(value: string | number) {
 export function debugConsole(args: any) {
   return util.inspect(args, { depth: null, colors: true })
 }
+
+export function convertAmount(amount: number) {
+  return amount / 1_000_000
+}

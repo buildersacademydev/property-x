@@ -165,7 +165,7 @@ export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
                 className="bg-muted text-muted-foreground"
                 type="text"
                 disabled
-                value="ST3Y14WTFX25M75376066Q8V5YY1RCBCDE0KC5MBF.tech"
+                value="ST3Y14WTFX25M75376066Q8V5YY1RCBCDE0KC5MBF.mock-token"
                 readOnly
               />
             </div>

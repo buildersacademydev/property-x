@@ -1,10 +1,13 @@
 "use client"
 
+import { getRequest } from "@/services/api"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Cl } from "@stacks/transactions"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
 import React, { useState } from "react"
+import { env } from "@/lib/config/env"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -18,7 +21,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -83,7 +85,16 @@ export function BuyNowDialog({
     setIsLoading(true)
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      const args = [
+        Cl.uint(listing.listingId),
+        Cl.contractPrincipal(env.CONTRACT_ADDRESS, "mock-token"),
+        Cl.uint(data.amount),
+      ]
+
+      await getRequest({
+        args,
+        functionName: "fulfil-listing-ft-stx",
+      })
 
       toast.success(
         `Successfully purchased ${data.amount} tokens of ${listing.assetName}`
@@ -132,9 +143,6 @@ export function BuyNowDialog({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Available: {listing.amount} tokens
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

@@ -3,6 +3,7 @@ import { assets, listings, tcoins, whiteListing } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import React from "react"
 import Image from "next/image"
+import { convertAmount } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -40,7 +41,6 @@ type ListingWithDetails = {
 }
 
 const Page = async () => {
-  // Fetch listings with joined data
   const listingsData = await db
     .select({
       listingId: listings.listingId,
@@ -75,7 +75,7 @@ const Page = async () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold">Your Listings</h1>
+      <h1 className="mb-8 text-3xl font-bold">Marketplace Listings</h1>
 
       {listingsData.length === 0 ? (
         <div className="py-12 text-center">
@@ -93,9 +93,6 @@ const Page = async () => {
 }
 
 function ListingCard({ listing }: { listing: ListingWithDetails }) {
-  const expiryDate = new Date(listing.expiry * 1000).toLocaleDateString()
-  const isExpired = listing.expiry * 1000 < Date.now()
-
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-3">
@@ -117,23 +114,19 @@ function ListingCard({ listing }: { listing: ListingWithDetails }) {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-muted-foreground">Price</p>
-            <p className="font-semibold">{listing.price} tokens</p>
+            <p className="font-semibold">{listing.price}</p>
           </div>
           <div>
             <p className="text-muted-foreground">Amount</p>
-            <p className="font-semibold">{listing.amount}</p>
+            <p className="font-semibold">{convertAmount(listing.amount)}</p>
           </div>
           <div>
             <p className="text-muted-foreground">APR</p>
             <p className="font-semibold">{listing.assetApr}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Expires</p>
-            <p
-              className={`font-semibold ${isExpired ? "text-destructive" : ""}`}
-            >
-              {expiryDate}
-            </p>
+            <p className="text-muted-foreground">Tokens</p>
+            <p className={"font-semibold"}>{listing.assetTokens}</p>
           </div>
         </div>
       </CardContent>
