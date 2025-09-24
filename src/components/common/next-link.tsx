@@ -9,19 +9,11 @@ export type { LinkProps }
 
 export function NextLink({
   children,
-  prefetch = false,
+  prefetch = true,
   ...props
 }: NextLinkProps) {
-  const router = useRouter()
-
   return (
-    <Link
-      {...props}
-      prefetch={prefetch}
-      onMouseEnter={() => {
-        router.prefetch(props.href as string)
-      }}
-    >
+    <Link {...props} prefetch={prefetch}>
       {children}
     </Link>
   )

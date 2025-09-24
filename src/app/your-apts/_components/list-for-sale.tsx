@@ -1,15 +1,16 @@
 "use client"
 
 import { getRequest } from "@/services/api"
+import { listAptForSale } from "@/services/mutation-options"
+import { listForSaleSchema } from "@/services/schema"
+import { TListForSaleSchema } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Cl } from "@stacks/transactions"
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import * as z from "zod"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { env } from "@/lib/config/env"
-import { safeUint } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -36,16 +37,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-const formSchema = z.object({
-  listingPrice: z.number().positive("Enter a valid price > 0"),
-  amount: z.number().positive("Enter a valid amount > 0"),
-  paymentAsset: z.string(),
-  listingDuration: z.string(),
-  targetBuyer: z.string().optional(),
-})
-
-type FormValues = z.infer<typeof formSchema>
-
 type Props = {
   contract: string
   currentBlockHeight: number
@@ -53,11 +44,10 @@ type Props = {
 
 export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
   const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<TListForSaleSchema>({
+    resolver: zodResolver(listForSaleSchema),
     defaultValues: {
       listingPrice: 0,
       amount: 0,
@@ -67,41 +57,20 @@ export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
     },
   })
 
-  async function onSubmit(values: FormValues) {
-    if (loading) return
+  const listAptMutation = useMutation({
+    ...listAptForSale(),
+    onSuccess: () => {
+      form.reset()
+      toast.success("Contract whitelist status updated successfully")
+    },
+    onError: (error) => {
+      toast.error(`Error updating whitelist status: ${error.message}`)
+    },
+  })
 
+  async function onSubmit(values: TListForSaleSchema) {
     if (!contract) return toast.error("Missing asset contract")
-
-    try {
-      setLoading(true)
-      const finalPrice =
-        values.paymentAsset !== "STX"
-          ? values.listingPrice * 100
-          : values.listingPrice
-      const ftArgs = [
-        Cl.contractPrincipal(env.CONTRACT_ADDRESS, "mock-token"),
-        Cl.tuple({
-          taker: Cl.none(),
-          amt: safeUint(values.amount * 1000000),
-          expiry: safeUint(currentBlockHeight + Number(values.listingDuration)),
-          price: safeUint(finalPrice),
-          "payment-asset-contract":
-            values.paymentAsset === "STX"
-              ? Cl.none()
-              : Cl.some(Cl.principal(values.paymentAsset)),
-        }),
-      ]
-      const res = await getRequest({
-        args: ftArgs,
-        functionName: "list-asset-ft",
-      })
-      setOpen(false)
-      router.push("/your-listing")
-    } catch (err: any) {
-      toast.error(String(err?.message || err || "Failed to create listing"))
-    } finally {
-      setLoading(false)
-    }
+    listAptMutation.mutate({ currentBlockHeight, ...values })
   }
 
   return (
@@ -246,8 +215,7 @@ export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
               <Button
                 type="submit"
                 className="flex-1"
-                disabled={loading}
-                loading={loading}
+                loading={listAptMutation.isPending}
               >
                 List Apt
               </Button>

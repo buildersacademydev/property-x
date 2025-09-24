@@ -1,3 +1,11 @@
+import { z } from "zod"
+
+import {
+  listForSaleSchema,
+  marketplaceSchema,
+  whitelistContractSchema,
+} from "./schema"
+
 export interface TBlockHeightResponse {
   server_version: string
   status: string
@@ -58,11 +66,6 @@ export interface TListingSchema {
   topic: string
 }
 
-export interface TWhiteListSchema {
-  isWhitelisted: boolean
-  whitelisted: string
-}
-
 export interface TCoinSchema {
   name: string
   description: string
@@ -101,4 +104,11 @@ export interface TPostBalancesWhitelistResponse {
     description: string
     staking: boolean
   } | null
+}
+
+export type TWhitelistContractSchema = z.infer<typeof whitelistContractSchema>
+export type TMarketplaceSchema = z.infer<typeof marketplaceSchema>
+export type TListForSaleSchema = z.infer<typeof listForSaleSchema>
+export type TListSaleBlockHeight = TListForSaleSchema & {
+  currentBlockHeight: number
 }

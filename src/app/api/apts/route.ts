@@ -27,6 +27,8 @@ export async function POST(request: Request) {
         )
       )
 
+    console.log("Whitelisted Rows:", whitelistedRows)
+
     const whitelistedSet = new Set(whitelistedRows.map((r) => r.whitelisted))
     if (!whitelistedSet.size) {
       return NextResponse.json({ items: [] }, { status: 200 })
@@ -95,7 +97,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ items }, { status: 200 })
   } catch (err) {
-    console.error("/api/apts error:", err)
     return NextResponse.json(
       { error: "Failed to process balances" },
       { status: 500 }

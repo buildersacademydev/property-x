@@ -4,6 +4,7 @@ import { Geist_Mono } from "next/font/google"
 import "./globals.css"
 
 import RootProviders from "@/providers/root-providers"
+import { Toaster } from "@/components/ui/sonner"
 import Footer from "@/components/common/footer"
 import Nav from "@/components/common/nav"
 
@@ -33,6 +34,12 @@ export default function RootLayout({
           {children}
           <Footer />
         </RootProviders>
+        <Toaster
+          position="bottom-right"
+          richColors
+          closeButton
+          duration={3000}
+        />
       </body>
     </html>
   )

@@ -1,9 +1,8 @@
 import { db } from "@/db/drizzle"
 import { assets, tcoins, whiteListing } from "@/db/schema"
 import { ApiService } from "@/services/api"
-import { TCoinSchema, TWhiteListSchema } from "@/services/type"
+import { TCoinSchema, TWhitelistContractSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
-import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network"
 import { fetchCallReadOnlyFunction } from "@stacks/transactions"
 import { inArray } from "drizzle-orm"
 import { env } from "@/lib/config/env"
@@ -94,7 +93,7 @@ async function processTokenUri(contract: string): Promise<boolean> {
       console.warn(`Invalid token data structure for ${contract}`)
       return false
     }
-
+    console.log(`Fetched token data for ${contract}:`, tokenData)
     await saveTokenAndAssetData(contract, tokenData)
     return true
   } catch (error) {
@@ -118,7 +117,7 @@ export async function POST(request: Request) {
   try {
     const payload: StacksPayload = await request.json()
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
-    const processedValues = processRouteTransactions<TWhiteListSchema>({
+    const processedValues = processRouteTransactions<TWhitelistContractSchema>({
       transactions,
     })
 
@@ -164,23 +163,13 @@ export async function POST(request: Request) {
         .where(inArray(whiteListing.whitelisted, toDelete))
 
       await cleanupOrphanedData(toDelete)
-      console.log(`Removed ${toDelete.length} contracts from whitelist`)
     }
 
     if (toInsert.length > 0) {
       await db.insert(whiteListing).values(toInsert).onConflictDoNothing()
-      console.log(`Added ${toInsert.length} contracts to whitelist`)
 
-      const results = await Promise.allSettled(
+      await Promise.allSettled(
         toInsert.map((item) => processTokenUri(item.whitelisted))
-      )
-
-      const successCount = results.filter(
-        (result) => result.status === "fulfilled" && result.value === true
-      ).length
-
-      console.log(
-        `Successfully processed token data for ${successCount}/${toInsert.length} contracts`
       )
     }
 
@@ -196,7 +185,6 @@ export async function POST(request: Request) {
       }
     )
   } catch (error) {
-    console.error("Error processing whitelist:", error)
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

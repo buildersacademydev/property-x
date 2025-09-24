@@ -23,7 +23,7 @@ export function useAptData() {
     retry: 2,
   })
 
-  const { data: blockHeightData, isSuccess: blockHeightSuccess } = useQuery({
+  const { data: blockHeightData } = useQuery({
     ...getBlockHeight(),
     enabled: connected,
   })
@@ -31,7 +31,6 @@ export function useAptData() {
   const whitelistMutation = useMutation({
     ...postBalancesWhitelist(),
     onSuccess: (res) => {
-      console.log("✅ Whitelist response:", res)
       queryClient.setQueryData<CachedResponse>(
         ["apt-data", stxAddress],
         res as CachedResponse

@@ -1,10 +1,12 @@
 "use client"
 
-import { getRequest } from "@/services/api"
+import { whitelistContract } from "@/services/mutation-options"
+import { marketplaceSchema, whitelistContractSchema } from "@/services/schema"
+import { TMarketplaceSchema, TWhitelistContractSchema } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Cl } from "@stacks/transactions"
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { toast } from "sonner"
 import React from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,49 +27,38 @@ import {
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-const whitelistSchema = z.object({
-  contractAddress: z
-    .string()
-    .min(1, "Contract address is required")
-    .regex(
-      /^[a-zA-Z0-9]+\.{1}[a-zA-Z0-9_-]+$/,
-      "Contract address must be in the format: address.contractName"
-    ),
-  isWhitelisted: z.enum(["true", "false"] as const),
-})
-
-const marketplaceSchema = z.object({
-  principal: z.string().min(1, "Principal is required"),
-  role: z.enum(["admin", "fulfill"] as const),
-})
-
 const Admin = () => {
-  const whitelistForm = useForm<z.infer<typeof whitelistSchema>>({
-    resolver: zodResolver(whitelistSchema),
-    defaultValues: { contractAddress: "", isWhitelisted: "true" },
+  const whitelistForm = useForm<TWhitelistContractSchema>({
+    resolver: zodResolver(whitelistContractSchema),
+    defaultValues: { whitelisted: "", isWhitelisted: true },
     mode: "onChange",
   })
 
-  const marketplaceForm = useForm<z.infer<typeof marketplaceSchema>>({
+  const marketplaceForm = useForm<TMarketplaceSchema>({
     resolver: zodResolver(marketplaceSchema),
     defaultValues: { principal: "", role: "admin" },
     mode: "onChange",
   })
 
-  const onSubmitWhitelist = async (values: z.infer<typeof whitelistSchema>) => {
-    const contract = values.contractAddress.split(".")
-    const args = [
-      Cl.contractPrincipal(contract[0], contract[1]),
-      Cl.bool(values.isWhitelisted === "true"),
-    ]
-    await getRequest({
-      args: args,
-      functionName: "set-whitelisted",
-      postMode: false,
+  const whitelistMutation = useMutation({
+    ...whitelistContract(),
+    onSuccess: () => {
+      whitelistForm.reset()
+      toast.success("Contract whitelist status updated successfully")
+    },
+    onError: (error) => {
+      toast.error(`Error updating whitelist status: ${error.message}`)
+    },
+  })
+
+  const onSubmitWhitelist = async (values: TWhitelistContractSchema) => {
+    whitelistMutation.mutate({
+      whitelisted: values.whitelisted,
+      isWhitelisted: values.isWhitelisted,
     })
   }
 
-  const onSubmitMarketplace = (values: z.infer<typeof marketplaceSchema>) => {
+  const onSubmitMarketplace = (values: TMarketplaceSchema) => {
     console.log("Marketplace update submit", values)
   }
 
@@ -91,7 +82,7 @@ const Admin = () => {
             >
               <FormField
                 control={whitelistForm.control}
-                name="contractAddress"
+                name="whitelisted"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Contract Address</FormLabel>
@@ -112,8 +103,8 @@ const Admin = () => {
                     <FormControl>
                       <RadioGroup
                         className="grid grid-cols-2 gap-3"
-                        value={field.value}
-                        onValueChange={field.onChange}
+                        value={field.value.toString()}
+                        onValueChange={(val) => field.onChange(val === "true")}
                       >
                         <label
                           className="inline-flex items-center gap-2 text-sm"
@@ -133,7 +124,9 @@ const Admin = () => {
               />
 
               <div className="flex justify-end">
-                <Button type="submit">Submit</Button>
+                <Button type="submit" loading={whitelistMutation.isPending}>
+                  Submit
+                </Button>
               </div>
             </form>
           </Form>

@@ -1,13 +1,18 @@
 import { request } from "@stacks/connect"
+import { Cl } from "@stacks/transactions"
 import { toast } from "sonner"
 import { apiClient } from "@/lib/config/api-client"
 import { env } from "@/lib/config/env"
+import { getContractNameAddress, safeUint } from "@/lib/utils"
 
 import {
   TBlockHeightResponse,
   TFtBalancesResponse,
+  TListForSaleSchema,
+  TListSaleBlockHeight,
   TPostBalancesWhitelistResponse,
   TTestCoin,
+  TWhitelistContractSchema,
 } from "./type"
 
 export class ApiService {
@@ -20,13 +25,6 @@ export class ApiService {
 
   static async getBlockHeight(): Promise<TBlockHeightResponse> {
     const response = await apiClient.get(`${this.BASE_PATH}`)
-    return response.data
-  }
-
-  static async getAccountAssets(stxAddress: string): Promise<void> {
-    const response = await apiClient.get(
-      `${this.BASE_PATH}/v1/address/${stxAddress}/assets`
-    )
     return response.data
   }
 
@@ -61,24 +59,67 @@ export const getRequest = async ({
   postMode = true,
   functionName,
 }: {
-  args: any[]
+  args: any
   postMode?: boolean
   functionName: string
 }) => {
   try {
-    const response = await request("stx_callContract", {
+    return await request("stx_callContract", {
       contract: `${env.CONTRACT_ADDRESS}.${CONTRACT_NAME}`,
-      functionName: functionName,
+      functionName,
       functionArgs: args,
       network: env.NETWORK,
       postConditionMode: postMode ? "allow" : "deny",
     })
-    return response
   } catch (error) {
-    console.error("Error calling contract:", error)
-    toast.error(
-      "Error calling contract: " +
-        (error instanceof Error ? error.message : "Unknown error")
-    )
+    throw error instanceof Error
+      ? error
+      : new Error("Unknown contract call error")
+  }
+}
+
+export class ContractService {
+  static async whitelistContract({
+    whitelisted,
+    isWhitelisted,
+  }: TWhitelistContractSchema) {
+    const { contractAddress, contractName } =
+      getContractNameAddress(whitelisted)
+    const args = [
+      Cl.contractPrincipal(contractAddress, contractName),
+      Cl.bool(isWhitelisted),
+    ]
+    return await getRequest({
+      args,
+      functionName: "set-whitelisted",
+      postMode: false,
+    })
+  }
+
+  static async listAptForSale({
+    currentBlockHeight,
+    ...values
+  }: TListSaleBlockHeight) {
+    const finalPrice =
+      values.paymentAsset !== "STX"
+        ? values.listingPrice * 100
+        : values.listingPrice
+    const args = [
+      Cl.contractPrincipal(env.CONTRACT_ADDRESS, "mock-token"),
+      Cl.tuple({
+        taker: Cl.none(),
+        amt: safeUint(values.amount * 1000000),
+        expiry: safeUint(currentBlockHeight + Number(values.listingDuration)),
+        price: safeUint(finalPrice),
+        "payment-asset-contract":
+          values.paymentAsset === "STX"
+            ? Cl.none()
+            : Cl.some(Cl.principal(values.paymentAsset)),
+      }),
+    ]
+    return await getRequest({
+      args,
+      functionName: "list-asset-ft",
+    })
   }
 }

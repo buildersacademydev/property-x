@@ -1,4 +1,5 @@
 import util from "util"
+import { TWhitelistContractSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { Cl } from "@stacks/transactions"
 import { clsx, type ClassValue } from "clsx"
@@ -49,4 +50,14 @@ export function debugConsole(args: any) {
 
 export function convertAmount(amount: number) {
   return amount / 1_000_000
+}
+
+export function getContractNameAddress(
+  contract: TWhitelistContractSchema["whitelisted"]
+) {
+  const [contractAddress, contractName] = contract.split(".")
+  return {
+    contractAddress,
+    contractName,
+  }
 }
