@@ -3,7 +3,7 @@
 import { getRequest } from "@/services/api"
 import { listAptForSale } from "@/services/mutation-options"
 import { listForSaleSchema } from "@/services/schema"
-import { TListForSaleSchema } from "@/services/type"
+import { TListForSaleSchema, TYourAptsResponse } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Cl } from "@stacks/transactions"
 import { useMutation } from "@tanstack/react-query"
@@ -38,19 +38,17 @@ import {
 } from "@/components/ui/select"
 
 type Props = {
-  contract: string
+  item: TYourAptsResponse
   currentBlockHeight: number
 }
 
-export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
+export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
   const form = useForm<TListForSaleSchema>({
     resolver: zodResolver(listForSaleSchema),
     defaultValues: {
-      listingPrice: 0,
-      amount: 0,
       paymentAsset: "STX",
       listingDuration: "20927",
       targetBuyer: "",
@@ -61,16 +59,25 @@ export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
     ...listAptForSale(),
     onSuccess: () => {
       form.reset()
-      toast.success("Contract whitelist status updated successfully")
+      setOpen(false)
+      router.refresh()
+      toast.success("Apt listed for sale successfully")
     },
     onError: (error) => {
-      toast.error(`Error updating whitelist status: ${error.message}`)
+      toast.error(`Error listing apt for sale: ${error.message}`)
     },
   })
 
   async function onSubmit(values: TListForSaleSchema) {
-    if (!contract) return toast.error("Missing asset contract")
-    listAptMutation.mutate({ currentBlockHeight, ...values })
+    if (!item.contract) return toast.error("Missing asset contract")
+    if (values.amount > Number(item.balance)) {
+      form.setError("amount", {
+        type: "manual",
+        message: `Amount cannot exceed the value ${item.balance}`,
+      })
+      return
+    }
+    listAptMutation.mutateAsync({ currentBlockHeight, ...values })
   }
 
   return (
@@ -134,7 +141,7 @@ export function ListForSaleDialog({ contract, currentBlockHeight }: Props) {
                 className="bg-muted text-muted-foreground"
                 type="text"
                 disabled
-                value="ST3Y14WTFX25M75376066Q8V5YY1RCBCDE0KC5MBF.mock-token"
+                value={item.contract}
                 readOnly
               />
             </div>

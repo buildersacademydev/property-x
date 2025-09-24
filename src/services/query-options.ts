@@ -9,9 +9,9 @@ export const getBlockHeight = () => {
   })
 }
 
-export const getFtBalances = (stxAddress: string) => {
+export const getYourApts = (stxAddress: string) => {
   return queryOptions({
-    queryKey: ["ft-balances", stxAddress],
-    queryFn: () => ApiService.getFtBalances(stxAddress),
+    queryKey: ["your-apts", stxAddress],
+    queryFn: () => ApiService.getYourApts(stxAddress),
   })
 }

@@ -1,6 +1,5 @@
 import { request } from "@stacks/connect"
 import { Cl } from "@stacks/transactions"
-import { toast } from "sonner"
 import { apiClient } from "@/lib/config/api-client"
 import { env } from "@/lib/config/env"
 import { getContractNameAddress, safeUint } from "@/lib/utils"
@@ -8,11 +7,10 @@ import { getContractNameAddress, safeUint } from "@/lib/utils"
 import {
   TBlockHeightResponse,
   TFtBalancesResponse,
-  TListForSaleSchema,
   TListSaleBlockHeight,
-  TPostBalancesWhitelistResponse,
   TTestCoin,
   TWhitelistContractSchema,
+  TYourAptsResponse,
 } from "./type"
 
 export class ApiService {
@@ -35,13 +33,11 @@ export class ApiService {
     return response.data
   }
 
-  static async postBalancesWhitelist({
-    balances,
-  }: {
-    balances: TFtBalancesResponse["results"]
-  }): Promise<{ items: TPostBalancesWhitelistResponse[] }> {
-    const response = await apiClient.post("/api/apts", {
-      balances: balances,
+  static async getYourApts(
+    stxAddress: string
+  ): Promise<{ items: TYourAptsResponse[] }> {
+    const response = await apiClient.get("/api/apts", {
+      params: { address: stxAddress },
     })
     return response.data
   }

@@ -1,22 +1,32 @@
 import { db } from "@/db/drizzle"
 import { assets, tcoins, whiteListing } from "@/db/schema"
+import { ApiService } from "@/services/api"
 import { TFtBalancesResponse } from "@/services/type"
 import { and, eq, inArray } from "drizzle-orm"
 import { NextResponse } from "next/server"
+import { convertAmount } from "@/lib/utils"
 
-type IncomingBalance = { balances: TFtBalancesResponse["results"] }
-
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   try {
-    const body: IncomingBalance = await request.json()
-    const balances = body.balances || []
+    const { searchParams } = new URL(request.url)
+    const address = searchParams.get("address")
+
+    if (!address) {
+      return NextResponse.json(
+        { error: "STX address is required" },
+        { status: 400 }
+      )
+    }
+
+    const balancesResponse: TFtBalancesResponse =
+      await ApiService.getFtBalances(address)
+    const balances = balancesResponse.results || []
 
     if (!balances.length) {
       return NextResponse.json({ items: [] }, { status: 200 })
     }
 
     const allContracts = balances.map((b) => b.token.split("::")[0])
-
     const whitelistedRows = await db
       .select({ whitelisted: whiteListing.whitelisted })
       .from(whiteListing)
@@ -26,9 +36,6 @@ export async function POST(request: Request) {
           eq(whiteListing.isWhitelisted, true)
         )
       )
-
-    console.log("Whitelisted Rows:", whitelistedRows)
-
     const whitelistedSet = new Set(whitelistedRows.map((r) => r.whitelisted))
     if (!whitelistedSet.size) {
       return NextResponse.json({ items: [] }, { status: 200 })
@@ -60,7 +67,6 @@ export async function POST(request: Request) {
       .where(inArray(tcoins.contract, whitelistedContracts))
 
     const byContract = new Map(tcoinRows.map((r) => [r.contract, r]))
-
     const items = balances
       .map((b) => {
         const contract = b.token.split("::")[0]
@@ -69,7 +75,7 @@ export async function POST(request: Request) {
         const meta = byContract.get(contract)
         if (!meta) return null
         return {
-          balance: b.balance,
+          balance: convertAmount(Number(b.balance)),
           contract,
           tokenName,
           tcoin: {

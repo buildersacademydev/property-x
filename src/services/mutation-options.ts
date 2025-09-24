@@ -1,22 +1,7 @@
 import { mutationOptions } from "@tanstack/react-query"
 
-import { ApiService, ContractService } from "./api"
-import {
-  TFtBalancesResponse,
-  TListSaleBlockHeight,
-  TWhitelistContractSchema,
-} from "./type"
-
-export const postBalancesWhitelist = () => {
-  return mutationOptions({
-    mutationKey: ["post-balances-whitelist"],
-    mutationFn: async ({
-      balances,
-    }: {
-      balances: TFtBalancesResponse["results"]
-    }) => ApiService.postBalancesWhitelist({ balances }),
-  })
-}
+import { ContractService } from "./api"
+import { TListSaleBlockHeight, TWhitelistContractSchema } from "./type"
 
 export const whitelistContract = () => {
   return mutationOptions({

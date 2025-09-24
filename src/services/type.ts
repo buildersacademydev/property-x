@@ -83,7 +83,7 @@ interface Asset {
   staking: string
 }
 
-export interface TPostBalancesWhitelistResponse {
+export interface TYourAptsResponse {
   balance: string
   contract: string
   tokenName: string

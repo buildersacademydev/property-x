@@ -8,13 +8,18 @@ import { Icons } from "@/components/common/icons"
 import { NextLink } from "@/components/common/next-link"
 
 import { ListForSaleDialog } from "./_components/list-for-sale"
+import EmptyApt from "./empty-apt"
+import LoadingApt from "./loading-apt"
 import { useAptData } from "./use-apt-data"
 
 const Apts = () => {
   const { currentBlockHeight, items, isLoading } = useAptData()
-
   if (isLoading) {
-    return <div>Loading...</div>
+    return <LoadingApt />
+  }
+
+  if (items.length === 0) {
+    return <EmptyApt />
   }
 
   const formatNumber = (val?: number | string) => {
@@ -116,8 +121,8 @@ const Apts = () => {
                     <div className="mt-6 flex flex-col gap-4 sm:flex-row">
                       {currentBlockHeight ? (
                         <ListForSaleDialog
-                          contract={contract}
                           currentBlockHeight={currentBlockHeight}
+                          item={item}
                         />
                       ) : null}
                       <Button className="flex-1" variant="outline">
