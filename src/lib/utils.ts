@@ -48,7 +48,13 @@ export function debugConsole(args: any) {
   return util.inspect(args, { depth: null, colors: true })
 }
 
-export function convertAmount(amount: number) {
+export function convertAmount(
+  amount: number,
+  type: "to-u6" | "from-u6" = "from-u6"
+): number {
+  if (type === "to-u6") {
+    return amount * 1_000_000
+  }
   return amount / 1_000_000
 }
 
@@ -61,3 +67,22 @@ export function getContractNameAddress(
     contractName,
   }
 }
+
+export const functionContractMap = {
+  "list-asset-ft": "marketplace",
+  "set-whitelisted": "marketplace",
+  "update-protocol-contract": "marketplace",
+  "update-listing-ft": "marketplace",
+  "set-emergency-stop": "marketplace",
+  "set-contract-owner": "marketplace",
+  "set-transaction-fee-bps": "marketplace",
+  "cancel-listing-ft": "marketplace",
+
+  "fulfil-listing-ft-stx": "marketplace-fulfill",
+  "fulfil-ft-listing-ft": "marketplace-fulfill",
+
+  "update-contract": "marketplace-admin",
+
+  staking: "staking-interface",
+  unstaking: "staking-interface",
+} as const

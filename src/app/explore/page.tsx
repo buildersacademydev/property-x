@@ -1,9 +1,9 @@
 import { db } from "@/db/drizzle"
 import { assets, listings, tcoins, whiteListing } from "@/db/schema"
+import { TMarketplaceListing } from "@/services/type"
 import { eq } from "drizzle-orm"
-import React from "react"
+import React, { Suspense } from "react"
 import Image from "next/image"
-import { convertAmount } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -15,32 +15,11 @@ import {
 } from "@/components/ui/card"
 
 import { BuyNowDialog } from "./_components/buy-now-dialog"
+import EmptyExplore from "./_components/empty-explore"
+import LoadingExplore from "./_components/loading-explore"
 import { ViewDetailsDialog } from "./_components/view-details-dialog"
 
-type ListingWithDetails = {
-  listingId: number
-  amount: number
-  expiry: number
-  maker: string
-  paymentAssetContract: string | null
-  price: number
-  taker: string | null
-  topic: string
-  assetContract: string
-  contractName: string
-  contractDescription: string
-  contractImage: string
-  assetName: string
-  assetImage: string
-  assetLocation: string
-  assetValuation: string
-  assetTokens: string
-  assetApr: string
-  assetDescription: string
-  assetStaking: string
-}
-
-const Page = async () => {
+async function ListingsContent() {
   const listingsData = await db
     .select({
       listingId: listings.listingId,
@@ -73,26 +52,31 @@ const Page = async () => {
     .innerJoin(assets, eq(tcoins.assetId, assets.id))
     .where(eq(whiteListing.isWhitelisted, true))
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold">Marketplace Listings</h1>
+  if (listingsData.length === 0) {
+    return <EmptyExplore />
+  }
 
-      {listingsData.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-muted-foreground">No listings found.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {listingsData.map((listing) => (
-            <ListingCard key={listing.listingId} listing={listing} />
-          ))}
-        </div>
-      )}
+  return (
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {listingsData.map((listing) => (
+        <ListingCard key={listing.listingId} listing={listing} />
+      ))}
     </div>
   )
 }
 
-function ListingCard({ listing }: { listing: ListingWithDetails }) {
+function Page() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="mb-8 text-3xl font-bold">Marketplace Listings</h1>
+      <Suspense fallback={<LoadingExplore />}>
+        <ListingsContent />
+      </Suspense>
+    </div>
+  )
+}
+
+function ListingCard({ listing }: { listing: TMarketplaceListing }) {
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-3">
@@ -118,7 +102,7 @@ function ListingCard({ listing }: { listing: ListingWithDetails }) {
           </div>
           <div>
             <p className="text-muted-foreground">Amount</p>
-            <p className="font-semibold">{convertAmount(listing.amount)}</p>
+            <p className="font-semibold">{listing.amount}</p>
           </div>
           <div>
             <p className="text-muted-foreground">APR</p>

@@ -1,5 +1,6 @@
 "use client"
 
+import { TMarketplaceListing } from "@/services/type"
 import React, { useState } from "react"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
@@ -13,31 +14,8 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
-interface ListingWithDetails {
-  listingId: number
-  amount: number
-  expiry: number
-  maker: string
-  paymentAssetContract: string | null
-  price: number
-  taker: string | null
-  topic: string
-  assetContract: string
-  contractName: string
-  contractDescription: string
-  contractImage: string
-  assetName: string
-  assetImage: string
-  assetLocation: string
-  assetValuation: string
-  assetTokens: string
-  assetApr: string
-  assetDescription: string
-  assetStaking: string
-}
-
 interface ViewDetailsDialogProps {
-  listing: ListingWithDetails
+  listing: TMarketplaceListing
   children: React.ReactNode
 }
 

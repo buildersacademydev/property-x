@@ -1,13 +1,15 @@
 "use client"
 
-import { getRequest } from "@/services/api"
+import { buyListing } from "@/services/mutation-options"
+import { buyListingSchema } from "@/services/schema"
+import { TBuyListingSchema, TMarketplaceListing } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Cl } from "@stacks/transactions"
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import * as z from "zod"
 import React, { useState } from "react"
-import { env } from "@/lib/config/env"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -28,40 +30,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-const buyFormSchema = z.object({
-  amount: z.coerce
-    .number()
-    .min(1, "Amount must be at least 1")
-    .max(1000000, "Amount is too large"),
-})
-
-type BuyFormData = z.infer<typeof buyFormSchema>
-
-interface ListingWithDetails {
-  listingId: number
-  amount: number
-  expiry: number
-  maker: string
-  paymentAssetContract: string | null
-  price: number
-  taker: string | null
-  topic: string
-  assetContract: string
-  contractName: string
-  contractDescription: string
-  contractImage: string
-  assetName: string
-  assetImage: string
-  assetLocation: string
-  assetValuation: string
-  assetTokens: string
-  assetApr: string
-  assetDescription: string
-  assetStaking: string
-}
-
 interface BuyNowDialogProps {
-  listing: ListingWithDetails
+  listing: TMarketplaceListing
   children: React.ReactNode
   disabled?: boolean
 }
@@ -72,40 +42,41 @@ export function BuyNowDialog({
   disabled,
 }: BuyNowDialogProps) {
   const [open, setOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
-  const form = useForm<BuyFormData>({
-    resolver: zodResolver(buyFormSchema),
-    defaultValues: {
-      amount: 1,
+  const form = useForm<TBuyListingSchema>({
+    resolver: zodResolver(buyListingSchema),
+  })
+
+  const buyListingMutation = useMutation({
+    ...buyListing(),
+    onSuccess: () => {
+      form.reset()
+      setOpen(false)
+      router.refresh()
+      toast.success("Successfully purchased listing!")
+    },
+    onError: (error) => {
+      toast.error(`Error purchasing listing: ${error.message}`)
     },
   })
 
-  const onSubmit = async (data: BuyFormData) => {
-    setIsLoading(true)
-
-    try {
-      const args = [
-        Cl.uint(listing.listingId),
-        Cl.contractPrincipal(env.CONTRACT_ADDRESS, "mock-token"),
-        Cl.uint(data.amount),
-      ]
-
-      await getRequest({
-        args,
-        functionName: "fulfil-listing-ft-stx",
+  const onSubmit = async (values: TBuyListingSchema) => {
+    if (!listing.assetContract) return toast.error("Missing asset contract")
+    console.log("Submitting buy listing with values:", values)
+    console.log("Listing details:", listing)
+    if (values.amount > Number(listing.amount)) {
+      form.setError("amount", {
+        type: "manual",
+        message: `Amount cannot exceed the value ${listing.amount}`,
       })
-
-      toast.success(
-        `Successfully purchased ${data.amount} tokens of ${listing.assetName}`
-      )
-      setOpen(false)
-      form.reset()
-    } catch (error) {
-      toast.error("Failed to complete purchase. Please try again.")
-    } finally {
-      setIsLoading(false)
+      return
     }
+    buyListingMutation.mutate({
+      listingId: listing.listingId,
+      contract: listing.assetContract,
+      amount: values.amount,
+    })
   }
 
   const watchedAmount = form.watch("amount")
@@ -138,9 +109,8 @@ export function BuyNowDialog({
                     <Input
                       type="number"
                       placeholder="Enter amount"
-                      min="1"
-                      max={listing.amount}
                       {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormMessage />
@@ -162,12 +132,12 @@ export function BuyNowDialog({
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
-                disabled={isLoading}
+                disabled={buyListingMutation.isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Processing..." : "Buy Now"}
+              <Button type="submit" loading={buyListingMutation.isPending}>
+                Buy Now
               </Button>
             </DialogFooter>
           </form>

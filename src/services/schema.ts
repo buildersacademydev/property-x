@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 export const listForSaleSchema = z.object({
-  listingPrice: z.number().positive("Enter a valid price > 0"),
-  amount: z.number().positive("Enter a valid amount > 0"),
+  listingPrice: z.number().min(1, "Listing price must be at least 1"),
+  amount: z.number().min(1, "Amount must be at least 1"),
   paymentAsset: z.string(),
   listingDuration: z.string(),
   targetBuyer: z.string().optional(),
@@ -24,4 +24,8 @@ export const whitelistContractSchema = z.object({
 export const marketplaceSchema = z.object({
   principal: z.string().min(1, "Principal is required"),
   role: z.enum(["admin", "fulfill"] as const),
+})
+
+export const buyListingSchema = z.object({
+  amount: z.number().min(1, "Amount must be at least 1"),
 })

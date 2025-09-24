@@ -2,7 +2,11 @@ import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
 import { TListingSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
-import { debugConsole, processRouteTransactions } from "@/lib/utils"
+import {
+  convertAmount,
+  debugConsole,
+  processRouteTransactions,
+} from "@/lib/utils"
 
 export async function POST(request: Request) {
   try {
@@ -25,7 +29,7 @@ export async function POST(request: Request) {
       processedValues
         .filter((v) => v["asset-contract"])
         .map((values) => ({
-          amount: values.amount,
+          amount: convertAmount(values.amount),
           assetContract: values["asset-contract"],
           expiry: values.expiry,
           listingId: values["listing-id"],

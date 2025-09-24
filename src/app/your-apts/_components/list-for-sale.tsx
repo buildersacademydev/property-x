@@ -1,11 +1,9 @@
 "use client"
 
-import { getRequest } from "@/services/api"
 import { listAptForSale } from "@/services/mutation-options"
 import { listForSaleSchema } from "@/services/schema"
 import { TListForSaleSchema, TYourAptsResponse } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Cl } from "@stacks/transactions"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -70,6 +68,7 @@ export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
 
   async function onSubmit(values: TListForSaleSchema) {
     if (!item.contract) return toast.error("Missing asset contract")
+    console.log("Form Values:", values)
     if (values.amount > Number(item.balance)) {
       form.setError("amount", {
         type: "manual",
@@ -77,7 +76,11 @@ export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
       })
       return
     }
-    listAptMutation.mutateAsync({ currentBlockHeight, ...values })
+    listAptMutation.mutate({
+      currentBlockHeight,
+      ...values,
+      contract: item.contract,
+    })
   }
 
   return (

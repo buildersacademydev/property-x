@@ -2,11 +2,18 @@ import { request } from "@stacks/connect"
 import { Cl } from "@stacks/transactions"
 import { apiClient } from "@/lib/config/api-client"
 import { env } from "@/lib/config/env"
-import { getContractNameAddress, safeUint } from "@/lib/utils"
+import {
+  convertAmount,
+  functionContractMap,
+  getContractNameAddress,
+  safeUint,
+} from "@/lib/utils"
 
 import {
   TBlockHeightResponse,
+  TBuyListing,
   TFtBalancesResponse,
+  TFunctionName,
   TListSaleBlockHeight,
   TTestCoin,
   TWhitelistContractSchema,
@@ -48,8 +55,6 @@ export class ApiService {
   }
 }
 
-const CONTRACT_NAME = "marketplace"
-
 export const getRequest = async ({
   args,
   postMode = true,
@@ -57,8 +62,18 @@ export const getRequest = async ({
 }: {
   args: any
   postMode?: boolean
-  functionName: string
+  functionName: TFunctionName
 }) => {
+  const CONTRACT_NAME = functionContractMap[functionName]
+  if (!CONTRACT_NAME) {
+    throw new Error(`No contract mapping found for function: ${functionName}`)
+  }
+  console.log("getRequest called with:", {
+    args,
+    postMode,
+    functionName,
+    CONTRACT_NAME,
+  })
   try {
     return await request("stx_callContract", {
       contract: `${env.CONTRACT_ADDRESS}.${CONTRACT_NAME}`,
@@ -100,11 +115,15 @@ export class ContractService {
       values.paymentAsset !== "STX"
         ? values.listingPrice * 100
         : values.listingPrice
+
+    const { contractAddress, contractName } = getContractNameAddress(
+      values.contract
+    )
     const args = [
-      Cl.contractPrincipal(env.CONTRACT_ADDRESS, "mock-token"),
+      Cl.contractPrincipal(contractAddress, contractName),
       Cl.tuple({
         taker: Cl.none(),
-        amt: safeUint(values.amount * 1000000),
+        amt: safeUint(convertAmount(values.amount, "to-u6")),
         expiry: safeUint(currentBlockHeight + Number(values.listingDuration)),
         price: safeUint(finalPrice),
         "payment-asset-contract":
@@ -116,6 +135,22 @@ export class ContractService {
     return await getRequest({
       args,
       functionName: "list-asset-ft",
+    })
+  }
+
+  static async buyListing(values: TBuyListing) {
+    const { contractAddress, contractName } = getContractNameAddress(
+      values.contract
+    )
+    const args = [
+      Cl.uint(values.listingId),
+      Cl.contractPrincipal(contractAddress, contractName),
+      Cl.uint(convertAmount(values.amount, "to-u6")),
+    ]
+
+    return await getRequest({
+      args,
+      functionName: "fulfil-listing-ft-stx",
     })
   }
 }

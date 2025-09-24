@@ -1,6 +1,8 @@
 import { z } from "zod"
+import { functionContractMap } from "@/lib/utils"
 
 import {
+  buyListingSchema,
   listForSaleSchema,
   marketplaceSchema,
   whitelistContractSchema,
@@ -83,6 +85,29 @@ interface Asset {
   staking: string
 }
 
+export interface TMarketplaceListing {
+  listingId: number
+  amount: number
+  expiry: number
+  maker: string
+  paymentAssetContract: string | null
+  price: number
+  taker: string | null
+  topic: string
+  assetContract: string
+  contractName: string
+  contractDescription: string
+  contractImage: string
+  assetName: string
+  assetImage: string
+  assetLocation: string
+  assetValuation: string
+  assetTokens: string
+  assetApr: string
+  assetDescription: string
+  assetStaking: string
+}
+
 export interface TYourAptsResponse {
   balance: string
   contract: string
@@ -106,9 +131,19 @@ export interface TYourAptsResponse {
   } | null
 }
 
+export type TFunctionName = keyof typeof functionContractMap
+
 export type TWhitelistContractSchema = z.infer<typeof whitelistContractSchema>
 export type TMarketplaceSchema = z.infer<typeof marketplaceSchema>
+export type TBuyListingSchema = z.infer<typeof buyListingSchema>
 export type TListForSaleSchema = z.infer<typeof listForSaleSchema>
+
 export type TListSaleBlockHeight = TListForSaleSchema & {
   currentBlockHeight: number
+  contract: string
+}
+
+export type TBuyListing = TBuyListingSchema & {
+  listingId: number
+  contract: string
 }
