@@ -62,7 +62,7 @@ export function BuyNowDialog({
   })
 
   const onSubmit = async (values: TBuyListingSchema) => {
-    if (!listing.assetContract) return toast.error("Missing asset contract")
+    if (!listing.contract) return toast.error("Missing asset contract")
     console.log("Submitting buy listing with values:", values)
     console.log("Listing details:", listing)
     if (values.amount > Number(listing.amount)) {
@@ -74,7 +74,7 @@ export function BuyNowDialog({
     }
     buyListingMutation.mutate({
       listingId: listing.listingId,
-      contract: listing.assetContract,
+      contract: listing.contract,
       amount: values.amount,
     })
   }

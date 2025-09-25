@@ -40,7 +40,6 @@ export function ViewDetailsDialog({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Asset Image */}
           <div className="relative aspect-video overflow-hidden rounded-lg">
             <Image
               src={listing.assetImage}
@@ -50,19 +49,18 @@ export function ViewDetailsDialog({
             />
           </div>
 
-          {/* Basic Info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h3 className="mb-2 font-semibold">Contract Details</h3>
               <div className="space-y-2 text-sm">
                 <div>
                   <span className="text-muted-foreground">Name: </span>
-                  <span>{listing.contractName}</span>
+                  <span>{listing.name}</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Contract: </span>
                   <span className="font-mono text-xs break-all">
-                    {listing.assetContract}
+                    {listing.contract}
                   </span>
                 </div>
               </div>
@@ -171,7 +169,6 @@ export function ViewDetailsDialog({
 
           <Separator />
 
-          {/* Descriptions */}
           <div className="space-y-4">
             <div>
               <h3 className="mb-2 font-semibold">Asset Description</h3>
@@ -183,7 +180,7 @@ export function ViewDetailsDialog({
             <div>
               <h3 className="mb-2 font-semibold">Contract Description</h3>
               <p className="text-sm text-muted-foreground">
-                {listing.contractDescription}
+                {listing.description}
               </p>
             </div>
           </div>

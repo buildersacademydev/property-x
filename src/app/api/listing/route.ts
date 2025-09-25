@@ -2,6 +2,7 @@ import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
 import { TListingSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
+import { revalidatePath } from "next/cache"
 import {
   convertAmount,
   debugConsole,
@@ -40,20 +41,13 @@ export async function POST(request: Request) {
           topic: values.topic,
         }))
     )
+    revalidatePath("/explore")
+    revalidatePath("/your-listings")
+    console.log("path revalidated")
 
     return new Response("Listing successful", { status: 200 })
   } catch (error) {
     console.error("Error processing listing:", error)
-    return new Response("Internal server error", { status: 500 })
-  }
-}
-
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const address = searchParams.get("address")
-  } catch (error) {
-    console.error("Error fetching listings:", error)
     return new Response("Internal server error", { status: 500 })
   }
 }

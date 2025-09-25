@@ -94,10 +94,10 @@ export interface TMarketplaceListing {
   price: number
   taker: string | null
   topic: string
-  assetContract: string
-  contractName: string
-  contractDescription: string
-  contractImage: string
+  contract: string
+  name: string
+  description: string
+  image: string
   assetName: string
   assetImage: string
   assetLocation: string

@@ -6,9 +6,12 @@ import { Card } from "@/components/ui/card"
 import { Icons } from "@/components/common/icons"
 import { NextLink } from "@/components/common/next-link"
 
-// Empty state for the Explore (Marketplace Listings) page when there are no active listings.
-// Mirrors visual language of other empty states for consistency.
-const EmptyExplore: React.FC = () => {
+interface EmptyListingProps {
+  href: string
+  label: string
+}
+
+const EmptyListing = ({ href, label }: EmptyListingProps) => {
   return (
     <div className="flex w-full items-center justify-center py-24">
       <Card
@@ -31,15 +34,12 @@ const EmptyExplore: React.FC = () => {
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row">
-          <NextLink href="/" className="flex-1">
-            <Button variant="outline" className="w-full">
-              Go Home
-            </Button>
+          <NextLink href={href} className="flex-1">
+            <Button className="w-full">{label}</Button>
           </NextLink>
         </div>
       </Card>
     </div>
   )
 }
-
-export default EmptyExplore
+export default EmptyListing

@@ -8,8 +8,8 @@ import { Card } from "@/components/ui/card"
 import { Icons } from "@/components/common/icons"
 import { NextLink } from "@/components/common/next-link"
 
+import EmptyApt from "./_components/empty-apt"
 import { ListForSaleDialog } from "./_components/list-for-sale"
-import EmptyApt from "./empty-apt"
 
 const Apts = async () => {
   const apt = await getAptsCore()

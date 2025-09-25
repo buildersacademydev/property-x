@@ -179,9 +179,6 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         message: "Processing completed successfully",
-        added: toInsert.length,
-        updated: toUpdate.length,
-        removed: 0,
       }),
       {
         status: 200,

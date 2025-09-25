@@ -1,15 +1,8 @@
 import * as React from "react"
 import { Card } from "@/components/ui/card"
+import { Skeleton as Skel } from "@/components/ui/skeleton"
 
-// Simple skeleton block utility (same style language as other loading components)
-const Skel = ({ className = "" }: { className?: string }) => (
-  <div className={`animate-pulse rounded-md bg-muted ${className}`} />
-)
-
-// Loading state for the Explore (Marketplace Listings) page while server/data fetch occurs.
-// Provides a responsive grid of placeholder cards matching the eventual layout.
 const LoadingExplore: React.FC = () => {
-  // Number of placeholder cards to show (roughly a first screenful)
   const placeholders = Array.from({ length: 6 }, (_, i) => i)
   return (
     <div
