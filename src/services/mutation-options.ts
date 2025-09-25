@@ -23,10 +23,10 @@ export const listAptForSale = () => {
   })
 }
 
-export const buyListing = () => {
+export const fulfillStx = () => {
   return mutationOptions({
     mutationKey: ["buy-listing"],
     mutationFn: async (values: TBuyListing) =>
-      ContractService.buyListing({ ...values }),
+      ContractService.fulfillStx({ ...values }),
   })
 }

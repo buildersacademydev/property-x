@@ -3,16 +3,11 @@ import { listings } from "@/db/schema"
 import { TListingSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { revalidatePath } from "next/cache"
-import {
-  convertAmount,
-  debugConsole,
-  processRouteTransactions,
-} from "@/lib/utils"
+import { convertAmount, processRouteTransactions } from "@/lib/utils"
 
 export async function POST(request: Request) {
   try {
     const payload: StacksPayload = await request.json()
-    console.log("Received payload:", debugConsole(payload))
     if (!payload.apply || !Array.isArray(payload.apply)) {
       return new Response("Invalid payload structure", { status: 400 })
     }

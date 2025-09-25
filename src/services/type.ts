@@ -108,6 +108,18 @@ export interface TMarketplaceListing {
   assetStaking: string
 }
 
+export interface TFtStxBuyPayload {
+  amt: number
+  buyer: string
+  "fee-percentage": number
+  "listing-id": number
+  "remaining-amt": number
+  seller: string
+  topic: string
+  "total-payment": number
+  "tx-fee": number
+}
+
 export type TFunctionName = keyof typeof functionContractMap
 
 export type TWhitelistContractSchema = z.infer<typeof whitelistContractSchema>

@@ -10,7 +10,6 @@ import { ViewDetailsDialog } from "../_components/view-details-dialog"
 
 const Page = async () => {
   const res = await getListings("explore")
-  console.log("res", res)
 
   if (!res.success) {
     if (res.error?.type === "no-data")

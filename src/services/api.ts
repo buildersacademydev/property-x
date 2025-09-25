@@ -123,7 +123,7 @@ export class ContractService {
     })
   }
 
-  static async buyListing(values: TBuyListing) {
+  static async fulfillStx(values: TBuyListing) {
     const { contractAddress, contractName } = getContractNameAddress(
       values.contract
     )

@@ -169,15 +169,8 @@ export async function simulateContractCall(
     senderAddress,
   } = params
 
-  console.log(
-    `Calling contract ${contractAddress}.${contractName}::${functionName}`
-  )
-
-  // Handle specific contract functions based on the contract and function name
   if (contractName === "rws" && functionName === "get-balance") {
     const address = (functionArgs[0] as PrincipalCV)?.address || "unknown"
-    console.log(`Checking balance for address: ${address}`)
-    // Return a simulated PXT balance (100-1000)
     const balance = Math.floor(Math.random() * 900) + 100
     return {
       value: { type: "uint", value: balance },

@@ -1,6 +1,6 @@
 "use client"
 
-import { buyListing } from "@/services/mutation-options"
+import { fulfillStx } from "@/services/mutation-options"
 import { buyListingSchema } from "@/services/schema"
 import { TBuyListingSchema, TMarketplaceListing } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -49,7 +49,7 @@ export function BuyNowDialog({
   })
 
   const buyListingMutation = useMutation({
-    ...buyListing(),
+    ...fulfillStx(),
     onSuccess: () => {
       form.reset()
       setOpen(false)
@@ -63,8 +63,6 @@ export function BuyNowDialog({
 
   const onSubmit = async (values: TBuyListingSchema) => {
     if (!listing.contract) return toast.error("Missing asset contract")
-    console.log("Submitting buy listing with values:", values)
-    console.log("Listing details:", listing)
     if (values.amount > Number(listing.amount)) {
       form.setError("amount", {
         type: "manual",

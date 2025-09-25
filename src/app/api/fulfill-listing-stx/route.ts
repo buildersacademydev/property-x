@@ -1,5 +1,14 @@
+import { db } from "@/db/drizzle"
+import { listings } from "@/db/schema"
+import { TFtStxBuyPayload } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
-import { debugConsole, processRouteTransactions } from "@/lib/utils"
+import { eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
+import {
+  convertAmount,
+  debugConsole,
+  processRouteTransactions,
+} from "@/lib/utils"
 
 export async function POST(request: Request) {
   try {
@@ -9,7 +18,7 @@ export async function POST(request: Request) {
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
     console.log("transactions in stx buy: ", debugConsole(transactions))
-    const processedValues = processRouteTransactions<void>({
+    const processedValues = processRouteTransactions<TFtStxBuyPayload>({
       transactions,
     })
     console.log("Processed Values in stx buy: ", processedValues)
@@ -18,6 +27,31 @@ export async function POST(request: Request) {
         status: 400,
       })
     }
+
+    const ops = processedValues
+      .filter(
+        (v) =>
+          typeof v["listing-id"] === "number" &&
+          typeof v["remaining-amt"] === "number"
+      )
+      .map((v) => {
+        const listingId = v["listing-id"]
+        const remaining = v["remaining-amt"]
+
+        if (remaining === 0) {
+          return db.delete(listings).where(eq(listings.listingId, listingId))
+        }
+
+        return db
+          .update(listings)
+          .set({ amount: convertAmount(remaining) })
+          .where(eq(listings.listingId, listingId))
+      })
+
+    await Promise.all(ops)
+
+    revalidatePath("/explore")
+    revalidatePath("/your-listings")
 
     return new Response("Token Buy successful", { status: 200 })
   } catch (error) {

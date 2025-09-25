@@ -83,7 +83,6 @@ export function ListForSaleDialog({ contract, balance }: Props) {
 
   async function onSubmit(values: TListForSaleSchema) {
     if (!contract) return toast.error("Missing asset contract")
-    console.log("Form Values:", values)
     if (values.amount > Number(balance)) {
       form.setError("amount", {
         type: "manual",
