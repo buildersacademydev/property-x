@@ -1,16 +1,23 @@
-import { getApts } from "@/db/actions/apts"
+import { getAptsCore } from "@/db/actions/apts"
 import { dalFormatErrorMessage, dalVerifySuccess } from "@/db/helpers"
 import React from "react"
 import Image from "next/image"
+import { formatNumber } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Icons } from "@/components/common/icons"
 import { NextLink } from "@/components/common/next-link"
 
 import { ListForSaleDialog } from "./_components/list-for-sale"
+import EmptyApt from "./empty-apt"
 
 const Apts = async () => {
-  const apt = await getApts()
+  const apt = await getAptsCore()
+
+  if (!apt.success && apt.error?.type === "no-data") {
+    return <EmptyApt />
+  }
+
   if (!apt.success) {
     return dalFormatErrorMessage(apt.error)
   }
@@ -19,15 +26,6 @@ const Apts = async () => {
   const items = response.items
   if (!response.items) {
     return null
-  }
-
-  const formatNumber = (val?: number | string) => {
-    const n = typeof val === "string" ? Number(val) : val
-    return typeof n === "number" && isFinite(n)
-      ? new Intl.NumberFormat("en-US").format(n)
-      : typeof val === "string"
-        ? val
-        : "—"
   }
 
   return (

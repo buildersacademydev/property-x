@@ -1,5 +1,6 @@
 import { ApiService } from "@/services/api"
 import { and, eq, inArray } from "drizzle-orm"
+import { unstable_cache } from "next/cache"
 import { convertAmount } from "@/lib/utils"
 
 import { db } from "../drizzle"
@@ -22,7 +23,7 @@ const getFtBalancesFromApi = async (stxAddress: string) => {
   })
 }
 
-export async function getApts() {
+export async function getAptsCore() {
   return dalDbOperation(async () => {
     const stxAddress = await getWalletAddress()
     if (!stxAddress) {
@@ -102,3 +103,8 @@ export async function getApts() {
     return { items }
   })
 }
+
+const getApts = unstable_cache(getAptsCore, ["apts-data"], {
+  tags: ["apts"],
+  revalidate: 3600,
+})

@@ -86,3 +86,12 @@ export const functionContractMap = {
   staking: "staking-interface",
   unstaking: "staking-interface",
 } as const
+
+export const formatNumber = (val?: number | string) => {
+  const n = typeof val === "string" ? Number(val) : val
+  return typeof n === "number" && isFinite(n)
+    ? new Intl.NumberFormat("en-US").format(n)
+    : typeof val === "string"
+      ? val
+      : "—"
+}

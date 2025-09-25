@@ -1,13 +1,8 @@
 import * as React from "react"
 import { Card } from "@/components/ui/card"
+import { Skeleton as Skel } from "@/components/ui/skeleton"
 import { Icons } from "@/components/common/icons"
 
-// Utility skeleton block
-const Skel = ({ className = "" }: { className?: string }) => (
-  <div className={`animate-pulse rounded-md bg-muted ${className}`} />
-)
-
-// Loading state for the Your Apts page while fetching holdings
 const LoadingApt: React.FC = () => {
   const placeholders = [1, 2]
   return (

@@ -4,7 +4,8 @@ import { ApiService } from "@/services/api"
 import { TCoinSchema, TWhitelistContractSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { fetchCallReadOnlyFunction } from "@stacks/transactions"
-import { inArray } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
 import { env } from "@/lib/config/env"
 import { processRouteTransactions } from "@/lib/utils"
 
@@ -102,17 +103,6 @@ async function processTokenUri(contract: string): Promise<boolean> {
   }
 }
 
-async function cleanupOrphanedData(deletedContracts: string[]) {
-  try {
-    await db.delete(tcoins).where(inArray(tcoins.contract, deletedContracts))
-    console.log(
-      `Cleaned up data for ${deletedContracts.length} delisted contracts`
-    )
-  } catch (error) {
-    console.error("Error cleaning up orphaned data:", error)
-  }
-}
-
 export async function POST(request: Request) {
   try {
     const payload: StacksPayload = await request.json()
@@ -137,7 +127,7 @@ export async function POST(request: Request) {
       existingRecords.map((record) => [record.whitelisted, record])
     )
 
-    const toDelete: string[] = []
+    const toUpdate: Array<{ whitelisted: string; isWhitelisted: boolean }> = []
     const toInsert: Array<{ whitelisted: string; isWhitelisted: boolean }> = []
 
     for (const value of validValues) {
@@ -147,8 +137,11 @@ export async function POST(request: Request) {
         continue
       }
 
-      if (existing && existing.isWhitelisted && !value.isWhitelisted) {
-        toDelete.push(value.whitelisted)
+      if (existing && existing.isWhitelisted !== value.isWhitelisted) {
+        toUpdate.push({
+          whitelisted: value.whitelisted,
+          isWhitelisted: value.isWhitelisted,
+        })
       } else if (value.isWhitelisted && !existing) {
         toInsert.push({
           whitelisted: value.whitelisted,
@@ -157,12 +150,15 @@ export async function POST(request: Request) {
       }
     }
 
-    if (toDelete.length > 0) {
-      await db
-        .delete(whiteListing)
-        .where(inArray(whiteListing.whitelisted, toDelete))
-
-      await cleanupOrphanedData(toDelete)
+    if (toUpdate.length > 0) {
+      await Promise.allSettled(
+        toUpdate.map((item) =>
+          db
+            .update(whiteListing)
+            .set({ isWhitelisted: item.isWhitelisted })
+            .where(eq(whiteListing.whitelisted, item.whitelisted))
+        )
+      )
     }
 
     if (toInsert.length > 0) {
@@ -173,11 +169,19 @@ export async function POST(request: Request) {
       )
     }
 
+    if (toUpdate.length > 0 || toInsert.length > 0) {
+      revalidatePath("/your-apts")
+      // revalidateTag('apts')
+      // revalidateTag('whitelist')
+      console.log("Cache revalidated after whitelist changes")
+    }
+
     return new Response(
       JSON.stringify({
         message: "Processing completed successfully",
         added: toInsert.length,
-        removed: toDelete.length,
+        updated: toUpdate.length,
+        removed: 0,
       }),
       {
         status: 200,
