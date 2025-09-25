@@ -1,5 +1,6 @@
 "use client"
 
+import { clearWalletAddress, setWalletAddress } from "@/db/actions/wallet"
 import {
   connect,
   disconnect,
@@ -146,6 +147,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
           setStxAddress(addr)
           setConnected(true)
           void fetchBalance(addr)
+          void setWalletAddress(addr)
         }
       }
     } catch (e) {
@@ -184,6 +186,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       setStxAddress(addr)
       setConnected(true)
       await fetchBalance(addr)
+      await setWalletAddress(addr)
     }
   }
 
@@ -193,6 +196,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     setUserData(null)
     setBalance({ pxt: 0, btc: 0 })
     disconnect()
+    void clearWalletAddress()
   }
 
   const callContract = async ({

@@ -8,10 +8,3 @@ export const getBlockHeight = () => {
     queryFn: () => ApiService.getBlockHeight(),
   })
 }
-
-export const getYourApts = (stxAddress: string) => {
-  return queryOptions({
-    queryKey: ["your-apts", stxAddress],
-    queryFn: () => ApiService.getYourApts(stxAddress),
-  })
-}

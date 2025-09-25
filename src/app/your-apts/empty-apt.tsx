@@ -6,8 +6,6 @@ import { Card } from "@/components/ui/card"
 import { Icons } from "@/components/common/icons"
 import { NextLink } from "@/components/common/next-link"
 
-// A lightweight empty state for the Your Apts page when the user has no holdings yet.
-// Keeps styling consistent with the rest of the app (cards, muted foreground, iconography).
 const EmptyApt: React.FC = () => {
   return (
     <div className="flex w-full items-center justify-center py-24">

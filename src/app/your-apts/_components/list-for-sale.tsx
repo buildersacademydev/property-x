@@ -1,10 +1,12 @@
 "use client"
 
+import { useWallet } from "@/providers/wallet-provider"
 import { listAptForSale } from "@/services/mutation-options"
+import { getBlockHeight } from "@/services/query-options"
 import { listForSaleSchema } from "@/services/schema"
-import { TListForSaleSchema, TYourAptsResponse } from "@/services/type"
+import { TListForSaleSchema } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useState } from "react"
@@ -36,13 +38,24 @@ import {
 } from "@/components/ui/select"
 
 type Props = {
-  item: TYourAptsResponse
-  currentBlockHeight: number
+  contract: string
+  balance: number
 }
 
-export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
+export function ListForSaleDialog({ contract, balance }: Props) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
+
+  const { connected } = useWallet()
+
+  const {
+    data: blockHeightData,
+    isLoading: isLoadingBlockHeight,
+    isSuccess: isSuccessBlockHeight,
+  } = useQuery({
+    ...getBlockHeight(),
+    enabled: connected,
+  })
 
   const form = useForm<TListForSaleSchema>({
     resolver: zodResolver(listForSaleSchema),
@@ -52,6 +65,8 @@ export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
       targetBuyer: "",
     },
   })
+
+  const currentBlockHeight = blockHeightData?.chain_tip?.block_height || 0
 
   const listAptMutation = useMutation({
     ...listAptForSale(),
@@ -67,19 +82,23 @@ export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
   })
 
   async function onSubmit(values: TListForSaleSchema) {
-    if (!item.contract) return toast.error("Missing asset contract")
+    if (!contract) return toast.error("Missing asset contract")
     console.log("Form Values:", values)
-    if (values.amount > Number(item.balance)) {
+    if (values.amount > Number(balance)) {
       form.setError("amount", {
         type: "manual",
-        message: `Amount cannot exceed the value ${item.balance}`,
+        message: `Amount cannot exceed the value ${balance}`,
       })
+      return
+    }
+    if (!isSuccessBlockHeight || !currentBlockHeight) {
+      toast.error("Unable to fetch current block height")
       return
     }
     listAptMutation.mutate({
       currentBlockHeight,
       ...values,
-      contract: item.contract,
+      contract,
     })
   }
 
@@ -96,7 +115,7 @@ export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
             <FormField
               control={form.control}
               name="listingPrice"
@@ -144,7 +163,7 @@ export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
                 className="bg-muted text-muted-foreground"
                 type="text"
                 disabled
-                value={item.contract}
+                value={contract}
                 readOnly
               />
             </div>
@@ -160,7 +179,7 @@ export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select payment asset" />
                       </SelectTrigger>
                     </FormControl>
@@ -190,7 +209,7 @@ export function ListForSaleDialog({ item, currentBlockHeight }: Props) {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select duration" />
                       </SelectTrigger>
                     </FormControl>

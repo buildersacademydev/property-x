@@ -17,7 +17,6 @@ import {
   TListSaleBlockHeight,
   TTestCoin,
   TWhitelistContractSchema,
-  TYourAptsResponse,
 } from "./type"
 
 export class ApiService {
@@ -40,15 +39,6 @@ export class ApiService {
     return response.data
   }
 
-  static async getYourApts(
-    stxAddress: string
-  ): Promise<{ items: TYourAptsResponse[] }> {
-    const response = await apiClient.get("/api/apts", {
-      params: { address: stxAddress },
-    })
-    return response.data
-  }
-
   static async getTestCoin(url: string): Promise<TTestCoin> {
     const response = await apiClient.get(url)
     return response.data
@@ -68,12 +58,7 @@ export const getRequest = async ({
   if (!CONTRACT_NAME) {
     throw new Error(`No contract mapping found for function: ${functionName}`)
   }
-  console.log("getRequest called with:", {
-    args,
-    postMode,
-    functionName,
-    CONTRACT_NAME,
-  })
+
   try {
     return await request("stx_callContract", {
       contract: `${env.CONTRACT_ADDRESS}.${CONTRACT_NAME}`,

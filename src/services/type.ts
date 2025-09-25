@@ -108,29 +108,6 @@ export interface TMarketplaceListing {
   assetStaking: string
 }
 
-export interface TYourAptsResponse {
-  balance: string
-  contract: string
-  tokenName: string
-  tcoin: {
-    name: string
-    description: string
-    image: string
-    assetId: string
-  }
-  asset: {
-    id: string
-    name: string
-    image: string
-    location: string
-    valuation: number | string
-    tokens: number | string
-    apr: number | string
-    description: string
-    staking: boolean
-  } | null
-}
-
 export type TFunctionName = keyof typeof functionContractMap
 
 export type TWhitelistContractSchema = z.infer<typeof whitelistContractSchema>

@@ -47,3 +47,13 @@ export async function POST(request: Request) {
     return new Response("Internal server error", { status: 500 })
   }
 }
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const address = searchParams.get("address")
+  } catch (error) {
+    console.error("Error fetching listings:", error)
+    return new Response("Internal server error", { status: 500 })
+  }
+}
