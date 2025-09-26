@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 export const listForSaleSchema = z.object({
-  listingPrice: z.number().min(1, "Listing price must be at least 1"),
-  amount: z.number().min(1, "Amount must be at least 1"),
+  listingPrice: z.coerce.number().min(1, "Listing price must be at least 1"),
+  amount: z.coerce.number().min(1, "Amount must be at least 1"),
   paymentAsset: z.string(),
   listingDuration: z.string(),
   targetBuyer: z.string().optional(),
@@ -27,5 +27,5 @@ export const marketplaceSchema = z.object({
 })
 
 export const buyListingSchema = z.object({
-  amount: z.number().min(1, "Amount must be at least 1"),
+  amount: z.coerce.number().min(1, "Amount must be at least 1"),
 })

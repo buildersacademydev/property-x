@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 import Logo from "./logo"
+import { NextLink } from "./next-link"
 
 const Footer: React.FC = () => {
   return (
@@ -74,18 +75,19 @@ const Footer: React.FC = () => {
               <h4 className="mb-4 font-semibold">Legal</h4>
               <div className="space-y-2 text-sm">
                 {[
-                  "Terms of Service",
-                  "Privacy Policy",
-                  "Risk Disclosure",
-                  "Compliance",
-                ].map((item) => (
-                  <button
-                    key={item}
+                  { label: "Terms and Conditions", href: "/terms" },
+                  { label: "Privacy Policy", href: "/privacy" },
+                  { label: "Risk Disclosure", href: "/risk" },
+                  { label: "Compliance", href: "/compliance" },
+                ].map(({ label, href }) => (
+                  <NextLink
+                    key={label}
+                    href={href}
                     className="block text-muted-foreground transition-colors
                       hover:text-foreground"
                   >
-                    {item}
-                  </button>
+                    {label}
+                  </NextLink>
                 ))}
               </div>
             </div>

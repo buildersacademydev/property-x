@@ -7,6 +7,7 @@ import {
   getLocalStorage,
   isConnected,
 } from "@stacks/connect"
+import { toast } from "sonner"
 import React, {
   createContext,
   ReactNode,
@@ -87,16 +88,10 @@ interface WalletContextValue {
   getNftData: (tokenId: number) => Promise<NftData>
   getAssetData: (owner: string, assetId: number) => Promise<AssetData | null>
   fetchIpfsMetadata: <T = any>(cid: string) => Promise<T | null>
-  getMarketplaceListings: () => Promise<MarketplaceListing[]>
   isContractAdmin: () => Promise<boolean>
   updateMarketplaceContract: (principal: string, role: string) => Promise<void>
   updateKycContract: (principal: string, role: string) => Promise<void>
-  whitelistTokenCreator: (
-    contractIdentifier: string,
-    status: boolean
-  ) => Promise<void>
 }
-
 interface WalletProviderProps {
   children: ReactNode
 }
@@ -119,11 +114,9 @@ const WalletContext = createContext<WalletContextValue>({
   getNftData: async () => ({ tokenId: 0, owner: null }),
   getAssetData: async () => null,
   fetchIpfsMetadata: async () => null,
-  getMarketplaceListings: noopPromiseArray,
   isContractAdmin: noopPromiseBool,
   updateMarketplaceContract: noopAsync,
   updateKycContract: noopAsync,
-  whitelistTokenCreator: noopAsync,
 })
 
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
@@ -132,7 +125,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   const [userData, setUserData] = useState<LocalStorageData | null>(null)
   const [balance, setBalance] = useState<Balance>({ pxt: 0, btc: 0 })
 
-  // Type guard for local storage shape
   const isLocalStorageData = (data: unknown): data is LocalStorageData => {
     return !!data && typeof data === "object" && "addresses" in (data as any)
   }
@@ -188,6 +180,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       await fetchBalance(addr)
       await setWalletAddress(addr)
     }
+    toast.success("Wallet connected successfully")
   }
 
   const getDisconnect = (): void => {
@@ -197,6 +190,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     setBalance({ pxt: 0, btc: 0 })
     disconnect()
     void clearWalletAddress()
+    toast("Wallet Disconnected", { description: "You have been logged out." })
   }
 
   const callContract = async ({
@@ -356,27 +350,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     }
   }
 
-  const whitelistTokenCreator = async (
-    contractIdentifier: string,
-    status: boolean
-  ): Promise<void> => {
-    if (!connected) throw new Error("Wallet not connected")
-    try {
-      await simulateContractWrite({
-        contractAddress: "ST1JG6WDA1B4PZD8JZY95RPNKFFF5YKPV57BHPC9G",
-        contractName: "marketplace",
-        functionName: "set-whitelisted",
-        functionArgs: [
-          createPrincipalCV(contractIdentifier),
-          createBoolCV(status),
-        ],
-      })
-    } catch (error) {
-      console.error("Error whitelisting token creator:", error)
-      throw error
-    }
-  }
-
   const fetchIpfsMetadata = async <T = any,>(
     cid: string
   ): Promise<T | null> => {
@@ -393,69 +366,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     }
   }
 
-  const getMarketplaceListings = async (): Promise<MarketplaceListing[]> => {
-    if (!connected || !stxAddress) return []
-    const listings: MarketplaceListing[] = []
-    try {
-      for (let i = 1; i <= 5; i++) {
-        const result = await simulateContractCall({
-          contractAddress: "ST1VZ3YGJKKC8JSSWMS4EZDXXJM7QWRBEZ0ZWM64E",
-          contractName: "nft-marketplace",
-          functionName: "get-listing",
-          functionArgs: [createUintCV(i)],
-          senderAddress: stxAddress,
-        })
-
-        if (result?.value?.type === "tuple") {
-          const tuple = result.value.data as Record<string, any>
-          const tokenIdCv = tuple["tokenId"]
-          if (tokenIdCv?.type === "uint") {
-            const tokenId = tokenIdCv.value as number
-            const nftData = await getNftData(tokenId)
-            if (nftData?.owner) {
-              const assetData = await getAssetData(nftData.owner, tokenId)
-              if (assetData) {
-                const ipfsCid = `QmNR2n4zywCV61MeMLB6JwPueAPqhbtqMfCMKDRQftUSa${i}`
-                const idCv = tuple["id"]
-                const makerCv = tuple["maker"]
-                const priceCv = tuple["price"]
-                const expiryCv = tuple["expiry"]
-                const cancelledCv = tuple["isCancelled"]
-                listings.push({
-                  id: idCv?.type === "uint" ? idCv.value : i,
-                  tokenId,
-                  name: String(assetData.name),
-                  description: assetData.description
-                    ? String(assetData.description)
-                    : "",
-                  assetType: "property",
-                  owner:
-                    makerCv?.type === "principal"
-                      ? makerCv.address
-                      : nftData.owner || "",
-                  price: priceCv?.type === "uint" ? priceCv.value : 0,
-                  currency: "STX",
-                  imageUrl: `https://ipfs.io/ipfs/QmbeQYcm8xTdTtXiYPwTR8oBGPEZ9cZMLs4YgWkfQMCUJ${i}/image.jpg`,
-                  metadataCid: ipfsCid,
-                  createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000),
-                  expiry: expiryCv?.type === "uint" ? expiryCv.value : 0,
-                  isCancelled:
-                    cancelledCv?.type === "bool"
-                      ? Boolean(cancelledCv.value)
-                      : false,
-                })
-              }
-            }
-          }
-        }
-      }
-      return listings
-    } catch (error) {
-      console.error("Error fetching marketplace listings:", error)
-      return []
-    }
-  }
-
   const contextValue: WalletContextValue = {
     connected,
     stxAddress,
@@ -468,11 +378,9 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     getNftData,
     getAssetData,
     fetchIpfsMetadata,
-    getMarketplaceListings,
     isContractAdmin,
     updateMarketplaceContract,
     updateKycContract,
-    whitelistTokenCreator,
   }
 
   return (
