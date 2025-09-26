@@ -1,10 +1,12 @@
-import { getAptsCore } from "@/db/actions/apts"
+import { getApts } from "@/db/actions/apts"
+import { getWalletAddress } from "@/db/actions/wallet"
 import { dalFormatErrorMessage, dalVerifySuccess } from "@/db/helpers"
 import React from "react"
 import Image from "next/image"
 import { formatNumber } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import EmptyWallet from "@/components/common/empty-wallet"
 import { Icons } from "@/components/common/icons"
 import { NextLink } from "@/components/common/next-link"
 
@@ -12,7 +14,12 @@ import EmptyApt from "./_components/empty-apt"
 import { ListForSaleDialog } from "./_components/list-for-sale"
 
 const Apts = async () => {
-  const apt = await getAptsCore()
+  const stxAddress = await getWalletAddress()
+  if (!stxAddress) {
+    return <EmptyWallet />
+  }
+
+  const apt = await getApts(stxAddress)
 
   if (!apt.success && apt.error?.type === "no-data") {
     return <EmptyApt />

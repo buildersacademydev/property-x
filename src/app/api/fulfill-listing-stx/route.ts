@@ -4,11 +4,7 @@ import { TFtStxBuyPayload } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
-import {
-  convertAmount,
-  debugConsole,
-  processRouteTransactions,
-} from "@/lib/utils"
+import { convertAmount, processRouteTransactions } from "@/lib/utils"
 
 export async function POST(request: Request) {
   try {
@@ -17,11 +13,9 @@ export async function POST(request: Request) {
       return new Response("Invalid payload structure", { status: 400 })
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
-    console.log("transactions in stx buy: ", debugConsole(transactions))
     const processedValues = processRouteTransactions<TFtStxBuyPayload>({
       transactions,
     })
-    console.log("Processed Values in stx buy: ", processedValues)
     if (processedValues.length === 0) {
       return new Response("No valid listing transactions found", {
         status: 400,

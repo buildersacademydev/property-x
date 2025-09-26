@@ -2,6 +2,7 @@ import { getListings } from "@/db/actions/listing"
 import { dalFormatErrorMessage, dalVerifySuccess } from "@/db/helpers"
 import React from "react"
 import { Button } from "@/components/ui/button"
+import HandleError from "@/components/common/handle-error"
 
 import EmptyListing from "../_components/empty-listing"
 import ListingCard from "../_components/listing-card"
@@ -10,22 +11,12 @@ import { ViewDetailsDialog } from "../_components/view-details-dialog"
 async function ListingsContent() {
   const res = await getListings("your-listings")
 
-  if (!res.success) {
-    if (res.error?.type === "no-data") {
-      return (
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="mb-8 text-3xl font-bold">Your Listings</h1>
-          <EmptyListing href="/explore" label="Explore Marketplace" />
-        </div>
-      )
-    }
+  if (!res.success && res.error?.type) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="mb-2 text-3xl font-bold">Your Listings</h1>
-        <p className="text-sm text-destructive">
-          {dalFormatErrorMessage(res.error)}
-        </p>
-      </div>
+      <HandleError
+        error={res.error.type}
+        empty={<EmptyListing href="/explore" label="Explore Marketplace" />}
+      />
     )
   }
 
@@ -37,11 +28,19 @@ async function ListingsContent() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {listings.map((listing) => (
           <ListingCard key={listing.listingId} listing={listing}>
-            <Button className="flex-1" variant="outline">
-              Edit
-            </Button>
+            <div className="flex gap-2">
+              <Button className="flex-1" variant="outline">
+                Update Listing
+              </Button>
+              <Button className="flex-1" variant="destructive">
+                Cancel Listing
+              </Button>
+            </div>
+
             <ViewDetailsDialog listing={listing}>
-              <Button className="flex-1">View Details</Button>
+              <Button className="flex-1" variant={"outline"}>
+                View Details
+              </Button>
             </ViewDetailsDialog>
           </ListingCard>
         ))}

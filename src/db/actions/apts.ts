@@ -7,7 +7,6 @@ import { db } from "../drizzle"
 import { dalDbOperation } from "../helpers"
 import { assets, tcoins, whiteListing } from "../schema"
 import { ThrowableDalError } from "../type"
-import { getWalletAddress } from "./wallet"
 
 const getFtBalancesFromApi = async (stxAddress: string) => {
   return dalDbOperation(async () => {
@@ -23,9 +22,8 @@ const getFtBalancesFromApi = async (stxAddress: string) => {
   })
 }
 
-export async function getAptsCore() {
+async function getAptsCore(stxAddress: string) {
   return dalDbOperation(async () => {
-    const stxAddress = await getWalletAddress()
     if (!stxAddress) {
       throw new ThrowableDalError({ type: "invalid-address" })
     }
@@ -104,7 +102,7 @@ export async function getAptsCore() {
   })
 }
 
-const getApts = unstable_cache(getAptsCore, ["apts-data"], {
+export const getApts = unstable_cache(getAptsCore, ["apts-data"], {
   tags: ["apts"],
   revalidate: 3600,
 })

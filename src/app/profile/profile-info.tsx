@@ -97,7 +97,6 @@ const ProfileInfo: React.FC = () => {
             </Button>
           </div>
 
-          {/* Wallet Status */}
           <div className="mt-1 flex items-center gap-2 text-sm">
             <span
               className={

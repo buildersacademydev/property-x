@@ -5,7 +5,7 @@ import { TCoinSchema, TWhitelistContractSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { fetchCallReadOnlyFunction } from "@stacks/transactions"
 import { eq, inArray } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { env } from "@/lib/config/env"
 import { processRouteTransactions } from "@/lib/utils"
 
@@ -170,9 +170,7 @@ export async function POST(request: Request) {
     }
 
     if (toUpdate.length > 0 || toInsert.length > 0) {
-      revalidatePath("/your-apts")
-      // revalidateTag('apts')
-      // revalidateTag('whitelist')
+      revalidateTag("apts")
       console.log("Cache revalidated after whitelist changes")
     }
 

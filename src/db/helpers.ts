@@ -6,7 +6,6 @@ import {
   ThrowableDalError,
 } from "@/db/type"
 import { DrizzleQueryError } from "drizzle-orm"
-import { redirect } from "next/navigation"
 
 export function dalThrowError<T, E extends DalError>(
   dalReturn: DalReturn<T, E>
