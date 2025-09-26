@@ -37,7 +37,7 @@ export async function POST(request: Request) {
         }))
     )
 
-    revalidateTag("/listings")
+    revalidateTag("listings")
 
     return new Response("Listing successful", { status: 200 })
   } catch (error) {

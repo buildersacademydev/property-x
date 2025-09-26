@@ -169,10 +169,7 @@ export async function POST(request: Request) {
       )
     }
 
-    if (toUpdate.length > 0 || toInsert.length > 0) {
-      revalidateTag("apts")
-      console.log("Cache revalidated after whitelist changes")
-    }
+    revalidateTag("apts")
 
     return new Response(
       JSON.stringify({
