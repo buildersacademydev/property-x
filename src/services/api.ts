@@ -55,10 +55,6 @@ export const getRequest = async ({
   functionName: TFunctionName
 }) => {
   const CONTRACT_NAME = functionContractMap[functionName]
-  console.log("args", args)
-  console.log("postMode", postMode)
-  console.log("functionName", functionName)
-  console.log("CONTRACT_NAME", CONTRACT_NAME)
   if (!CONTRACT_NAME) {
     throw new Error(`No contract mapping found for function: ${functionName}`)
   }
@@ -85,9 +81,6 @@ export class ContractService {
   }: TWhitelistContractSchema) {
     const { contractAddress, contractName } =
       getContractNameAddress(whitelisted)
-    console.log("contractAddress", contractAddress)
-    console.log("contractName", contractName)
-    console.log("isWhitelisted", isWhitelisted)
     const args = [
       Cl.contractPrincipal(contractAddress, contractName),
       Cl.bool(isWhitelisted),

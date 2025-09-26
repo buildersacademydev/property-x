@@ -122,13 +122,7 @@ export function ListForSaleDialog({ contract, balance }: Props) {
                 <FormItem>
                   <FormLabel>Listing Price</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      step="any"
-                      placeholder="Enter price"
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
+                    <Input type="number" placeholder="Enter price" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -146,7 +140,6 @@ export function ListForSaleDialog({ contract, balance }: Props) {
                       type="number"
                       placeholder="Enter amount"
                       {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormMessage />

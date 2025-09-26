@@ -1,7 +1,9 @@
 import { getListings } from "@/db/actions/listing"
+import { getWalletAddress } from "@/db/actions/wallet"
 import { dalFormatErrorMessage, dalVerifySuccess } from "@/db/helpers"
 import React from "react"
 import { Button } from "@/components/ui/button"
+import EmptyWallet from "@/components/common/empty-wallet"
 
 import { BuyNowDialog } from "../_components/buy-now-dialog"
 import EmptyExplore from "../_components/empty-listing"
@@ -9,7 +11,11 @@ import ListingCard from "../_components/listing-card"
 import { ViewDetailsDialog } from "../_components/view-details-dialog"
 
 const Page = async () => {
-  const res = await getListings("explore")
+  const stxAddress = await getWalletAddress()
+  if (!stxAddress) {
+    return <EmptyWallet />
+  }
+  const res = await getListings("explore", stxAddress)
 
   if (!res.success) {
     if (res.error?.type === "no-data")

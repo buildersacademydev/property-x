@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm"
+import { unstable_cache } from "next/cache"
 import { getContractNameAddress } from "@/lib/utils"
 
 import { db } from "../drizzle"
@@ -7,12 +8,11 @@ import { assets, listings, tcoins, whiteListing } from "../schema"
 import { ThrowableDalError } from "../type"
 import { getWalletAddress } from "./wallet"
 
-export async function getListings(type: "your-listings" | "explore") {
+export async function getListingsCore(
+  type: "your-listings" | "explore",
+  stxAddress: string
+) {
   return dalDbOperation(async () => {
-    const stxAddress = await getWalletAddress()
-    if (!stxAddress) {
-      throw new ThrowableDalError({ type: "invalid-address" })
-    }
     const listingsData = await db
       .select()
       .from(listings)
@@ -51,13 +51,11 @@ export async function getListings(type: "your-listings" | "explore") {
     }))
 
     const yourListings = finalListings.filter((l) => {
-      const contractAddress = getContractNameAddress(l.contract).contractAddress
-      return contractAddress === stxAddress
+      return l.maker === stxAddress
     })
 
     const exploreListings = finalListings.filter((l) => {
-      const contractAddress = getContractNameAddress(l.contract).contractAddress
-      return contractAddress !== stxAddress
+      return l.maker !== stxAddress
     })
 
     if (type === "your-listings" && yourListings.length === 0) {
@@ -70,3 +68,8 @@ export async function getListings(type: "your-listings" | "explore") {
     return type === "your-listings" ? yourListings : exploreListings
   })
 }
+
+export const getListings = unstable_cache(getListingsCore, ["listing-data"], {
+  tags: ["listings"],
+  revalidate: 3600,
+})
