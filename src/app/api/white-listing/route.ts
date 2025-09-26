@@ -5,7 +5,7 @@ import { TCoinSchema, TWhitelistContractSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { fetchCallReadOnlyFunction } from "@stacks/transactions"
 import { eq, inArray } from "drizzle-orm"
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { env } from "@/lib/config/env"
 import { processRouteTransactions } from "@/lib/utils"
 

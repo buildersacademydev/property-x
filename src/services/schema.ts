@@ -30,7 +30,6 @@ export const buyListingSchema = z.object({
   amount: z.coerce.number().min(1, "Amount must be at least 1"),
 })
 
-// Asset request / creation form schema
 export const assetRequestSchema = z.object({
   assetType: z.string().min(1, "Select an asset type"),
   assetName: z
@@ -61,4 +60,10 @@ export const assetRequestSchema = z.object({
   terms: z
     .boolean({ required_error: "You must agree to terms" })
     .refine((val) => val, { message: "You must agree to terms" }),
+})
+
+export const updateListingSchema = z.object({
+  price: z.coerce.number().min(1, "New price must be at least 1"),
+  amount: z.coerce.number().min(1, "New amount must be at least 1"),
+  expiry: z.enum(["20927", "41855", "89689", "179377", "269066"]),
 })

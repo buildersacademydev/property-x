@@ -3,7 +3,7 @@ import { listings } from "@/db/schema"
 import { TFtStxBuyPayload } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { eq } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { convertAmount, processRouteTransactions } from "@/lib/utils"
 
 export async function POST(request: Request) {
@@ -44,8 +44,7 @@ export async function POST(request: Request) {
 
     await Promise.all(ops)
 
-    revalidatePath("/explore")
-    revalidatePath("/your-listings")
+    revalidateTag("/listings")
 
     return new Response("Token Buy successful", { status: 200 })
   } catch (error) {

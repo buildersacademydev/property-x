@@ -123,6 +123,18 @@ export class ContractService {
     })
   }
 
+  // static async updateListing() {
+  //   const args = [
+  //     Cl.uint(listingId),
+  //     Cl.contractPrincipal(CONTRACT_ADDRESS, CONTRACT_NAME),
+  //     Cl.some(Cl.principal(Data.newAmount)),
+  //     Cl.some(Cl.principal(Data.newPrice)),
+  //     Cl.some(Cl.principal(Data.newExpiry)),
+
+  //   ]
+
+  // }
+
   static async fulfillStx(values: TBuyListing) {
     const { contractAddress, contractName } = getContractNameAddress(
       values.contract

@@ -1,6 +1,7 @@
 import { ApiService } from "@/services/api"
 import { and, eq, inArray } from "drizzle-orm"
 import { unstable_cache } from "next/cache"
+import { env } from "@/lib/config/env"
 import { convertAmount } from "@/lib/utils"
 
 import { db } from "../drizzle"
@@ -104,5 +105,5 @@ async function getAptsCore(stxAddress: string) {
 
 export const getApts = unstable_cache(getAptsCore, ["apts-data"], {
   tags: ["apts"],
-  revalidate: 3600,
+  revalidate: env.NODE_ENV === "test" ? 0 : 3600,
 })

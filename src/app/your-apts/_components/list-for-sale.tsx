@@ -48,11 +48,7 @@ export function ListForSaleDialog({ contract, balance }: Props) {
 
   const { connected } = useWallet()
 
-  const {
-    data: blockHeightData,
-    isLoading: isLoadingBlockHeight,
-    isSuccess: isSuccessBlockHeight,
-  } = useQuery({
+  const { data: blockHeightData, isSuccess: isSuccessBlockHeight } = useQuery({
     ...getBlockHeight(),
     enabled: connected,
   })

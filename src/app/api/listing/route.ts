@@ -2,7 +2,7 @@ import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
 import { TListingSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { convertAmount, processRouteTransactions } from "@/lib/utils"
 
 export async function POST(request: Request) {
@@ -36,9 +36,8 @@ export async function POST(request: Request) {
           topic: values.topic,
         }))
     )
-    revalidatePath("/explore")
-    revalidatePath("/your-listings")
-    console.log("path revalidated")
+
+    revalidateTag("/listings")
 
     return new Response("Listing successful", { status: 200 })
   } catch (error) {
