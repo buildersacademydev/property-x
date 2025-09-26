@@ -38,6 +38,8 @@ export async function POST(request: Request) {
     )
 
     revalidateTag("listings")
+    revalidateTag("ft-balances")
+    revalidateTag("apts")
 
     return new Response("Listing successful", { status: 200 })
   } catch (error) {

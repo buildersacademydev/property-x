@@ -107,7 +107,6 @@ export function BuyNowDialog({
                       type="number"
                       placeholder="Enter amount"
                       {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormMessage />

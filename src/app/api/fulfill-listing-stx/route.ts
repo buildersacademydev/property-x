@@ -4,7 +4,11 @@ import { TFtStxBuyPayload } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { eq } from "drizzle-orm"
 import { revalidateTag } from "next/cache"
-import { convertAmount, processRouteTransactions } from "@/lib/utils"
+import {
+  convertAmount,
+  debugConsole,
+  processRouteTransactions,
+} from "@/lib/utils"
 
 export async function POST(request: Request) {
   try {
@@ -13,9 +17,14 @@ export async function POST(request: Request) {
       return new Response("Invalid payload structure", { status: 400 })
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
+    console.log(
+      "Transactions received stx fulfill:",
+      debugConsole(transactions)
+    )
     const processedValues = processRouteTransactions<TFtStxBuyPayload>({
       transactions,
     })
+    console.log("Processed values stx fulfill:", debugConsole(processedValues))
     if (processedValues.length === 0) {
       return new Response("No valid listing transactions found", {
         status: 400,
@@ -44,7 +53,9 @@ export async function POST(request: Request) {
 
     await Promise.all(ops)
 
-    revalidateTag("/listings")
+    revalidateTag("listings")
+    revalidateTag("ft-balances")
+    revalidateTag("apts")
 
     return new Response("Token Buy successful", { status: 200 })
   } catch (error) {

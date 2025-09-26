@@ -170,6 +170,7 @@ export async function POST(request: Request) {
     }
 
     revalidateTag("apts")
+    revalidateTag("ft-balances")
 
     return new Response(
       JSON.stringify({

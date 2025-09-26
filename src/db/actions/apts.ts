@@ -9,19 +9,26 @@ import { dalDbOperation } from "../helpers"
 import { assets, tcoins, whiteListing } from "../schema"
 import { ThrowableDalError } from "../type"
 
-const getFtBalancesFromApi = async (stxAddress: string) => {
-  return dalDbOperation(async () => {
-    if (!stxAddress) {
-      throw new ThrowableDalError({ type: "invalid-address" })
-    }
-    try {
-      const balancesResponse = await ApiService.getFtBalances(stxAddress)
-      return balancesResponse
-    } catch (error) {
-      throw new ThrowableDalError({ type: "unknown-error", error: error })
-    }
-  })
-}
+const getFtBalancesFromApi = unstable_cache(
+  async (stxAddress: string) => {
+    return dalDbOperation(async () => {
+      if (!stxAddress) {
+        throw new ThrowableDalError({ type: "invalid-address" })
+      }
+      try {
+        const balancesResponse = await ApiService.getFtBalances(stxAddress)
+        return balancesResponse
+      } catch (error) {
+        throw new ThrowableDalError({ type: "unknown-error", error: error })
+      }
+    })
+  },
+  ["ft-balances"],
+  {
+    tags: ["apts", "ft-balances"],
+    revalidate: env.NODE_ENV === "test" ? 0 : 3600,
+  }
+)
 
 async function getAptsCore(stxAddress: string) {
   return dalDbOperation(async () => {
@@ -103,7 +110,8 @@ async function getAptsCore(stxAddress: string) {
   })
 }
 
-export const getApts = unstable_cache(getAptsCore, ["apts-data"], {
-  tags: ["apts"],
-  revalidate: env.NODE_ENV === "test" ? 0 : 3600,
-})
+export const getApts = (stxAddress: string) =>
+  unstable_cache(getAptsCore, ["apts-data", stxAddress], {
+    tags: ["apts", `${stxAddress}`],
+    revalidate: env.NODE_ENV === "test" ? 0 : 3600,
+  })(stxAddress)

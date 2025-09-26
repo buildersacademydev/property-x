@@ -1,13 +1,11 @@
 import { eq } from "drizzle-orm"
 import { unstable_cache } from "next/cache"
 import { env } from "@/lib/config/env"
-import { getContractNameAddress } from "@/lib/utils"
 
 import { db } from "../drizzle"
 import { dalDbOperation } from "../helpers"
 import { assets, listings, tcoins, whiteListing } from "../schema"
 import { ThrowableDalError } from "../type"
-import { getWalletAddress } from "./wallet"
 
 export async function getListingsCore(
   type: "your-listings" | "explore",
