@@ -2,6 +2,7 @@ import { z } from "zod"
 import { functionContractMap } from "@/lib/utils"
 
 import {
+  assetRequestSchema,
   buyListingSchema,
   listForSaleSchema,
   marketplaceSchema,
@@ -126,6 +127,7 @@ export type TWhitelistContractSchema = z.infer<typeof whitelistContractSchema>
 export type TMarketplaceSchema = z.infer<typeof marketplaceSchema>
 export type TBuyListingSchema = z.infer<typeof buyListingSchema>
 export type TListForSaleSchema = z.infer<typeof listForSaleSchema>
+export type TAssetRequestSchema = z.infer<typeof assetRequestSchema>
 
 export type TListSaleBlockHeight = TListForSaleSchema & {
   currentBlockHeight: number

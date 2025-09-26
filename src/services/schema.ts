@@ -29,3 +29,36 @@ export const marketplaceSchema = z.object({
 export const buyListingSchema = z.object({
   amount: z.coerce.number().min(1, "Amount must be at least 1"),
 })
+
+// Asset request / creation form schema
+export const assetRequestSchema = z.object({
+  assetType: z.string().min(1, "Select an asset type"),
+  assetName: z
+    .string()
+    .min(3, "Asset name must be at least 3 characters")
+    .max(100, "Asset name must be at most 100 characters"),
+  tokenSymbol: z
+    .string()
+    .min(1, "Token symbol required")
+    .max(6, "Max 6 characters")
+    .transform((val) => val.toUpperCase()),
+  location: z.string().optional().or(z.literal("")),
+  description: z
+    .string()
+    .max(500, "Max 500 characters")
+    .optional()
+    .or(z.literal("")),
+  tokenSupply: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "string" ? Number(val) : val))
+    .refine((val) => !isNaN(val), { message: "Enter a valid number" })
+    .pipe(z.number().min(1, "Supply must be at least 1")),
+  initialOffering: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "string" ? Number(val) : val))
+    .refine((val) => !isNaN(val), { message: "Enter a valid number" })
+    .pipe(z.number().min(1, "Min 1%").max(100, "Cannot exceed 100%")),
+  terms: z
+    .boolean({ required_error: "You must agree to terms" })
+    .refine((val) => val, { message: "You must agree to terms" }),
+})
