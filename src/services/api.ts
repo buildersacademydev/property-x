@@ -12,10 +12,12 @@ import {
 import {
   TBlockHeightResponse,
   TBuyListing,
+  TCancelListing,
   TFtBalancesResponse,
   TFunctionName,
   TListSaleBlockHeight,
   TTestCoin,
+  TUpdateListing,
   TWhitelistContractSchema,
 } from "./type"
 
@@ -123,17 +125,38 @@ export class ContractService {
     })
   }
 
-  // static async updateListing() {
-  //   const args = [
-  //     Cl.uint(listingId),
-  //     Cl.contractPrincipal(CONTRACT_ADDRESS, CONTRACT_NAME),
-  //     Cl.some(Cl.principal(Data.newAmount)),
-  //     Cl.some(Cl.principal(Data.newPrice)),
-  //     Cl.some(Cl.principal(Data.newExpiry)),
+  static async updateListing(values: TUpdateListing) {
+    const { contractAddress, contractName } = getContractNameAddress(
+      values.contract
+    )
+    const args = [
+      Cl.uint(values.listingId),
+      Cl.contractPrincipal(contractAddress, contractName),
+      Cl.some(Cl.principal(convertAmount(values.amount, "to-u6").toString())),
+      Cl.some(Cl.principal(values.price.toString())),
+      Cl.some(Cl.principal(values.expiry)),
+    ]
 
-  //   ]
+    return await getRequest({
+      args,
+      functionName: "update-listing-ft",
+    })
+  }
 
-  // }
+  static async cancelListing(values: TCancelListing) {
+    const { contractAddress, contractName } = getContractNameAddress(
+      values.contract
+    )
+    const args = [
+      Cl.uint(values.listingId),
+      Cl.contractPrincipal(contractAddress, contractName),
+    ]
+
+    return await getRequest({
+      args,
+      functionName: "cancel-listing-ft",
+    })
+  }
 
   static async fulfillStx(values: TBuyListing) {
     const { contractAddress, contractName } = getContractNameAddress(

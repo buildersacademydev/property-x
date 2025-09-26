@@ -9,6 +9,8 @@ import HandleError from "@/components/common/handle-error"
 import EmptyListing from "../_components/empty-listing"
 import ListingCard from "../_components/listing-card"
 import { ViewDetailsDialog } from "../_components/view-details-dialog"
+import { CancelListingAlert } from "./_components/cancel-listing-alert"
+import { UpdateListingDialog } from "./_components/update-listing-dialog"
 
 async function ListingsContent() {
   const stxAddress = await getWalletAddress()
@@ -36,12 +38,8 @@ async function ListingsContent() {
           <ListingCard key={listing.listingId} listing={listing}>
             <div className="flex w-full flex-col gap-4">
               <div className="flex gap-2">
-                <Button className="flex-1" variant="secondary">
-                  Update Listing
-                </Button>
-                <Button className="flex-1" variant="destructive">
-                  Cancel Listing
-                </Button>
+                <UpdateListingDialog listing={listing} />
+                <CancelListingAlert listing={listing} />
               </div>
 
               <ViewDetailsDialog listing={listing}>

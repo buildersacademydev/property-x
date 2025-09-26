@@ -3,7 +3,9 @@ import { mutationOptions } from "@tanstack/react-query"
 import { ContractService } from "./api"
 import {
   TBuyListing,
+  TCancelListing,
   TListSaleBlockHeight,
+  TUpdateListing,
   TWhitelistContractSchema,
 } from "./type"
 
@@ -20,6 +22,22 @@ export const listAptForSale = () => {
     mutationKey: ["list-apt-for-sale"],
     mutationFn: async (values: TListSaleBlockHeight) =>
       ContractService.listAptForSale({ ...values }),
+  })
+}
+
+export const updateListing = () => {
+  return mutationOptions({
+    mutationKey: ["update-listing"],
+    mutationFn: async (values: TUpdateListing) =>
+      ContractService.updateListing({ ...values }),
+  })
+}
+
+export const cancelListing = () => {
+  return mutationOptions({
+    mutationKey: ["cancel-listing"],
+    mutationFn: async (values: TCancelListing) =>
+      ContractService.cancelListing({ ...values }),
   })
 }
 

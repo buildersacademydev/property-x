@@ -4,7 +4,7 @@ export const listForSaleSchema = z.object({
   listingPrice: z.coerce.number().min(1, "Listing price must be at least 1"),
   amount: z.coerce.number().min(1, "Amount must be at least 1"),
   paymentAsset: z.string(),
-  listingDuration: z.string(),
+  listingDuration: z.enum(["20927", "41855", "89689", "179377", "269066"]),
   targetBuyer: z.string().optional(),
 })
 

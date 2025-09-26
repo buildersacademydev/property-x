@@ -6,6 +6,7 @@ import {
   buyListingSchema,
   listForSaleSchema,
   marketplaceSchema,
+  updateListingSchema,
   whitelistContractSchema,
 } from "./schema"
 
@@ -128,13 +129,20 @@ export type TMarketplaceSchema = z.infer<typeof marketplaceSchema>
 export type TBuyListingSchema = z.infer<typeof buyListingSchema>
 export type TListForSaleSchema = z.infer<typeof listForSaleSchema>
 export type TAssetRequestSchema = z.infer<typeof assetRequestSchema>
+export type TUpdateListingSchema = z.infer<typeof updateListingSchema>
+
+type TListingContract = {
+  listingId: number
+  contract: string
+}
 
 export type TListSaleBlockHeight = TListForSaleSchema & {
   currentBlockHeight: number
   contract: string
 }
 
-export type TBuyListing = TBuyListingSchema & {
-  listingId: number
-  contract: string
-}
+export type TBuyListing = TBuyListingSchema & TListingContract
+
+export type TUpdateListing = TUpdateListingSchema & TListingContract
+
+export type TCancelListing = TListingContract
