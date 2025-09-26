@@ -146,3 +146,19 @@ export type TBuyListing = TBuyListingSchema & TListingContract
 export type TUpdateListing = TUpdateListingSchema & TListingContract
 
 export type TCancelListing = TListingContract
+
+export interface TCancelListingPayload {
+  "ft-asset-contract": string
+  "listing-id": number
+  topic: string
+}
+
+export interface TUpdateListingPayload {
+  "listing-id": number
+  maker: string
+  "new-amt": number
+  "new-expiry": number
+  "new-price": number
+  "old-amt": number
+  topic: string
+}

@@ -129,12 +129,16 @@ export class ContractService {
     const { contractAddress, contractName } = getContractNameAddress(
       values.contract
     )
+    const amountU6 = convertAmount(values.amount, "to-u6")
+    const price = values.price
+    const expiry = Number(values.expiry)
+
     const args = [
       Cl.uint(values.listingId),
       Cl.contractPrincipal(contractAddress, contractName),
-      Cl.some(Cl.principal(convertAmount(values.amount, "to-u6").toString())),
-      Cl.some(Cl.principal(values.price.toString())),
-      Cl.some(Cl.principal(values.expiry)),
+      Cl.some(safeUint(amountU6)),
+      Cl.some(safeUint(price)),
+      Cl.some(safeUint(expiry)),
     ]
 
     return await getRequest({
