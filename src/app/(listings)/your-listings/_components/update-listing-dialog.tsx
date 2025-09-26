@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useMemo, useState } from "react"
+import { useBlockHeight } from "@/hooks/use-block-height"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -40,6 +41,7 @@ interface UpdateListingDialogProps {
 
 export function UpdateListingDialog({ listing }: UpdateListingDialogProps) {
   const [open, setOpen] = useState(false)
+  const { currentBlockHeight, isSuccessBlockHeight } = useBlockHeight()
 
   const form = useForm<TUpdateListingSchema>({
     resolver: zodResolver(updateListingSchema),
@@ -80,8 +82,11 @@ export function UpdateListingDialog({ listing }: UpdateListingDialogProps) {
       toast.error("No changes made to update")
       return
     }
-
+    if (!isSuccessBlockHeight || !currentBlockHeight) {
+      return toast.error("Unable to fetch current block height")
+    }
     mutation.mutate({
+      currentBlockHeight,
       listingId: listing.listingId,
       contract: listing.contract,
       ...values,

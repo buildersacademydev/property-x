@@ -145,7 +145,10 @@ export type TListSaleBlockHeight = TListForSaleSchema & {
 
 export type TBuyListing = TBuyListingSchema & TListingContract
 
-export type TUpdateListing = TUpdateListingSchema & TListingContract
+export type TUpdateListing = TUpdateListingSchema &
+  TListingContract & {
+    currentBlockHeight: number
+  }
 
 export type TCancelListing = TListingContract
 
@@ -165,5 +168,14 @@ export interface TUpdateListingPayload {
   topic: string
 }
 
-export type TStakeApt = z.infer<typeof stakeSchema> & { contract: string }
-export type TUnstakeApt = z.infer<typeof unstakeSchema> & { contract: string }
+export type TStakeAptSchema = z.infer<typeof stakeSchema> & { contract: string }
+export type TUnstakeAptSchema = z.infer<typeof unstakeSchema> & {
+  contract: string
+}
+
+export type TStakeApt = TStakeAptSchema & {
+  contract: string
+  currentBlockHeight: number
+}
+
+export type TUnstakeApt = TUnstakeAptSchema & { contract: string }

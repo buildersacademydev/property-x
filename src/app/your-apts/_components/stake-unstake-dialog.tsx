@@ -2,7 +2,12 @@
 
 import { stakeApt, unstakeApt } from "@/services/mutation-options"
 import { stakeSchema, unstakeSchema } from "@/services/schema"
-import { TStakeApt, TUnstakeApt } from "@/services/type"
+import {
+  TStakeApt,
+  TStakeAptSchema,
+  TUnstakeApt,
+  TUnstakeAptSchema,
+} from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
@@ -10,6 +15,7 @@ import { toast } from "sonner"
 import { z } from "zod"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useBlockHeight } from "@/hooks/use-block-height"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,13 +53,15 @@ interface Props {
   variant: Variant
 }
 
-type StakeFormValues = Omit<TStakeApt, "contract"> & { kind: "stake" }
-type UnstakeFormValues = Omit<TUnstakeApt, "contract"> & { kind: "unstake" }
+type StakeFormValues = TStakeAptSchema & { kind: "stake" }
+type UnstakeFormValues = TUnstakeAptSchema & { kind: "unstake" }
 type FormValues = StakeFormValues | UnstakeFormValues
 
 export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const { currentBlockHeight, isSuccessBlockHeight } = useBlockHeight()
+
   const isStake = variant === "stake"
 
   const form = useForm<FormValues>({
@@ -95,6 +103,9 @@ export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
 
   function onSubmit(values: FormValues) {
     if (!contract) return toast.error("Missing contract address")
+    if (!isSuccessBlockHeight || !currentBlockHeight) {
+      return toast.error("Unable to fetch current block height")
+    }
 
     if (values.amount > Number(balance)) {
       form.setError("amount" as any, {
@@ -107,6 +118,7 @@ export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
     if (values.kind === "stake") {
       const payload: TStakeApt = {
         contract,
+        currentBlockHeight,
         amount: Number(values.amount),
         expiry: values.expiry,
       }

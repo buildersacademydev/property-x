@@ -16,7 +16,9 @@ import {
   TFtBalancesResponse,
   TFunctionName,
   TListSaleBlockHeight,
+  TStakeApt,
   TTestCoin,
+  TUnstakeApt,
   TUpdateListing,
   TWhitelistContractSchema,
 } from "./type"
@@ -94,14 +96,14 @@ export class ContractService {
     })
   }
 
-  static async statkeApt(values: any) {
+  static async statkeApt(values: TStakeApt) {
     const { contractAddress, contractName } = getContractNameAddress(
       values.contract
     )
     const args = [
       Cl.contractPrincipal(contractAddress, contractName),
       Cl.uint(convertAmount(values.amount, "to-u6")),
-      Cl.uint(values.expiry),
+      Cl.uint(values.currentBlockHeight + values.expiry),
     ]
 
     return await getRequest({
@@ -110,13 +112,13 @@ export class ContractService {
     })
   }
 
-  static async unstakeApt(values: any) {
+  static async unstakeApt(values: TUnstakeApt) {
     const { contractAddress, contractName } = getContractNameAddress(
       values.contract
     )
     const args = [
       Cl.contractPrincipal(contractAddress, contractName),
-      Cl.uint(convertAmount(values.amount, "to-u6")),
+      Cl.uint(values.amount),
     ]
 
     return await getRequest({
@@ -160,16 +162,17 @@ export class ContractService {
     const { contractAddress, contractName } = getContractNameAddress(
       values.contract
     )
-    const amountU6 = convertAmount(values.amount, "to-u6")
-    const price = values.price
-    const expiry = Number(values.expiry)
 
     const args = [
       Cl.uint(values.listingId),
       Cl.contractPrincipal(contractAddress, contractName),
-      Cl.some(safeUint(amountU6)),
-      Cl.some(safeUint(price)),
-      Cl.some(safeUint(expiry)),
+      values.amount
+        ? Cl.some(safeUint(convertAmount(values.amount, "to-u6")))
+        : Cl.none(),
+      values.price ? Cl.some(safeUint(values.price)) : Cl.none(),
+      values.expiry
+        ? Cl.some(safeUint(values.currentBlockHeight + values.expiry))
+        : Cl.none(),
     ]
 
     return await getRequest({

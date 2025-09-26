@@ -4,7 +4,11 @@ import { TUpdateListingPayload } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { and, eq } from "drizzle-orm"
 import { revalidatePath, revalidateTag } from "next/cache"
-import { debugConsole, processRouteTransactions } from "@/lib/utils"
+import {
+  convertAmount,
+  debugConsole,
+  processRouteTransactions,
+} from "@/lib/utils"
 
 export async function POST(request: Request) {
   try {
@@ -55,7 +59,7 @@ export async function POST(request: Request) {
       db
         .update(listings)
         .set({
-          amount: v["new-amt"],
+          amount: convertAmount(v["new-amt"], "from-u6"),
           expiry: v["new-expiry"],
           price: v["new-price"],
         })

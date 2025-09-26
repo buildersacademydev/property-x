@@ -63,13 +63,17 @@ export const assetRequestSchema = z.object({
     .refine((val) => val, { message: "You must agree to terms" }),
 })
 
-export const updateListingSchema = amountSchema.extend({
-  price: z.coerce.number().min(1, "New price must be at least 1"),
-  expiry: z.enum(["20927", "41855", "89689", "179377", "269066"]),
-})
+export const updateListingSchema = amountSchema
+  .extend({
+    price: z.coerce.number().min(1, "New price must be at least 1"),
+    expiry: z.enum(["20927", "41855", "89689", "179377", "269066"]),
+  })
+  .partial()
 
-export const stakeSchema = amountSchema.extend({
-  expiry: updateListingSchema.shape.expiry,
-})
+export const stakeSchema = amountSchema
+  .extend({
+    expiry: updateListingSchema.shape.expiry,
+  })
+  .required()
 
 export const unstakeSchema = amountSchema

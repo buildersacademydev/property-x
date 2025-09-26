@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useBlockHeight } from "@/hooks/use-block-height"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -46,12 +47,7 @@ export function ListForSaleDialog({ contract, balance }: Props) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
-  const { connected } = useWallet()
-
-  const { data: blockHeightData, isSuccess: isSuccessBlockHeight } = useQuery({
-    ...getBlockHeight(),
-    enabled: connected,
-  })
+  const { currentBlockHeight, isSuccessBlockHeight } = useBlockHeight()
 
   const form = useForm<TListForSaleSchema>({
     resolver: zodResolver(listForSaleSchema),
@@ -61,8 +57,6 @@ export function ListForSaleDialog({ contract, balance }: Props) {
       targetBuyer: "",
     },
   })
-
-  const currentBlockHeight = blockHeightData?.chain_tip?.block_height || 0
 
   const listAptMutation = useMutation({
     ...listAptForSale(),

@@ -123,10 +123,10 @@ const Apts = async () => {
                       </div>
                     </div>
 
-                    <div className="mt-6 flex flex-col gap-4 sm:flex-row">
+                    <div className="mt-6 flex flex-col gap-4">
                       {item ? (
                         <>
-                          <div className="flex w-full gap-2 sm:flex-1">
+                          <div className="flex w-full gap-2">
                             <StakeUnstakeDialog
                               contract={item.contract}
                               balance={balanceNum}
