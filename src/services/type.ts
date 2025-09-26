@@ -6,6 +6,8 @@ import {
   buyListingSchema,
   listForSaleSchema,
   marketplaceSchema,
+  stakeSchema,
+  unstakeSchema,
   updateListingSchema,
   whitelistContractSchema,
 } from "./schema"
@@ -162,3 +164,6 @@ export interface TUpdateListingPayload {
   "old-amt": number
   topic: string
 }
+
+export type TStakeApt = z.infer<typeof stakeSchema> & { contract: string }
+export type TUnstakeApt = z.infer<typeof unstakeSchema> & { contract: string }

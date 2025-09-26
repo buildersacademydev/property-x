@@ -1,8 +1,11 @@
 import { z } from "zod"
 
-export const listForSaleSchema = z.object({
-  listingPrice: z.coerce.number().min(1, "Listing price must be at least 1"),
+const amountSchema = z.object({
   amount: z.coerce.number().min(1, "Amount must be at least 1"),
+})
+
+export const listForSaleSchema = amountSchema.extend({
+  listingPrice: z.coerce.number().min(1, "Listing price must be at least 1"),
   paymentAsset: z.string(),
   listingDuration: z.enum(["20927", "41855", "89689", "179377", "269066"]),
   targetBuyer: z.string().optional(),
@@ -26,9 +29,7 @@ export const marketplaceSchema = z.object({
   role: z.enum(["admin", "fulfill"] as const),
 })
 
-export const buyListingSchema = z.object({
-  amount: z.coerce.number().min(1, "Amount must be at least 1"),
-})
+export const buyListingSchema = amountSchema
 
 export const assetRequestSchema = z.object({
   assetType: z.string().min(1, "Select an asset type"),
@@ -62,8 +63,13 @@ export const assetRequestSchema = z.object({
     .refine((val) => val, { message: "You must agree to terms" }),
 })
 
-export const updateListingSchema = z.object({
+export const updateListingSchema = amountSchema.extend({
   price: z.coerce.number().min(1, "New price must be at least 1"),
-  amount: z.coerce.number().min(1, "New amount must be at least 1"),
   expiry: z.enum(["20927", "41855", "89689", "179377", "269066"]),
 })
+
+export const stakeSchema = amountSchema.extend({
+  expiry: updateListingSchema.shape.expiry,
+})
+
+export const unstakeSchema = amountSchema

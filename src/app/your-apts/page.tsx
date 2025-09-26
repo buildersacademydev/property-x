@@ -12,6 +12,7 @@ import { NextLink } from "@/components/common/next-link"
 
 import EmptyApt from "./_components/empty-apt"
 import { ListForSaleDialog } from "./_components/list-for-sale"
+import { StakeUnstakeDialog } from "./_components/stake-unstake-dialog"
 
 const Apts = async () => {
   const stxAddress = await getWalletAddress()
@@ -124,14 +125,26 @@ const Apts = async () => {
 
                     <div className="mt-6 flex flex-col gap-4 sm:flex-row">
                       {item ? (
-                        <ListForSaleDialog
-                          contract={item.contract}
-                          balance={balanceNum}
-                        />
+                        <>
+                          <div className="flex w-full gap-2 sm:flex-1">
+                            <StakeUnstakeDialog
+                              contract={item.contract}
+                              balance={balanceNum}
+                              variant="stake"
+                            />
+                            <StakeUnstakeDialog
+                              contract={item.contract}
+                              balance={balanceNum}
+                              variant="unstake"
+                            />
+                          </div>
+
+                          <ListForSaleDialog
+                            contract={item.contract}
+                            balance={balanceNum}
+                          />
+                        </>
                       ) : null}
-                      <Button className="flex-1" variant="outline">
-                        Stake APT
-                      </Button>
                     </div>
                   </div>
                 </div>

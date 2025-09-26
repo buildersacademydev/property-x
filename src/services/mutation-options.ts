@@ -5,6 +5,8 @@ import {
   TBuyListing,
   TCancelListing,
   TListSaleBlockHeight,
+  TStakeApt,
+  TUnstakeApt,
   TUpdateListing,
   TWhitelistContractSchema,
 } from "./type"
@@ -46,5 +48,21 @@ export const fulfillStx = () => {
     mutationKey: ["buy-listing"],
     mutationFn: async (values: TBuyListing) =>
       ContractService.fulfillStx({ ...values }),
+  })
+}
+
+export const stakeApt = () => {
+  return mutationOptions({
+    mutationKey: ["stake-apt"],
+    mutationFn: async (values: TStakeApt) =>
+      ContractService.statkeApt({ ...values }),
+  })
+}
+
+export const unstakeApt = () => {
+  return mutationOptions({
+    mutationKey: ["unstake-apt"],
+    mutationFn: async (values: TUnstakeApt) =>
+      ContractService.unstakeApt({ ...values }),
   })
 }

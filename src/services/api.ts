@@ -94,6 +94,37 @@ export class ContractService {
     })
   }
 
+  static async statkeApt(values: any) {
+    const { contractAddress, contractName } = getContractNameAddress(
+      values.contract
+    )
+    const args = [
+      Cl.contractPrincipal(contractAddress, contractName),
+      Cl.uint(convertAmount(values.amount, "to-u6")),
+      Cl.uint(values.expiry),
+    ]
+
+    return await getRequest({
+      args,
+      functionName: "staking",
+    })
+  }
+
+  static async unstakeApt(values: any) {
+    const { contractAddress, contractName } = getContractNameAddress(
+      values.contract
+    )
+    const args = [
+      Cl.contractPrincipal(contractAddress, contractName),
+      Cl.uint(convertAmount(values.amount, "to-u6")),
+    ]
+
+    return await getRequest({
+      args,
+      functionName: "unstaking",
+    })
+  }
+
   static async listAptForSale({
     currentBlockHeight,
     ...values
