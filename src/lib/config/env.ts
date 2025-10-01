@@ -18,6 +18,10 @@ const clientSchema = z.object({
       "Contract address must be exactly 41 characters (including 0x)"
     ),
   NETWORK: z.enum(["devnet", "testnet", "mainnet"]),
+  MARKETPLACE: z.string().min(1).max(100),
+  FULFILL: z.string().min(1).max(100),
+  ADMIN: z.string().min(1).max(100),
+  STAKE: z.string().min(1).max(100),
 })
 
 const validateServerEnv = () => {
@@ -43,6 +47,10 @@ const validateClientEnv = () => {
   const clientEnv = {
     CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     NETWORK: process.env.NEXT_PUBLIC_NETWORK,
+    MARKETPLACE: process.env.NEXT_PUBLIC_MARKETPLACE,
+    FULFILL: process.env.NEXT_PUBLIC_FULFILL,
+    ADMIN: process.env.NEXT_PUBLIC_ADMIN,
+    STAKE: process.env.NEXT_PUBLIC_STAKE,
   }
 
   const result = clientSchema.safeParse(clientEnv)

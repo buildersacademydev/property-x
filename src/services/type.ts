@@ -178,4 +178,25 @@ export type TStakeApt = TStakeAptSchema & {
   currentBlockHeight: number
 }
 
+export interface TStakePayload {
+  amount: number
+  "block-time": number
+  "stacking-contract": string
+  staker: string
+}
+
+export type TUnstakePayload = Pick<
+  TStakePayload,
+  "amount" | "stacking-contract"
+> & {
+  unstaker: string
+}
+
 export type TUnstakeApt = TUnstakeAptSchema & { contract: string }
+
+export type TTypeSchema = {
+  [key: string]: {
+    type: "string" | "number" | "boolean" | "object" | "array"
+    optional?: boolean
+  }
+}

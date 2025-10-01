@@ -1,9 +1,11 @@
 import util from "util"
-import { TWhitelistContractSchema } from "@/services/type"
+import { TTypeSchema, TWhitelistContractSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { Cl } from "@stacks/transactions"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+
+import { env } from "./config/env"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -69,22 +71,22 @@ export function getContractNameAddress(
 }
 
 export const functionContractMap = {
-  "list-asset-ft": "marketplace",
-  "set-whitelisted": "marketplace",
-  "update-protocol-contract": "marketplace",
-  "update-listing-ft": "marketplace",
-  "set-emergency-stop": "marketplace",
-  "set-contract-owner": "marketplace",
-  "set-transaction-fee-bps": "marketplace",
-  "cancel-listing-ft": "marketplace",
+  "list-asset-ft": env.MARKETPLACE,
+  "set-whitelisted": env.MARKETPLACE,
+  "update-protocol-contract": env.MARKETPLACE,
+  "update-listing-ft": env.MARKETPLACE,
+  "set-emergency-stop": env.MARKETPLACE,
+  "set-contract-owner": env.MARKETPLACE,
+  "set-transaction-fee-bps": env.MARKETPLACE,
+  "cancel-listing-ft": env.MARKETPLACE,
 
-  "fulfil-listing-ft-stx": "marketplace-fulfill",
-  "fulfil-ft-listing-ft": "marketplace-fulfill",
+  "fulfil-listing-ft-stx": env.FULFILL,
+  "fulfil-ft-listing-ft": env.FULFILL,
 
-  "update-contract": "marketplace-admin",
+  "update-contract": env.ADMIN,
 
-  staking: "staking-interface",
-  unstaking: "staking-interface",
+  staking: env.STAKE,
+  unstaking: env.STAKE,
 } as const
 
 export const formatNumber = (val?: number | string) => {
@@ -94,4 +96,26 @@ export const formatNumber = (val?: number | string) => {
     : typeof val === "string"
       ? val
       : "—"
+}
+
+export function createTypeGuard<T extends Record<string, any>>(
+  schema: TTypeSchema
+): (obj: any) => obj is T {
+  return (obj: any): obj is T => {
+    if (typeof obj !== "object" || obj === null) return false
+
+    return Object.entries(schema).every(([key, config]) => {
+      if (config.optional && !(key in obj)) return true
+
+      if (!config.optional && !(key in obj)) return false
+
+      const value = obj[key]
+
+      if (config.type === "array") {
+        return Array.isArray(value)
+      }
+
+      return typeof value === config.type
+    })
+  }
 }

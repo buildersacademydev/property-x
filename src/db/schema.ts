@@ -1,4 +1,12 @@
-import { boolean, integer, pgTable, serial, text } from "drizzle-orm/pg-core"
+import {
+  boolean,
+  integer,
+  bigint as pgBigInt,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core"
 
 export const whiteListing = pgTable("whitelisting", {
   whitelisted: text("whitelisted").primaryKey(),
@@ -41,4 +49,13 @@ export const listings = pgTable("listings", {
   price: integer("price").notNull(),
   taker: text("taker"),
   topic: text("topic").notNull(),
+})
+
+export const stakeApt = pgTable("stake_apt", {
+  contract: text("contract")
+    .primaryKey()
+    .references(() => whiteListing.whitelisted),
+  staker: text("staker").notNull(),
+  amount: integer("amount").notNull(),
+  blockTime: integer("block_time"),
 })
