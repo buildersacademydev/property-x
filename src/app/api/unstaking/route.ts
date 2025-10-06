@@ -6,12 +6,27 @@ import {
   createTypeGuard,
   debugConsole,
   processRouteTransactions,
+  sendRealtimeNotification,
 } from "@/lib/utils"
 
 export async function POST(request: Request) {
+  const id = crypto.randomUUID()
   try {
+    await sendRealtimeNotification({
+      id,
+      status: "pending",
+      title: "Unstaking Apt",
+      message: "Processing unstaking...",
+    })
+
     const payload: StacksPayload = await request.json()
     if (!payload.apply || !Array.isArray(payload.apply)) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Unstaking Apt",
+        message: "Invalid payload structure",
+      })
       return new Response("Invalid payload structure", { status: 400 })
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
@@ -22,6 +37,12 @@ export async function POST(request: Request) {
 
     if (!processedValues.length) {
       console.warn("No unstaking events found in transactions")
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Unstaking Apt",
+        message: "No unstaking transactions found",
+      })
       return new Response("No unstaking transactions found", { status: 400 })
     }
 
@@ -38,6 +59,12 @@ export async function POST(request: Request) {
         "No valid unstaking events after normalization:",
         debugConsole(validUnstakingEvents)
       )
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Unstaking Apt",
+        message: "No valid unstaking transactions found",
+      })
       return new Response("No valid unstaking transactions found", {
         status: 400,
       })
@@ -65,9 +92,23 @@ export async function POST(request: Request) {
     revalidateTag("apts")
     revalidateTag("ft-balances")
 
+    await sendRealtimeNotification({
+      id,
+      status: "success",
+      title: "Unstaked Successfully",
+      message: "Apt unstaked successfully",
+      tag: "apts",
+    })
+
     return new Response("Unstaking apt successful", { status: 200 })
   } catch (error) {
     console.error("Unhandled unstaking route error", error)
+    await sendRealtimeNotification({
+      id,
+      status: "error",
+      title: "Unstaking Apt",
+      message: "Internal server error",
+    })
     return new Response("Internal server error", { status: 500 })
   }
 }

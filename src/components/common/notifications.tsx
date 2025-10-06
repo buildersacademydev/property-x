@@ -23,7 +23,7 @@ export default function Notifications() {
               description: data.message,
             })
             if (data.tag) {
-              revalidateData("apts")
+              revalidateData(data.tag)
             }
           } else if (data.status === "error") {
             realtimeToast.error(data.title, {

@@ -4,12 +4,30 @@ import { TCancelListingPayload } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { and, eq } from "drizzle-orm"
 import { revalidatePath, revalidateTag } from "next/cache"
-import { debugConsole, processRouteTransactions } from "@/lib/utils"
+import {
+  debugConsole,
+  processRouteTransactions,
+  sendRealtimeNotification,
+} from "@/lib/utils"
 
 export async function POST(request: Request) {
+  const id = crypto.randomUUID()
   try {
+    await sendRealtimeNotification({
+      id,
+      status: "pending",
+      title: "Cancelling Listing",
+      message: "Processing cancellation...",
+    })
+
     const payload: StacksPayload = await request.json()
     if (!payload.apply || !Array.isArray(payload.apply)) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Cancelling Listing",
+        message: "Invalid payload structure",
+      })
       return new Response("Invalid payload structure", { status: 400 })
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
@@ -23,6 +41,12 @@ export async function POST(request: Request) {
     )
 
     if (processedValues.length === 0) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Cancelling Listing",
+        message: "No valid cancel listing transactions found",
+      })
       return new Response("No valid cancel listing transactions found", {
         status: 400,
       })
@@ -38,6 +62,12 @@ export async function POST(request: Request) {
     )
 
     if (valid.length === 0) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Cancelling Listing",
+        message: "No valid cancel listing entries after validation",
+      })
       return new Response("No valid cancel listing entries after validation", {
         status: 400,
       })
@@ -67,9 +97,23 @@ export async function POST(request: Request) {
     revalidateTag("apts")
     revalidatePath("/your-listings")
 
+    await sendRealtimeNotification({
+      id,
+      status: "success",
+      title: "Listing Cancelled",
+      message: "Listing cancelled successfully",
+      tag: "apts",
+    })
+
     return new Response("Cancel listing successful", { status: 200 })
   } catch (error) {
     console.error("Error processing cancel listing:", error)
+    await sendRealtimeNotification({
+      id,
+      status: "error",
+      title: "Cancelling Listing",
+      message: "Internal server error",
+    })
     return new Response("Internal server error", { status: 500 })
   }
 }

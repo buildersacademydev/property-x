@@ -3,7 +3,6 @@ import { listings } from "@/db/schema"
 import { TFtStxBuyPayload } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { eq } from "drizzle-orm"
-import { revalidateTag } from "next/cache"
 import {
   convertAmount,
   processRouteTransactions,
@@ -11,15 +10,23 @@ import {
 } from "@/lib/utils"
 
 export async function POST(request: Request) {
+  const id = crypto.randomUUID()
   try {
     await sendRealtimeNotification({
+      id,
       status: "pending",
-      title: "Fulfill Listing STX",
-      message: "Processing listing fulfillment...",
-      tag: "fulfill-listing-stx",
+      title: "Fulfilling Listing",
+      message: "Processing purchase...",
     })
+
     const payload: StacksPayload = await request.json()
     if (!payload.apply || !Array.isArray(payload.apply)) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Fulfilling Listing",
+        message: "Invalid payload structure",
+      })
       return new Response("Invalid payload structure", { status: 400 })
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
@@ -30,12 +37,11 @@ export async function POST(request: Request) {
 
     if (processedValues.length === 0) {
       await sendRealtimeNotification({
+        id,
         status: "error",
-        title: "Fulfill Listing STX",
+        title: "Fulfilling Listing",
         message: "No valid listing transactions found",
-        tag: "fulfill-listing-stx",
       })
-
       return new Response("No valid listing transactions found", {
         status: 400,
       })
@@ -64,21 +70,22 @@ export async function POST(request: Request) {
     await Promise.all(ops)
 
     await sendRealtimeNotification({
+      id,
       status: "success",
-      title: "Fulfill Listing STX",
-      message: "Listing fulfillment processed successfully",
-      tag: "fulfill-listing-stx",
+      title: "Purchase Successful",
+      message: "Token purchase completed successfully",
+      tag: "apts",
     })
 
     return new Response("Token Buy successful", { status: 200 })
   } catch (error) {
-    await sendRealtimeNotification({
-      status: "error",
-      title: "Fulfill Listing STX",
-      message: "Internal server error",
-      tag: "fulfill-listing-stx",
-    })
     console.error("Error in fulfill-listing-stx:", error)
+    await sendRealtimeNotification({
+      id,
+      status: "error",
+      title: "Fulfilling Listing",
+      message: "Internal server error",
+    })
     return new Response("Internal server error", { status: 500 })
   }
 }

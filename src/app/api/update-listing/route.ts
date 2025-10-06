@@ -8,12 +8,27 @@ import {
   convertAmount,
   debugConsole,
   processRouteTransactions,
+  sendRealtimeNotification,
 } from "@/lib/utils"
 
 export async function POST(request: Request) {
+  const id = crypto.randomUUID()
   try {
+    await sendRealtimeNotification({
+      id,
+      status: "pending",
+      title: "Updating Listing",
+      message: "Processing listing update...",
+    })
+
     const payload: StacksPayload = await request.json()
     if (!payload.apply || !Array.isArray(payload.apply)) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Updating Listing",
+        message: "Invalid payload structure",
+      })
       return new Response("Invalid payload structure", { status: 400 })
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
@@ -26,6 +41,12 @@ export async function POST(request: Request) {
       debugConsole(processedValues)
     )
     if (processedValues.length === 0) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Updating Listing",
+        message: "No valid update listing transactions found",
+      })
       return new Response("No valid update listing transactions found", {
         status: 400,
       })
@@ -44,6 +65,12 @@ export async function POST(request: Request) {
     )
 
     if (valid.length === 0) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Updating Listing",
+        message: "No valid update listing entries after validation",
+      })
       return new Response("No valid update listing entries after validation", {
         status: 400,
       })
@@ -78,8 +105,22 @@ export async function POST(request: Request) {
     revalidateTag("apts")
     revalidatePath("/your-listings")
 
+    await sendRealtimeNotification({
+      id,
+      status: "success",
+      title: "Listing Updated",
+      message: "Listing updated successfully",
+      tag: "apts",
+    })
+
     return new Response("Update listing successful", { status: 200 })
   } catch (error) {
+    await sendRealtimeNotification({
+      id,
+      status: "error",
+      title: "Updating Listing",
+      message: "Internal server error",
+    })
     return new Response("Internal server error", { status: 500 })
   }
 }

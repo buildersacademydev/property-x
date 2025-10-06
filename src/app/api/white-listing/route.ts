@@ -7,7 +7,7 @@ import { fetchCallReadOnlyFunction } from "@stacks/transactions"
 import { eq, inArray } from "drizzle-orm"
 import { revalidateTag } from "next/cache"
 import { env } from "@/lib/config/env"
-import { processRouteTransactions } from "@/lib/utils"
+import { processRouteTransactions, sendRealtimeNotification } from "@/lib/utils"
 
 async function saveTokenAndAssetData(contract: string, tokenData: TCoinSchema) {
   try {
@@ -104,7 +104,15 @@ async function processTokenUri(contract: string): Promise<boolean> {
 }
 
 export async function POST(request: Request) {
+  const id = crypto.randomUUID()
   try {
+    await sendRealtimeNotification({
+      id,
+      status: "pending",
+      title: "Processing Whitelist",
+      message: "Processing whitelist updates...",
+    })
+
     const payload: StacksPayload = await request.json()
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
     const processedValues = processRouteTransactions<TWhitelistContractSchema>({
@@ -114,6 +122,12 @@ export async function POST(request: Request) {
     const validValues = processedValues.filter((v) => v !== null)
 
     if (validValues.length === 0) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Processing Whitelist",
+        message: "No valid transactions to process",
+      })
       return new Response("No valid transactions to process", { status: 200 })
     }
 
@@ -172,6 +186,14 @@ export async function POST(request: Request) {
     revalidateTag("apts")
     revalidateTag("ft-balances")
 
+    await sendRealtimeNotification({
+      id,
+      status: "success",
+      title: "Whitelist Updated",
+      message: "Whitelist processing completed successfully",
+      tag: "apts",
+    })
+
     return new Response(
       JSON.stringify({
         message: "Processing completed successfully",
@@ -182,6 +204,12 @@ export async function POST(request: Request) {
       }
     )
   } catch (error) {
+    await sendRealtimeNotification({
+      id,
+      status: "error",
+      title: "Processing Whitelist",
+      message: "Internal server error",
+    })
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

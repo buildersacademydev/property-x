@@ -6,12 +6,27 @@ import {
   createTypeGuard,
   debugConsole,
   processRouteTransactions,
+  sendRealtimeNotification,
 } from "@/lib/utils"
 
 export async function POST(request: Request) {
+  const id = crypto.randomUUID()
   try {
+    await sendRealtimeNotification({
+      id,
+      status: "pending",
+      title: "Staking Apt",
+      message: "Processing staking...",
+    })
+
     const payload: StacksPayload = await request.json()
     if (!payload.apply || !Array.isArray(payload.apply)) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Staking Apt",
+        message: "Invalid payload structure",
+      })
       return new Response("Invalid payload structure", { status: 400 })
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
@@ -23,6 +38,12 @@ export async function POST(request: Request) {
 
     if (!processedValues.length) {
       console.warn("No staking events found in transactions")
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Staking Apt",
+        message: "No staking transactions found",
+      })
       return new Response("No staking transactions found", { status: 400 })
     }
 
@@ -40,6 +61,12 @@ export async function POST(request: Request) {
         "No valid staking events found:",
         debugConsole(processedValues)
       )
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title: "Staking Apt",
+        message: "No valid staking transactions found",
+      })
       return new Response("No valid staking transactions found", {
         status: 400,
       })
@@ -60,9 +87,23 @@ export async function POST(request: Request) {
     revalidateTag("apts")
     revalidateTag("ft-balances")
 
+    await sendRealtimeNotification({
+      id,
+      status: "success",
+      title: "Staked Successfully",
+      message: "Apt staked successfully",
+      tag: "apts",
+    })
+
     return new Response("Staking apt successful", { status: 200 })
   } catch (error) {
     console.error("Unhandled staking route error", error)
+    await sendRealtimeNotification({
+      id,
+      status: "error",
+      title: "Staking Apt",
+      message: "Internal server error",
+    })
     return new Response("Internal server error", { status: 500 })
   }
 }
