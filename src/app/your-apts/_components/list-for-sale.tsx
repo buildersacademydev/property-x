@@ -64,7 +64,6 @@ export function ListForSaleDialog({ contract, balance }: Props) {
       form.reset()
       setOpen(false)
       router.refresh()
-      toast.success("Apt listed for sale successfully")
     },
     onError: (error) => {
       toast.error(`Error listing apt for sale: ${error.message}`)

@@ -6,26 +6,36 @@ import { eq } from "drizzle-orm"
 import { revalidateTag } from "next/cache"
 import {
   convertAmount,
-  debugConsole,
   processRouteTransactions,
+  sendRealtimeNotification,
 } from "@/lib/utils"
 
 export async function POST(request: Request) {
   try {
+    await sendRealtimeNotification({
+      status: "pending",
+      title: "Fulfill Listing STX",
+      message: "Processing listing fulfillment...",
+      tag: "fulfill-listing-stx",
+    })
     const payload: StacksPayload = await request.json()
     if (!payload.apply || !Array.isArray(payload.apply)) {
       return new Response("Invalid payload structure", { status: 400 })
     }
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
-    console.log(
-      "Transactions received stx fulfill:",
-      debugConsole(transactions)
-    )
+
     const processedValues = processRouteTransactions<TFtStxBuyPayload>({
       transactions,
     })
-    console.log("Processed values stx fulfill:", debugConsole(processedValues))
+
     if (processedValues.length === 0) {
+      await sendRealtimeNotification({
+        status: "error",
+        title: "Fulfill Listing STX",
+        message: "No valid listing transactions found",
+        tag: "fulfill-listing-stx",
+      })
+
       return new Response("No valid listing transactions found", {
         status: 400,
       })
@@ -53,13 +63,22 @@ export async function POST(request: Request) {
 
     await Promise.all(ops)
 
-    revalidateTag("listings")
-    revalidateTag("ft-balances")
-    revalidateTag("apts")
+    await sendRealtimeNotification({
+      status: "success",
+      title: "Fulfill Listing STX",
+      message: "Listing fulfillment processed successfully",
+      tag: "fulfill-listing-stx",
+    })
 
     return new Response("Token Buy successful", { status: 200 })
   } catch (error) {
-    console.error("Error processing token buy:", error)
+    await sendRealtimeNotification({
+      status: "error",
+      title: "Fulfill Listing STX",
+      message: "Internal server error",
+      tag: "fulfill-listing-stx",
+    })
+    console.error("Error in fulfill-listing-stx:", error)
     return new Response("Internal server error", { status: 500 })
   }
 }

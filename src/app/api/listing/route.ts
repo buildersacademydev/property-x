@@ -2,20 +2,53 @@ import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
 import { TListingSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
-import { revalidateTag } from "next/cache"
-import { convertAmount, processRouteTransactions } from "@/lib/utils"
+import {
+  convertAmount,
+  processRouteTransactions,
+  sendRealtimeNotification,
+} from "@/lib/utils"
 
 export async function POST(request: Request) {
   try {
+    await sendRealtimeNotification({
+      status: "pending",
+      title: "Listing Apt For Sale",
+      message: "Processing listing...",
+    })
+
     const payload: StacksPayload = await request.json()
+    const isSuccess = payload.apply.every((tx) =>
+      tx.transactions.every((t) => t.metadata.success)
+    )
+
+    if (!isSuccess) {
+      await sendRealtimeNotification({
+        status: "error",
+        title: "Listing Apt For Sale",
+        message: "Contract execution failed for one or more transactions",
+      })
+      return new Response("One or more transactions failed", { status: 400 })
+    }
+
     if (!payload.apply || !Array.isArray(payload.apply)) {
+      await sendRealtimeNotification({
+        status: "error",
+        title: "Listing Apt For Sale",
+        message: "Invalid payload structure",
+      })
       return new Response("Invalid payload structure", { status: 400 })
     }
+
     const transactions = payload.apply.map((tx) => tx.transactions).flat()
     const processedValues = processRouteTransactions<TListingSchema>({
       transactions,
     })
     if (processedValues.length === 0) {
+      await sendRealtimeNotification({
+        status: "error",
+        title: "Listing Apt For Sale",
+        message: "No valid listing transactions found",
+      })
       return new Response("No valid listing transactions found", {
         status: 400,
       })
@@ -37,12 +70,19 @@ export async function POST(request: Request) {
         }))
     )
 
-    revalidateTag("listings")
-    revalidateTag("ft-balances")
-    revalidateTag("apts")
-
+    await sendRealtimeNotification({
+      status: "success",
+      title: "Listed Apt For Sale",
+      message: "Apt listed for sale successfully",
+      tag: "apts",
+    })
     return new Response("Listing successful", { status: 200 })
   } catch (error) {
+    await sendRealtimeNotification({
+      status: "error",
+      title: "Listing Apt For Sale",
+      message: "Internal server error",
+    })
     console.error("Error processing listing:", error)
     return new Response("Internal server error", { status: 500 })
   }

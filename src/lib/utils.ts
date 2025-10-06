@@ -6,6 +6,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 import { env } from "./config/env"
+import { realtime, RealtimeEvents } from "./realtime"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -118,4 +119,10 @@ export function createTypeGuard<T extends Record<string, any>>(
       return typeof value === config.type
     })
   }
+}
+
+export const sendRealtimeNotification = async (
+  data: RealtimeEvents["notification"]["data"]
+) => {
+  await realtime.notification.data.emit(data)
 }

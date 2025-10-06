@@ -1,6 +1,5 @@
 import { eq } from "drizzle-orm"
 import { unstable_cache } from "next/cache"
-import { env } from "@/lib/config/env"
 
 import { db } from "../drizzle"
 import { dalDbOperation } from "../helpers"
@@ -70,5 +69,5 @@ export async function getListingsCore(
 
 export const getListings = unstable_cache(getListingsCore, ["listing-data"], {
   tags: ["listings"],
-  revalidate: env.NODE_ENV === "test" ? 0 : 3600,
+  revalidate: 3600,
 })

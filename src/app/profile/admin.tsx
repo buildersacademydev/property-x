@@ -44,7 +44,6 @@ const Admin = () => {
     ...whitelistContract(),
     onSuccess: () => {
       whitelistForm.reset()
-      toast.success("Contract whitelist status updated successfully")
     },
     onError: (error) => {
       toast.error(`Error updating whitelist status: ${error.message}`)

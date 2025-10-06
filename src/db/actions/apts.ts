@@ -1,7 +1,6 @@
 import { ApiService } from "@/services/api"
 import { and, eq, inArray } from "drizzle-orm"
 import { unstable_cache } from "next/cache"
-import { env } from "@/lib/config/env"
 import { convertAmount } from "@/lib/utils"
 
 import { db } from "../drizzle"
@@ -17,6 +16,7 @@ const getFtBalancesFromApi = unstable_cache(
       }
       try {
         const balancesResponse = await ApiService.getFtBalances(stxAddress)
+        console.log("FT Balances fetched")
         return balancesResponse
       } catch (error) {
         throw new ThrowableDalError({ type: "unknown-error", error: error })
@@ -25,8 +25,8 @@ const getFtBalancesFromApi = unstable_cache(
   },
   ["ft-balances"],
   {
-    tags: ["apts", "ft-balances"],
-    revalidate: env.NODE_ENV === "test" ? 0 : 3600,
+    tags: ["apts"],
+    revalidate: 3600,
   }
 )
 
@@ -106,12 +106,14 @@ async function getAptsCore(stxAddress: string) {
     if (!items || !items.length)
       throw new ThrowableDalError({ type: "no-data" })
 
+    console.log("Apts fetched")
+
     return { items }
   })
 }
 
 export const getApts = (stxAddress: string) =>
   unstable_cache(getAptsCore, ["apts-data", stxAddress], {
-    tags: ["apts", `${stxAddress}`],
-    revalidate: env.NODE_ENV === "test" ? 0 : 3600,
+    tags: ["apts"],
+    revalidate: 3600,
   })(stxAddress)

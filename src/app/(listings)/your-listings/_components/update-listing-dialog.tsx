@@ -64,7 +64,6 @@ export function UpdateListingDialog({ listing }: UpdateListingDialogProps) {
   const mutation = useMutation({
     ...updateListing(),
     onSuccess: () => {
-      toast.success("Listing updated successfully")
       setOpen(false)
     },
     onError: (error: any) => {

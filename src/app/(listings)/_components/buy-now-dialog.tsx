@@ -53,7 +53,6 @@ export function BuyNowDialog({
       form.reset()
       setOpen(false)
       router.refresh()
-      toast.success("Successfully purchased listing!")
     },
     onError: (error) => {
       toast.error(`Error purchasing listing: ${error.message}`)

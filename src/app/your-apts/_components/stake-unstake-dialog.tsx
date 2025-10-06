@@ -78,7 +78,6 @@ export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
   const stakeMutation = useMutation({
     ...stakeApt(),
     onSuccess: () => {
-      toast.success("APT staked successfully")
       form.reset()
       setOpen(false)
       router.refresh()
@@ -91,7 +90,6 @@ export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
   const unstakeMutation = useMutation({
     ...unstakeApt(),
     onSuccess: () => {
-      toast.success("APT unstaked successfully")
       form.reset()
       setOpen(false)
       router.refresh()

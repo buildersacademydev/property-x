@@ -28,7 +28,6 @@ export function CancelListingAlert({ listing }: CancelListingAlertProps) {
   const mutation = useMutation({
     ...cancelListing(),
     onSuccess: () => {
-      toast.success("Listing cancelled successfully")
       setOpen(false)
     },
     onError: (error: any) => {
