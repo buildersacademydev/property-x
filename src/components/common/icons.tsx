@@ -6,6 +6,8 @@ import {
   CheckCircle,
   ChevronUp,
   Clock,
+  CloudAlert,
+  CloudCheck,
   DollarSign,
   Download,
   ExternalLink,
@@ -52,6 +54,8 @@ export const Icons = {
   unplug: (props: IconProps) => <Unplug {...props} />,
   store: (props: IconProps) => <Store {...props} />,
   power: (props: IconProps) => <Power {...props} />,
+  success: (props: IconProps) => <CloudCheck {...props} />,
+  error: (props: IconProps) => <CloudAlert {...props} />,
   spinner: (props: IconProps) => (
     <Loader2 {...props} className="animate-spin" />
   ),

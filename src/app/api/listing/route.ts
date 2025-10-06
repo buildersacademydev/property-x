@@ -9,8 +9,10 @@ import {
 } from "@/lib/utils"
 
 export async function POST(request: Request) {
+  const id = crypto.randomUUID()
   try {
     await sendRealtimeNotification({
+      id,
       status: "pending",
       title: "Listing Apt For Sale",
       message: "Processing listing...",
@@ -23,6 +25,7 @@ export async function POST(request: Request) {
 
     if (!isSuccess) {
       await sendRealtimeNotification({
+        id,
         status: "error",
         title: "Listing Apt For Sale",
         message: "Contract execution failed for one or more transactions",
@@ -32,6 +35,7 @@ export async function POST(request: Request) {
 
     if (!payload.apply || !Array.isArray(payload.apply)) {
       await sendRealtimeNotification({
+        id,
         status: "error",
         title: "Listing Apt For Sale",
         message: "Invalid payload structure",
@@ -45,6 +49,7 @@ export async function POST(request: Request) {
     })
     if (processedValues.length === 0) {
       await sendRealtimeNotification({
+        id,
         status: "error",
         title: "Listing Apt For Sale",
         message: "No valid listing transactions found",
@@ -71,6 +76,7 @@ export async function POST(request: Request) {
     )
 
     await sendRealtimeNotification({
+      id,
       status: "success",
       title: "Listed Apt For Sale",
       message: "Apt listed for sale successfully",
@@ -79,6 +85,7 @@ export async function POST(request: Request) {
     return new Response("Listing successful", { status: 200 })
   } catch (error) {
     await sendRealtimeNotification({
+      id,
       status: "error",
       title: "Listing Apt For Sale",
       message: "Internal server error",

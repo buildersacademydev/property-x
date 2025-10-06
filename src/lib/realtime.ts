@@ -10,6 +10,7 @@ const schema = {
         status: z.enum(["success", "error", "pending"]),
         title: z.string(),
         message: z.string(),
+        id: z.string(),
         tag: z
           .array(z.enum(["apts", "listings"]))
           .or(z.enum(["apts", "listings"]))
