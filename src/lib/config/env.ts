@@ -11,12 +11,7 @@ const serverSchema = z.object({
 })
 
 const clientSchema = z.object({
-  CONTRACT_ADDRESS: z
-    .string()
-    .length(
-      41,
-      "Contract address must be exactly 41 characters (including 0x)"
-    ),
+  CONTRACT_ADDRESS: z.string().min(30).max(42),
   NETWORK: z.enum(["devnet", "testnet", "mainnet"]),
   MARKETPLACE: z.string().min(1).max(100),
   FULFILL: z.string().min(1).max(100),
