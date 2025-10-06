@@ -42,6 +42,8 @@
     "@stacks/transactions": "^7.2.0",
     "@tanstack/react-query": "^5.87.4",
     "@tanstack/react-query-devtools": "^5.87.4",
+    "@upstash/realtime": "^0.2.4",
+    "@upstash/redis": "^1.35.4",
     "axios": "^1.12.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -56,7 +58,7 @@
     "react-hook-form": "^7.62.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
-    "zod": "^3.22.4"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

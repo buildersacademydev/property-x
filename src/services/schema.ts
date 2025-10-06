@@ -19,9 +19,7 @@ export const whitelistContractSchema = z.object({
       /^[a-zA-Z0-9]+\.{1}[a-zA-Z0-9_-]+$/,
       "Contract address must be in the format: address.contractName"
     ),
-  isWhitelisted: z.boolean({
-    required_error: "Whitelisted status is required",
-  }),
+  isWhitelisted: z.boolean(),
 })
 
 export const marketplaceSchema = z.object({
@@ -59,7 +57,7 @@ export const assetRequestSchema = z.object({
     .refine((val) => !isNaN(val), { message: "Enter a valid number" })
     .pipe(z.number().min(1, "Min 1%").max(100, "Cannot exceed 100%")),
   terms: z
-    .boolean({ required_error: "You must agree to terms" })
+    .boolean()
     .refine((val) => val, { message: "You must agree to terms" }),
 })
 

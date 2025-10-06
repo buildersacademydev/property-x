@@ -2,6 +2,7 @@ import { getWalletAddress } from "@/db/actions/wallet"
 import React from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import EmptyWallet from "@/components/common/empty-wallet"
+import Notifications from "@/components/common/notifications"
 
 import Admin from "./admin"
 import Assets from "./assets"
@@ -12,6 +13,7 @@ const Page = async () => {
   return (
     <div className="container mx-auto max-w-5xl p-4 sm:p-6">
       <ProfileInfo />
+      <Notifications />
       {stxAddress ? (
         <div className="mt-6">
           <Tabs defaultValue="assets">

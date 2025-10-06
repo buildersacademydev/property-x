@@ -7,7 +7,19 @@ const serverSchema = z.object({
     .includes("postgresql", {
       message: "DATABASE_URL must be a PostgreSQL connection string",
     }),
+
   NODE_ENV: z.enum(["development", "production", "test"]),
+
+  UPSTASH_REDIS: z
+    .string()
+    .url("UPSTASH_REDIS must be a valid URL")
+    .includes("upstash.io", {
+      message: "UPSTASH_REDIS must be an Upstash Redis endpoint",
+    }),
+
+  UPSTASH_REDIS_TOKEN: z
+    .string()
+    .min(10, "UPSTASH_REDIS_TOKEN must be a non-empty token"),
 })
 
 const clientSchema = z.object({
@@ -23,6 +35,8 @@ const validateServerEnv = () => {
   const serverEnv = {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    UPSTASH_REDIS: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
   }
 
   const result = serverSchema.safeParse(serverEnv)
