@@ -1,114 +1,19 @@
 import { applyUnstakeEvent } from "@/db/actions/staking"
 import { TUnstakePayload } from "@/services/type"
-import { StacksPayload } from "@hirosystems/chainhook-client"
-import { revalidateTag } from "next/cache"
-import {
-  createTypeGuard,
-  debugConsole,
-  processRouteTransactions,
-  sendRealtimeNotification,
-} from "@/lib/utils"
+import { webhookHandler } from "@/lib/utils"
 
 export async function POST(request: Request) {
-  const id = crypto.randomUUID()
-  try {
-    await sendRealtimeNotification({
-      id,
-      status: "pending",
-      title: "Unstaking Apt",
-      message: "Processing unstaking...",
-    })
-
-    const payload: StacksPayload = await request.json()
-    if (!payload.apply || !Array.isArray(payload.apply)) {
-      await sendRealtimeNotification({
-        id,
-        status: "error",
-        title: "Unstaking Apt",
-        message: "Invalid payload structure",
-      })
-      return new Response("Invalid payload structure", { status: 400 })
-    }
-    const transactions = payload.apply.map((tx) => tx.transactions).flat()
-    const processedValues = processRouteTransactions<TUnstakePayload>({
-      transactions,
-    })
-    console.log("Processed unstaking values:", debugConsole(processedValues))
-
-    if (!processedValues.length) {
-      console.warn("No unstaking events found in transactions")
-      await sendRealtimeNotification({
-        id,
-        status: "error",
-        title: "Unstaking Apt",
-        message: "No unstaking transactions found",
-      })
-      return new Response("No unstaking transactions found", { status: 400 })
-    }
-
-    const isValidUnstakingObject = createTypeGuard<TUnstakePayload>({
-      amount: { type: "number" },
-      "stacking-contract": { type: "string" },
-      unstaker: { type: "string" },
-    })
-
-    const validUnstakingEvents = processedValues.filter(isValidUnstakingObject)
-
-    if (!validUnstakingEvents.length) {
-      console.warn(
-        "No valid unstaking events after normalization:",
-        debugConsole(validUnstakingEvents)
-      )
-      await sendRealtimeNotification({
-        id,
-        status: "error",
-        title: "Unstaking Apt",
-        message: "No valid unstaking transactions found",
-      })
-      return new Response("No valid unstaking transactions found", {
-        status: 400,
-      })
-    }
-
-    for (const event of validUnstakingEvents) {
-      try {
-        const result = await applyUnstakeEvent({
+  return webhookHandler<TUnstakePayload>({
+    request,
+    route: "unstaking",
+    dbOperation: async (processedValues) => {
+      const ops = processedValues.map((event) =>
+        applyUnstakeEvent({
           contract: event["stacking-contract"],
           amount: event.amount,
         })
-
-        console.log(
-          `Applied unstaking event for ${event["stacking-contract"]} by ${Array.from(event.unstaker).join(",")}:`,
-          debugConsole(result)
-        )
-      } catch (error) {
-        console.error(
-          `Failed to persist unstaking event for ${event["stacking-contract"]}:`,
-          error
-        )
-      }
-    }
-
-    revalidateTag("apts")
-    revalidateTag("ft-balances")
-
-    await sendRealtimeNotification({
-      id,
-      status: "success",
-      title: "Unstaked Successfully",
-      message: "Apt unstaked successfully",
-      tag: "apts",
-    })
-
-    return new Response("Unstaking apt successful", { status: 200 })
-  } catch (error) {
-    console.error("Unhandled unstaking route error", error)
-    await sendRealtimeNotification({
-      id,
-      status: "error",
-      title: "Unstaking Apt",
-      message: "Internal server error",
-    })
-    return new Response("Internal server error", { status: 500 })
-  }
+      )
+      await Promise.all(ops)
+    },
+  })
 }

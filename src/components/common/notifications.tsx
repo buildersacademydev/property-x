@@ -23,6 +23,7 @@ export default function Notifications() {
               description: data.message,
             })
             if (data.tag) {
+              console.log("tag from notification:", data.tag)
               revalidateData(data.tag)
             }
           } else if (data.status === "error") {
@@ -50,7 +51,7 @@ const realtimeToast = {
     return toast(message, {
       id: options?.id,
       description: options?.description,
-      duration: options?.duration || 4000,
+      duration: options?.duration || 5000,
       icon: <Icons.success />,
       style: {
         background: "oklch(0.594 0.0443 196.0233)",
@@ -66,7 +67,7 @@ const realtimeToast = {
     return toast(message, {
       id: options?.id,
       description: options?.description,
-      duration: options?.duration || 5000,
+      duration: options?.duration || 6000,
       icon: <Icons.error />,
       style: {
         background: "oklch(0.35 0.18 25.33)",

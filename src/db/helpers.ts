@@ -39,6 +39,7 @@ export async function dalDbOperation<T>(operation: () => Promise<T>) {
 
 export function dalFormatErrorMessage(error: DalError) {
   const type = error.type
+  console.log("database error", error)
   switch (error.type) {
     case "invalid-address":
       return "The provided address is invalid."

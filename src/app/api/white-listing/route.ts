@@ -2,12 +2,10 @@ import { db } from "@/db/drizzle"
 import { assets, tcoins, whiteListing } from "@/db/schema"
 import { ApiService } from "@/services/api"
 import { TCoinSchema, TWhitelistContractSchema } from "@/services/type"
-import { StacksPayload } from "@hirosystems/chainhook-client"
 import { fetchCallReadOnlyFunction } from "@stacks/transactions"
 import { eq, inArray } from "drizzle-orm"
-import { revalidateTag } from "next/cache"
 import { env } from "@/lib/config/env"
-import { processRouteTransactions, sendRealtimeNotification } from "@/lib/utils"
+import { webhookHandler } from "@/lib/utils"
 
 async function saveTokenAndAssetData(contract: string, tokenData: TCoinSchema) {
   try {
@@ -104,115 +102,63 @@ async function processTokenUri(contract: string): Promise<boolean> {
 }
 
 export async function POST(request: Request) {
-  const id = crypto.randomUUID()
-  try {
-    await sendRealtimeNotification({
-      id,
-      status: "pending",
-      title: "Processing Whitelist",
-      message: "Processing whitelist updates...",
-    })
+  return webhookHandler<TWhitelistContractSchema>({
+    request,
+    route: "white-listing",
+    dbOperation: async (processedValues) => {
+      const whitelistedAddresses = processedValues.map((v) => v.whitelisted)
+      const existingRecords = await db
+        .select()
+        .from(whiteListing)
+        .where(inArray(whiteListing.whitelisted, whitelistedAddresses))
 
-    const payload: StacksPayload = await request.json()
-    const transactions = payload.apply.map((tx) => tx.transactions).flat()
-    const processedValues = processRouteTransactions<TWhitelistContractSchema>({
-      transactions,
-    })
+      const existingMap = new Map(
+        existingRecords.map((record) => [record.whitelisted, record])
+      )
 
-    const validValues = processedValues.filter((v) => v !== null)
+      const toUpdate: Array<{ whitelisted: string; isWhitelisted: boolean }> =
+        []
+      const toInsert: Array<{ whitelisted: string; isWhitelisted: boolean }> =
+        []
 
-    if (validValues.length === 0) {
-      await sendRealtimeNotification({
-        id,
-        status: "error",
-        title: "Processing Whitelist",
-        message: "No valid transactions to process",
-      })
-      return new Response("No valid transactions to process", { status: 200 })
-    }
+      for (const value of processedValues) {
+        const existing = existingMap.get(value.whitelisted)
 
-    const whitelistedAddresses = validValues.map((v) => v.whitelisted)
-    const existingRecords = await db
-      .select()
-      .from(whiteListing)
-      .where(inArray(whiteListing.whitelisted, whitelistedAddresses))
+        if (!existing && !value.isWhitelisted) {
+          continue
+        }
 
-    const existingMap = new Map(
-      existingRecords.map((record) => [record.whitelisted, record])
-    )
-
-    const toUpdate: Array<{ whitelisted: string; isWhitelisted: boolean }> = []
-    const toInsert: Array<{ whitelisted: string; isWhitelisted: boolean }> = []
-
-    for (const value of validValues) {
-      const existing = existingMap.get(value.whitelisted)
-
-      if (!existing && !value.isWhitelisted) {
-        continue
+        if (existing && existing.isWhitelisted !== value.isWhitelisted) {
+          toUpdate.push({
+            whitelisted: value.whitelisted,
+            isWhitelisted: value.isWhitelisted,
+          })
+        } else if (value.isWhitelisted && !existing) {
+          toInsert.push({
+            whitelisted: value.whitelisted,
+            isWhitelisted: value.isWhitelisted,
+          })
+        }
       }
 
-      if (existing && existing.isWhitelisted !== value.isWhitelisted) {
-        toUpdate.push({
-          whitelisted: value.whitelisted,
-          isWhitelisted: value.isWhitelisted,
-        })
-      } else if (value.isWhitelisted && !existing) {
-        toInsert.push({
-          whitelisted: value.whitelisted,
-          isWhitelisted: value.isWhitelisted,
-        })
-      }
-    }
-
-    if (toUpdate.length > 0) {
-      await Promise.allSettled(
-        toUpdate.map((item) =>
-          db
-            .update(whiteListing)
-            .set({ isWhitelisted: item.isWhitelisted })
-            .where(eq(whiteListing.whitelisted, item.whitelisted))
+      if (toUpdate.length > 0) {
+        await Promise.allSettled(
+          toUpdate.map((item) =>
+            db
+              .update(whiteListing)
+              .set({ isWhitelisted: item.isWhitelisted })
+              .where(eq(whiteListing.whitelisted, item.whitelisted))
+          )
         )
-      )
-    }
-
-    if (toInsert.length > 0) {
-      await db.insert(whiteListing).values(toInsert).onConflictDoNothing()
-
-      await Promise.allSettled(
-        toInsert.map((item) => processTokenUri(item.whitelisted))
-      )
-    }
-
-    revalidateTag("apts")
-    revalidateTag("ft-balances")
-
-    await sendRealtimeNotification({
-      id,
-      status: "success",
-      title: "Whitelist Updated",
-      message: "Whitelist processing completed successfully",
-      tag: "apts",
-    })
-
-    return new Response(
-      JSON.stringify({
-        message: "Processing completed successfully",
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
       }
-    )
-  } catch (error) {
-    await sendRealtimeNotification({
-      id,
-      status: "error",
-      title: "Processing Whitelist",
-      message: "Internal server error",
-    })
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    })
-  }
+
+      if (toInsert.length > 0) {
+        await db.insert(whiteListing).values(toInsert).onConflictDoNothing()
+
+        await Promise.allSettled(
+          toInsert.map((item) => processTokenUri(item.whitelisted))
+        )
+      }
+    },
+  })
 }

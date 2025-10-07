@@ -26,7 +26,7 @@ export const TOAST_MESSAGES: ToastMessages = {
       },
       success: {
         message: "Listing canceled successfully.",
-        tag: "listings",
+        tag: ["apts", "listings"],
       },
     },
     "fulfill-listing-stx": {
@@ -46,7 +46,7 @@ export const TOAST_MESSAGES: ToastMessages = {
       },
       success: {
         message: "Listing created successfully.",
-        tag: "listings",
+        tag: ["apts", "listings"],
       },
     },
     staking: {
@@ -56,7 +56,7 @@ export const TOAST_MESSAGES: ToastMessages = {
       },
       success: {
         message: "Assets staked successfully.",
-        tag: "listings",
+        tag: "apts",
       },
     },
     unstaking: {
@@ -66,7 +66,7 @@ export const TOAST_MESSAGES: ToastMessages = {
       },
       success: {
         message: "Assets unstaked successfully.",
-        tag: "listings",
+        tag: "apts",
       },
     },
     "update-listing": {
@@ -76,7 +76,7 @@ export const TOAST_MESSAGES: ToastMessages = {
       },
       success: {
         message: "Listing updated successfully.",
-        tag: "listings",
+        tag: ["apts", "listings"],
       },
     },
     "white-listing": {
@@ -86,7 +86,7 @@ export const TOAST_MESSAGES: ToastMessages = {
       },
       success: {
         message: "Address whitelisted successfully.",
-        tag: "listings",
+        tag: "apts",
       },
     },
   },

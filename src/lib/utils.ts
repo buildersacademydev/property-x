@@ -3,6 +3,7 @@ import { TTypeSchema, TWhitelistContractSchema } from "@/services/type"
 import { StacksPayload } from "@hirosystems/chainhook-client"
 import { Cl } from "@stacks/transactions"
 import { clsx, type ClassValue } from "clsx"
+import { is } from "drizzle-orm"
 import { twMerge } from "tailwind-merge"
 
 import { API_MESSAGES } from "./content/api-responses"
@@ -157,7 +158,18 @@ export async function webhookHandler<T>({
     const processedValues = processRouteTransactions<T>({
       transactions,
     })
-    if (processedValues.length === 0) {
+    console.log(`Processed Values: ${title}`, debugConsole(processedValues))
+    const validValues = processedValues.filter(
+      (v) =>
+        v &&
+        typeof v === "object" &&
+        !Array.isArray(v) &&
+        Object.keys(v).length > 0 &&
+        ("event-type" in v ? false : true)
+    )
+    console.log(`Valid Values: ${title}`, debugConsole(validValues))
+
+    if (validValues.length === 0) {
       await sendRealtimeNotification({
         id,
         status: "error",
@@ -169,7 +181,7 @@ export async function webhookHandler<T>({
       })
     }
 
-    await dbOperation(processedValues)
+    await dbOperation(validValues)
 
     await sendRealtimeNotification({
       id,

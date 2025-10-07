@@ -2,12 +2,8 @@ import { request } from "@stacks/connect"
 import { Cl } from "@stacks/transactions"
 import { apiClient } from "@/lib/config/api-client"
 import { env } from "@/lib/config/env"
-import {
-  convertAmount,
-  FUNCTIONCONTRACTMAP,
-  getContractNameAddress,
-  safeUint,
-} from "@/lib/utils"
+import { FUNCTIONCONTRACTMAP } from "@/lib/content/constant"
+import { convertAmount, getContractNameAddress, safeUint } from "@/lib/utils"
 
 import {
   TBlockHeightResponse,

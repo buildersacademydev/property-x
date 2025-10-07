@@ -1,7 +1,7 @@
 import { ApiService } from "@/services/api"
 import { and, eq, inArray } from "drizzle-orm"
 import { unstable_cache } from "next/cache"
-import { convertAmount } from "@/lib/utils"
+import { convertAmount, debugConsole } from "@/lib/utils"
 
 import { db } from "../drizzle"
 import { dalDbOperation } from "../helpers"
@@ -37,6 +37,7 @@ async function getAptsCore(stxAddress: string) {
     }
 
     const response = await getFtBalancesFromApi(stxAddress)
+    console.log("FT Balances response", debugConsole(response))
     const balances = response.success ? response.data.results || [] : []
     const contracts = balances.map((b) => b.token.split("::")[0])
 
