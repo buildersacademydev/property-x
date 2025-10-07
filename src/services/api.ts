@@ -4,7 +4,7 @@ import { apiClient } from "@/lib/config/api-client"
 import { env } from "@/lib/config/env"
 import {
   convertAmount,
-  functionContractMap,
+  FUNCTIONCONTRACTMAP,
   getContractNameAddress,
   safeUint,
 } from "@/lib/utils"
@@ -58,7 +58,7 @@ export const getRequest = async ({
   postMode?: boolean
   functionName: TFunctionName
 }) => {
-  const CONTRACT_NAME = functionContractMap[functionName]
+  const CONTRACT_NAME = FUNCTIONCONTRACTMAP[functionName]
   if (!CONTRACT_NAME) {
     throw new Error(`No contract mapping found for function: ${functionName}`)
   }

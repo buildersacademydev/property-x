@@ -1,7 +1,7 @@
 "use server"
 
 import { revalidateTag } from "next/cache"
-import { RealtimeEvents } from "@/lib/realtime"
+import { RealtimeEvents } from "@/lib/realtime/realtime"
 
 export async function revalidateData(
   tag: RealtimeEvents["notification"]["data"]["tag"]

@@ -3,7 +3,7 @@
 import { revalidateData } from "@/db/actions/revalidate-data"
 import { useRealtime } from "@upstash/realtime/client"
 import { toast } from "sonner"
-import type { RealtimeEvents } from "@/lib/realtime"
+import { RealtimeEvents } from "@/lib/realtime/realtime"
 
 import { Icons } from "./icons"
 

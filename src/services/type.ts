@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { functionContractMap } from "@/lib/utils"
+import { FUNCTIONCONTRACTMAP } from "@/lib/content/constant"
 
 import {
   assetRequestSchema,
@@ -124,7 +124,7 @@ export interface TFtStxBuyPayload {
   "tx-fee": number
 }
 
-export type TFunctionName = keyof typeof functionContractMap
+export type TFunctionName = keyof typeof FUNCTIONCONTRACTMAP
 
 export type TWhitelistContractSchema = z.infer<typeof whitelistContractSchema>
 export type TMarketplaceSchema = z.infer<typeof marketplaceSchema>

@@ -5,8 +5,10 @@ import { Cl } from "@stacks/transactions"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-import { env } from "./config/env"
-import { realtime, RealtimeEvents } from "./realtime"
+import { API_MESSAGES } from "./content/api-responses"
+import { TWebhookRoutes } from "./content/constant"
+import { TOAST_MESSAGES } from "./content/toast-messages"
+import { realtime, RealtimeEvents } from "./realtime/realtime"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -71,25 +73,6 @@ export function getContractNameAddress(
   }
 }
 
-export const functionContractMap = {
-  "list-asset-ft": env.MARKETPLACE,
-  "set-whitelisted": env.MARKETPLACE,
-  "update-protocol-contract": env.MARKETPLACE,
-  "update-listing-ft": env.MARKETPLACE,
-  "set-emergency-stop": env.MARKETPLACE,
-  "set-contract-owner": env.MARKETPLACE,
-  "set-transaction-fee-bps": env.MARKETPLACE,
-  "cancel-listing-ft": env.MARKETPLACE,
-
-  "fulfil-listing-ft-stx": env.FULFILL,
-  "fulfil-ft-listing-ft": env.FULFILL,
-
-  "update-contract": env.ADMIN,
-
-  staking: env.STAKE,
-  unstaking: env.STAKE,
-} as const
-
 export const formatNumber = (val?: number | string) => {
   const n = typeof val === "string" ? Number(val) : val
   return typeof n === "number" && isFinite(n)
@@ -125,4 +108,88 @@ export const sendRealtimeNotification = async (
   data: RealtimeEvents["notification"]["data"]
 ) => {
   await realtime.notification.data.emit(data)
+}
+
+export async function webhookHandler<T>({
+  request,
+  route,
+  dbOperation,
+}: {
+  request: Request
+  route: TWebhookRoutes
+  dbOperation: (values: T[]) => Promise<void>
+}) {
+  const id = crypto.randomUUID()
+  const title = TOAST_MESSAGES.webhook[route].title
+  try {
+    await sendRealtimeNotification({
+      id,
+      status: "pending",
+      title,
+      message: TOAST_MESSAGES.webhook[route].pending.message,
+    })
+    const payload: StacksPayload = await request.json()
+    const isSuccess = payload.apply.every((tx) =>
+      tx.transactions.every((t) => t.metadata.success)
+    )
+
+    if (!isSuccess) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title,
+        message: API_MESSAGES.CONTRACT_FAILED,
+      })
+      return new Response(API_MESSAGES.CONTRACT_FAILED, { status: 400 })
+    }
+
+    if (!payload.apply || !Array.isArray(payload.apply)) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title,
+        message: API_MESSAGES.INVALID_PAYLOAD,
+      })
+      return new Response(API_MESSAGES.INVALID_PAYLOAD, { status: 400 })
+    }
+
+    const transactions = payload.apply.map((tx) => tx.transactions).flat()
+    const processedValues = processRouteTransactions<T>({
+      transactions,
+    })
+    if (processedValues.length === 0) {
+      await sendRealtimeNotification({
+        id,
+        status: "error",
+        title,
+        message: API_MESSAGES.NO_VALID_LISTINGS,
+      })
+      return new Response(API_MESSAGES.NO_VALID_LISTINGS, {
+        status: 400,
+      })
+    }
+
+    await dbOperation(processedValues)
+
+    await sendRealtimeNotification({
+      id,
+      status: "success",
+      title,
+      message: TOAST_MESSAGES.webhook[route].success.message,
+      tag: TOAST_MESSAGES.webhook[route].success.tag,
+    })
+
+    return new Response(TOAST_MESSAGES.webhook[route].success.message, {
+      status: 200,
+    })
+  } catch (error) {
+    await sendRealtimeNotification({
+      id,
+      status: "error",
+      title,
+      message: API_MESSAGES.INTERNAL_SERVER_ERROR,
+    })
+    console.error(title, error)
+    return new Response(API_MESSAGES.INTERNAL_SERVER_ERROR, { status: 500 })
+  }
 }
