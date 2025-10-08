@@ -29,12 +29,12 @@ const ConnectWallet = ({ isNav = false, ...props }: ConnectWalletProps) => {
   return (
     <>
       <Button
-        size="sm"
+        size="default"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         {...props}
         className={cn(
-          "group relative flex cursor-pointer items-center gap-2",
+          "group relative flex cursor-pointer items-center gap-2 rounded-lg",
           props.className
         )}
         onClick={handleButtonClick}
@@ -53,7 +53,7 @@ const ConnectWallet = ({ isNav = false, ...props }: ConnectWalletProps) => {
                   transition={{ duration: 0.2 }}
                   className="absolute inset-0"
                 >
-                  <Icons.unplug size={24} />
+                  <Icons.unplug size={16} />
                 </motion.div>
               ) : (
                 <motion.div
@@ -64,7 +64,7 @@ const ConnectWallet = ({ isNav = false, ...props }: ConnectWalletProps) => {
                   transition={{ duration: 0.2 }}
                   className="absolute inset-0"
                 >
-                  <Icons.plug size={24} />
+                  <Icons.plug size={16} />
                 </motion.div>
               )}
             </AnimatePresence>

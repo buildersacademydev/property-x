@@ -4,6 +4,8 @@ import { QueryProvider } from "@/providers/query-provider"
 import React from "react"
 import dynamic from "next/dynamic"
 
+import { ThemeProvider } from "./theme-provider"
+
 const WalletProvider = dynamic(
   () => import("@/providers/wallet-provider").then((m) => m.WalletProvider),
   { ssr: false }
@@ -12,7 +14,9 @@ const WalletProvider = dynamic(
 export function RootProviders({ children }: { children: React.ReactNode }) {
   return (
     <WalletProvider>
-      <QueryProvider>{children}</QueryProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <QueryProvider>{children}</QueryProvider>
+      </ThemeProvider>
     </WalletProvider>
   )
 }

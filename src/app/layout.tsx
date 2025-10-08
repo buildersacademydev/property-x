@@ -27,12 +27,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistMono.className} dark min-h-dvh bg-background
+        className={`${geistMono.className} min-h-dvh bg-background
           text-foreground antialiased`}
       >
         <RootProviders>
           <Nav />
-          {children}
+          <main className="mt-12">{children}</main>
+
           <Footer />
         </RootProviders>
         <Toaster
