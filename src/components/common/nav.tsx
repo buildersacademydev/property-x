@@ -38,7 +38,6 @@ const Nav = () => {
 
   return (
     <Navbar className="px-4">
-      {/* Desktop Navigation */}
       <NavBody>
         <Logo />
         <div
