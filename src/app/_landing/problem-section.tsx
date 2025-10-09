@@ -330,20 +330,20 @@ export function ProblemSection() {
                   {/* Key Message Highlight */}
                   <div
                     className="relative overflow-hidden rounded-2xl border
-                      border-primary/30 bg-gradient-to-br from-primary/10
+                      border-secondary/30 bg-gradient-to-br from-secondary/10
                       via-primary/5 to-transparent p-8 text-center
                       backdrop-blur-sm"
                   >
                     {/* Decorative elements */}
                     <div
                       className="pointer-events-none absolute top-0 left-0
-                        h-full w-1 bg-gradient-to-b from-primary via-primary/50
-                        to-transparent"
+                        h-full w-1 bg-gradient-to-b from-secondary
+                        via-secondary/50 to-transparent"
                     />
                     <div
                       className="pointer-events-none absolute top-0 right-0
-                        h-full w-1 bg-gradient-to-b from-primary via-primary/50
-                        to-transparent"
+                        h-full w-1 bg-gradient-to-b from-secondary
+                        via-secondary/50 to-transparent"
                     />
 
                     <div className="relative space-y-3">
@@ -373,10 +373,9 @@ export function ProblemSection() {
                         </p>
                         {/* Animated underline */}
                         <div
-                          className="mx-auto mt-2 h-1 w-0 rounded-full
+                          className="mx-auto mt-2 h-1 w-full rounded-full
                             bg-gradient-to-r from-transparent via-primary
-                            to-transparent transition-all duration-500
-                            group-hover:w-full"
+                            to-transparent transition-all duration-500"
                         />
                       </div>
                       <div
@@ -404,8 +403,8 @@ export function ProblemSection() {
                     <Badge
                       key={index}
                       variant="secondary"
-                      className="bg-primary/10 px-4 py-1.5 text-sm font-medium
-                        text-primary hover:bg-primary/20"
+                      className="bg-accent/20 px-4 py-1.5 text-sm font-medium
+                        text-accent-foreground hover:bg-accent/30"
                     >
                       {feature}
                     </Badge>
