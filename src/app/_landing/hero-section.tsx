@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { Badge } from "@/components/ui/badge"
-import DatabaseWithRestApi from "@/components/ui/database-with-rest-api"
 import { Separator } from "@/components/ui/separator"
 import ConnectWallet from "@/components/common/connect-wallet"
 import { Icons } from "@/components/common/icons"
@@ -107,15 +106,15 @@ export function HeroSection() {
               >
                 <ConnectWallet
                   size={"lg"}
-                  className="px-10 py-6 text-lg font-medium transition-all
+                  className="mt-6 px-10 py-6 text-lg font-medium transition-all
                     duration-300 hover:scale-[1.03]"
                 />
               </div>
             </div>
           </div>
-          <div className="mt-8 w-full rounded-xl bg-accent/20 p-4">
+          {/* <div className="mt-8 w-full rounded-xl bg-accent/20 p-4">
             <DatabaseWithRestApi />
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
