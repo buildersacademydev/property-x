@@ -27,8 +27,11 @@ export function EcosystemSection() {
                 text-sm font-semibold text-secondary"
             >
               <Icons.award className="mr-2 h-4 w-4" />
-              Ecosystem Alignment — &ldquo;Powered by Stacks, Built for
-              Builders&rdquo;
+              <span className="hidden sm:inline">
+                Ecosystem Alignment — &ldquo;Powered by Stacks, Built for
+                Builders&rdquo;
+              </span>
+              <span className="sm:hidden">Ecosystem Alignment</span>
             </Badge>
 
             <h2

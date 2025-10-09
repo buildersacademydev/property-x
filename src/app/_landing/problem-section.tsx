@@ -57,7 +57,10 @@ export function ProblemSection() {
                 text-sm font-semibold text-destructive"
             >
               <Icons.error className="mr-2 h-4 w-4" />
-              The Problem — &ldquo;Speculative Yield is Broken&rdquo;
+              <span className="hidden sm:inline">
+                The Problem — &ldquo;Speculative Yield is Broken&rdquo;
+              </span>
+              <span className="sm:hidden">The Problem</span>
             </Badge>
 
             <h2

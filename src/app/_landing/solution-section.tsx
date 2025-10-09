@@ -95,8 +95,11 @@ export function SolutionSection() {
                 py-2 text-sm font-semibold"
             >
               <Icons.checkCircle className="mr-2 h-4 w-4" />
-              The Solution — &ldquo;PropertyX: Real-World Yield, Secured by
-              Bitcoin&rdquo;
+              <span className="hidden sm:inline">
+                The Solution — &ldquo;PropertyX: Real-World Yield, Secured by
+                Bitcoin&rdquo;
+              </span>
+              <span className="sm:hidden">The Solution</span>
             </Badge>
 
             <h2
