@@ -4,35 +4,56 @@ import { Icons } from "@/components/common/icons"
 
 export function EcosystemSection() {
   return (
-    <section className="bg-muted/30 py-20">
-      <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-6xl">
+    <section className="relative overflow-hidden bg-muted/30 py-20 lg:py-28">
+      <div className="pointer-events-none absolute inset-0">
+        <div
+          className="absolute top-0 left-1/2 h-[500px] w-[800px]
+            -translate-x-1/2 bg-gradient-to-b from-secondary/5 to-transparent
+            opacity-40 blur-3xl"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-transparent
+            via-background to-transparent"
+        />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4">
+        <div className="mx-auto max-w-7xl">
+          {/* Header */}
           <div className="mb-16 text-center">
-            <div
-              className="mb-4 inline-block rounded-full bg-secondary/10 px-4
-                py-2"
+            <Badge
+              variant="outline"
+              className="mb-6 border-secondary/30 bg-secondary/5 px-4 py-2
+                text-sm font-semibold text-secondary"
             >
-              <span className="text-sm font-semibold text-secondary">
-                Ecosystem Alignment — &ldquo;Powered by Stacks, Built for
-                Builders&rdquo;
+              <Icons.award className="mr-2 h-4 w-4" />
+              Ecosystem Alignment — &ldquo;Powered by Stacks, Built for
+              Builders&rdquo;
+            </Badge>
+
+            <h2
+              className="mb-6 text-4xl leading-tight font-bold tracking-tight
+                text-balance lg:text-5xl"
+            >
+              Building the Future of{" "}
+              <span
+                className="bg-gradient-to-r from-secondary to-secondary/60
+                  bg-clip-text text-transparent"
+              >
+                Bitcoin Finance
               </span>
-            </div>
-            <h2 className="mb-6 text-4xl font-bold text-balance">
-              Building the Future of Bitcoin Finance
             </h2>
+
             <p
-              className="mx-auto max-w-3xl text-xl text-pretty
-                text-muted-foreground"
+              className="mx-auto max-w-3xl text-lg leading-relaxed text-pretty
+                text-muted-foreground lg:text-xl"
             >
-              PropertyX is proudly backed by the Stacks Foundation Grant to
-              pioneer Bitcoin-secured RWAs. We&apos;re not just launching a
-              protocol — we&apos;re building an open framework for the entire
-              ecosystem.
+              Backed by Stacks Foundation Grant to pioneer Bitcoin-secured RWAs
+              with an open framework for the entire ecosystem.
             </p>
           </div>
 
-          {/* Main Value Proposition */}
-          <div className="mb-12">
+          <div className="mx-auto mb-12 max-w-5xl">
             <Card
               className="border-primary/20 bg-gradient-to-br from-primary/5
                 to-secondary/5 p-8 backdrop-blur-sm"
@@ -59,64 +80,147 @@ export function EcosystemSection() {
             </Card>
           </div>
 
-          {/* Ecosystem Benefits */}
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card
-              className="bg-card/80 p-6 backdrop-blur-sm transition-all
-                duration-300 hover:scale-105 hover:shadow-lg"
+              className="group relative overflow-hidden bg-card/80 p-6
+                backdrop-blur-sm transition-all duration-500 hover:shadow-2xl"
             >
               <div
-                className="mb-4 flex h-12 w-12 items-center justify-center
-                  rounded-lg bg-primary/10"
-              >
-                <Icons.bitcoin className="h-6 w-6 text-primary" />
+                className="pointer-events-none absolute inset-0 opacity-0
+                  transition-opacity duration-500 group-hover:opacity-100"
+                style={{
+                  background:
+                    "radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb, 59, 130, 246), 0.1), transparent 40%)",
+                }}
+              />
+
+              <div className="relative z-10">
+                <div
+                  className="mb-4 flex h-12 w-12 items-center justify-center
+                    rounded-xl bg-primary/10 ring-1 ring-primary/20
+                    transition-all duration-500 group-hover:scale-110
+                    group-hover:bg-primary/20 group-hover:shadow-lg
+                    group-hover:shadow-primary/20"
+                  style={{
+                    animation: "bounce 2s ease-in-out infinite",
+                  }}
+                >
+                  <Icons.bitcoin
+                    className="h-6 w-6 text-primary transition-transform
+                      duration-500 group-hover:rotate-12"
+                  />
+                </div>
+                <h3
+                  className="mb-3 text-xl leading-snug font-semibold
+                    text-foreground"
+                >
+                  Bitcoin-Secured
+                </h3>
+                <p
+                  className="text-sm leading-relaxed text-muted-foreground
+                    transition-colors duration-300
+                    group-hover:text-foreground/80"
+                >
+                  Every transaction inherits Bitcoin&apos;s security through
+                  Stacks&apos; proof-of-transfer mechanism.
+                </p>
               </div>
-              <h3 className="mb-3 text-xl font-semibold">Bitcoin-Secured</h3>
-              <p className="text-muted-foreground">
-                Every transaction inherits Bitcoin&apos;s security through
-                Stacks&apos; proof-of-transfer mechanism, ensuring maximum trust
-                and finality.
-              </p>
             </Card>
 
             <Card
-              className="bg-card/80 p-6 backdrop-blur-sm transition-all
-                duration-300 hover:scale-105 hover:shadow-lg"
+              className="group relative overflow-hidden bg-card/80 p-6
+                backdrop-blur-sm transition-all duration-500 hover:shadow-2xl"
             >
               <div
-                className="mb-4 flex h-12 w-12 items-center justify-center
-                  rounded-lg bg-secondary/10"
-              >
-                <Icons.shield className="h-6 w-6 text-secondary" />
+                className="pointer-events-none absolute inset-0 opacity-0
+                  transition-opacity duration-500 group-hover:opacity-100"
+                style={{
+                  background:
+                    "radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--secondary-rgb, 147, 51, 234), 0.1), transparent 40%)",
+                }}
+              />
+
+              <div className="relative z-10">
+                <div
+                  className="mb-4 flex h-12 w-12 items-center justify-center
+                    rounded-xl bg-secondary/10 ring-1 ring-secondary/20
+                    transition-all duration-500 group-hover:scale-110
+                    group-hover:bg-secondary/20 group-hover:shadow-lg
+                    group-hover:shadow-secondary/20"
+                  style={{
+                    animation: "bounce 2s ease-in-out infinite 0.5s",
+                  }}
+                >
+                  <Icons.shield
+                    className="h-6 w-6 text-secondary transition-transform
+                      duration-500 group-hover:rotate-12"
+                  />
+                </div>
+                <h3
+                  className="mb-3 text-xl leading-snug font-semibold
+                    text-foreground"
+                >
+                  Open Framework
+                </h3>
+                <p
+                  className="text-sm leading-relaxed text-muted-foreground
+                    transition-colors duration-300
+                    group-hover:text-foreground/80"
+                >
+                  Open-source legal and technical frameworks enable compliant
+                  RWA projects.
+                </p>
               </div>
-              <h3 className="mb-3 text-xl font-semibold">Open Framework</h3>
-              <p className="text-muted-foreground">
-                Our legal and technical frameworks are open-source, enabling
-                other builders to launch compliant RWA projects without
-                reinventing the wheel.
-              </p>
             </Card>
 
             <Card
-              className="bg-card/80 p-6 backdrop-blur-sm transition-all
-                duration-300 hover:scale-105 hover:shadow-lg"
+              className="group relative overflow-hidden bg-card/80 p-6
+                backdrop-blur-sm transition-all duration-500 hover:shadow-2xl
+                md:col-span-2 lg:col-span-1"
             >
               <div
-                className="mb-4 flex h-12 w-12 items-center justify-center
-                  rounded-lg bg-chart-1/10"
-              >
-                <Icons.users className="h-6 w-6 text-chart-1" />
+                className="pointer-events-none absolute inset-0 opacity-0
+                  transition-opacity duration-500 group-hover:opacity-100"
+                style={{
+                  background:
+                    "radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--chart-1-rgb, 34, 197, 94), 0.1), transparent 40%)",
+                }}
+              />
+
+              <div className="relative z-10">
+                <div
+                  className="mb-4 flex h-12 w-12 items-center justify-center
+                    rounded-xl bg-chart-1/10 ring-1 ring-chart-1/20
+                    transition-all duration-500 group-hover:scale-110
+                    group-hover:bg-chart-1/20 group-hover:shadow-lg
+                    group-hover:shadow-chart-1/20"
+                  style={{
+                    animation: "bounce 2s ease-in-out infinite 1s",
+                  }}
+                >
+                  <Icons.users
+                    className="h-6 w-6 text-chart-1 transition-transform
+                      duration-500 group-hover:rotate-12"
+                  />
+                </div>
+                <h3
+                  className="mb-3 text-xl leading-snug font-semibold
+                    text-foreground"
+                >
+                  Community-First
+                </h3>
+                <p
+                  className="text-sm leading-relaxed text-muted-foreground
+                    transition-colors duration-300
+                    group-hover:text-foreground/80"
+                >
+                  Built with and for the Stacks community to grow the Bitcoin
+                  DeFi ecosystem.
+                </p>
               </div>
-              <h3 className="mb-3 text-xl font-semibold">Community-First</h3>
-              <p className="text-muted-foreground">
-                Built with and for the Stacks community, PropertyX is committed
-                to growing the Bitcoin DeFi ecosystem through collaboration and
-                transparency.
-              </p>
             </Card>
           </div>
 
-          {/* Stacks Foundation Badge */}
           <div className="mt-12 text-center">
             <Badge variant="secondary" className="px-6 py-3 text-base">
               <Icons.award className="mr-2 h-5 w-5" />

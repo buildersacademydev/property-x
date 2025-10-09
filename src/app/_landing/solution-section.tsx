@@ -116,18 +116,15 @@ export function SolutionSection() {
               className="mx-auto max-w-3xl text-lg leading-relaxed text-pretty
                 text-muted-foreground lg:text-xl"
             >
-              PropertyX tokenizes future revenue from real businesses into
-              yield-bearing digital assets. Liquidity providers fund tokenized
-              offerings — like a trucking operation with recurring invoices —
-              and earn dividends when revenue clears.
+              Each offering is fully transparent, legally compliant, and secured
+              by Stacks smart contracts anchored to Bitcoin.
             </p>
             <p
               className="mx-auto mt-4 max-w-3xl text-base text-muted-foreground
                 lg:text-lg"
             >
-              Each offering is fully transparent, legally structured, and
-              powered by Stacks smart contracts that anchor every transaction to
-              Bitcoin.
+              PropertyX turns real business revenue into yield-bearing digital
+              assets.
             </p>
           </div>
 
