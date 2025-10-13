@@ -1,12 +1,16 @@
 "use client"
 
+import { useState } from "react"
 import type React from "react"
 import { Badge } from "@/components/ui/badge"
+import { Banner } from "@/components/ui/banner"
 import { Separator } from "@/components/ui/separator"
 import ConnectWallet from "@/components/common/connect-wallet"
 import { Icons } from "@/components/common/icons"
 
 export function HeroSection() {
+  const [showBanner, setShowBanner] = useState(true)
+
   return (
     <section
       id="hero"
@@ -47,9 +51,42 @@ export function HeroSection() {
         <div className="mx-auto max-w-4xl">
           <div className="flex flex-col items-center text-center">
             <div
-              className="animate-in space-y-8 duration-1000
+              className="w-full animate-in space-y-8 duration-1000
                 slide-in-from-bottom-8"
             >
+              <div
+                className="animate-in delay-100 duration-1000 fade-in
+                  slide-in-from-top-4"
+              >
+                <Banner
+                  show={showBanner}
+                  onHide={() => setShowBanner(false)}
+                  icon={
+                    <Icons.award className="mb-px h-4 w-4 text-green-800" />
+                  }
+                  title={
+                    <>
+                      <span className="font-semibold">
+                        $35,000 grant secured
+                      </span>{" "}
+                      — advancing Real World Assets on Stacks and Bitcoin
+                    </>
+                  }
+                  action={{
+                    label: "View Details",
+                    onClick: () => {
+                      // Navigate to the relevant section or external link
+                      window.scrollTo({
+                        top:
+                          document.getElementById("how-it-works")?.offsetTop ||
+                          0,
+                        behavior: "smooth",
+                      })
+                    },
+                  }}
+                />
+              </div>
+
               <div className="space-y-4">
                 <Badge
                   variant="secondary"

@@ -99,14 +99,14 @@ const Apts = async () => {
                         >
                           {name}
                         </div>
-                        <NextLink
+                        {/* <NextLink
                           href={`/your-apts/${encodeURIComponent(item?.contract as string)}`}
                           className="flex items-center gap-1 text-primary
                             transition-colors hover:text-foreground"
                           prefetch={false}
                         >
                           <Icons.externalLink size={16} />
-                        </NextLink>
+                        </NextLink> */}
                       </div>
 
                       <div className="mt-4 grid grid-cols-2 gap-3 text-sm">

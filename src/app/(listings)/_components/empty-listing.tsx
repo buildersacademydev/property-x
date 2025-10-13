@@ -7,7 +7,7 @@ import { Icons } from "@/components/common/icons"
 import { NextLink } from "@/components/common/next-link"
 
 interface EmptyListingProps {
-  href: string
+  href: "/explore" | "/your-apts" | "/your-listings"
   label: string
 }
 

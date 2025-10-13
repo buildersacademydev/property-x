@@ -82,7 +82,7 @@ const Footer: React.FC = () => {
                 ].map(({ label, href }) => (
                   <NextLink
                     key={label}
-                    href={href}
+                    href={href as any}
                     className="block text-muted-foreground transition-colors
                       hover:text-foreground"
                   >
