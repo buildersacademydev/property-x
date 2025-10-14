@@ -13,11 +13,11 @@ const WalletProvider = dynamic(
 
 export function RootProviders({ children }: { children: React.ReactNode }) {
     return (
-        <WalletProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <WalletProvider>
                 <QueryProvider>{children}</QueryProvider>
-            </ThemeProvider>
-        </WalletProvider>
+            </WalletProvider>
+        </ThemeProvider>
     )
 }
 

@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from "motion/react"
 import React, { useState, type ComponentPropsWithoutRef } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
 import { Icons } from "@workspace/ui/components/icons"
@@ -11,11 +10,10 @@ type LaunchAppProps = ComponentPropsWithoutRef<typeof Button> & {
 }
 
 const LaunchApp = ({ ...props }: LaunchAppProps) => {
-    const router = useRouter()
     const [hovered, setHovered] = useState(false)
 
     const handleButtonClick = () => {
-        router.push("/")
+        window.open("https://app.propertyx.finance/", "_blank")
     }
 
     return (
