@@ -1,30 +1,37 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import type { Metadata } from "next";
+import { Geist_Mono } from "next/font/google";
+import "@workspace/ui/globals.css";
+import Nav from "@/components/nav";
+import { ThemeProvider } from "@workspace/ui/components/theme-provider";
+import Footer from "@/components/footer";
 
-import "@workspace/ui/globals.css"
-import { Providers } from "@/components/providers"
-
-const fontSans = Geist({
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  variable: "--font-sans",
 })
 
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
+export const metadata: Metadata = {
+  title: "PropertyX Protocol",
+  description: "Tokenize Urban Real-World Assets on PropertyX",
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
+        className={`${geistMono.className} min-h-dvh bg-background
+          text-foreground antialiased`}
       >
-        <Providers>{children}</Providers>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Nav />
+          <main className="mt-12">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

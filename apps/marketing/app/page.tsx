@@ -1,12 +1,19 @@
-import { Button } from "@workspace/ui/components/button"
+import { CtaSection } from "./_landing/cta-section";
+import { HeroSection } from "./_landing/hero-section";
 
-export default function Page() {
+export default function PropertyXLanding() {
   return (
-    <div className="flex items-center justify-center min-h-svh">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold">Hello World</h1>
-        <Button size="sm">Button</Button>
-      </div>
+    <div className="min-h-screen">
+      {/* <ScrollToTop /> */}
+      <HeroSection />
+      {/* <SocialProofSection /> */}
+      {/* <ProblemSection /> */}
+      {/* <SolutionSection /> */}
+      {/* <FeaturesSection /> */}
+      {/* <EcosystemSection /> */}
+      {/* <TestimonialsSection /> */}
+      {/* <FaqSection /> */}
+      <CtaSection />
     </div>
   )
 }
