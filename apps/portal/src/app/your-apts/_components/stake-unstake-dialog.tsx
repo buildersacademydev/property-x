@@ -53,8 +53,8 @@ interface Props {
   variant: Variant
 }
 
-type StakeFormValues = z.input<typeof stakeSchema> & { kind: "stake" }
-type UnstakeFormValues = z.input<typeof unstakeSchema> & { kind: "unstake" }
+type StakeFormValues = TStakeAptSchema & { kind: "stake" }
+type UnstakeFormValues = TUnstakeAptSchema & { kind: "unstake" }
 type FormValues = StakeFormValues | UnstakeFormValues
 
 export function StakeUnstakeDialog({ contract, balance, variant }: Props) {

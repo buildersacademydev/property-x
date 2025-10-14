@@ -43,6 +43,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.4",
+    "@workspace/typescript-config": "workspace:*",
     "typescript": "^5"
   }
 }

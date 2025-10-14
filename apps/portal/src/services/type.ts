@@ -168,8 +168,8 @@ export interface TUpdateListingPayload {
   topic: string
 }
 
-export type TStakeAptSchema = z.input<typeof stakeSchema> & { contract: string }
-export type TUnstakeAptSchema = z.input<typeof unstakeSchema> & {
+export type TStakeAptSchema = z.infer<typeof stakeSchema> & { contract: string }
+export type TUnstakeAptSchema = z.infer<typeof unstakeSchema> & {
   contract: string
 }
 
