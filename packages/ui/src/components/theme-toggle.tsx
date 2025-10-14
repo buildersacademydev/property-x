@@ -2,8 +2,8 @@
 
 import { motion } from "motion/react"
 import * as React from "react"
-import { cn } from "@/lib/utils"
-import { useThemeToggle } from "@/hooks/use-theme-toggle"
+import { cn } from "@workspace/ui/lib/utils"
+import { useThemeToggle } from "@workspace/ui/hooks/use-theme-toggle"
 
 export function ThemeToggle() {
     const { isDark, toggleTheme } = useThemeToggle()

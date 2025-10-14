@@ -42,7 +42,7 @@ const LaunchApp = ({ ...props }: LaunchAppProps) => {
                                 transition={{ duration: 0.2 }}
                                 className="absolute inset-0"
                             >
-                                <Icons.power size={16} />
+                                <Icons.zap size={16} />
                             </motion.div>
                         ) : (
                             <motion.div
@@ -53,7 +53,7 @@ const LaunchApp = ({ ...props }: LaunchAppProps) => {
                                 transition={{ duration: 0.2 }}
                                 className="absolute inset-0"
                             >
-                                <Icons.zap size={16} />
+                                <Icons.power size={16} />
                             </motion.div>
                         )}
                     </AnimatePresence>

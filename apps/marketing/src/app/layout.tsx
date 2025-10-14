@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "@workspace/ui/globals.css";
+import Nav from "@/components/nav";
+import { ThemeProvider } from "@workspace/ui/components/theme-provider";
+import Footer from "@/components/footer";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -9,7 +12,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "PropertyX Protocol",
-  description: "Tokenize Urban Real-World Assets on Stacks",
+  description: "Tokenize Urban Real-World Assets on PropertyX",
 }
 
 export default function RootLayout({
@@ -23,7 +26,11 @@ export default function RootLayout({
         className={`${geistMono.className} min-h-dvh bg-background
           text-foreground antialiased`}
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Nav />
+          <main className="mt-12">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

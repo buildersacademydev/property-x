@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Icons } from "./icons.js"
+import { Icons } from "@workspace/ui/components/icons"
 
 interface LogoProps {
     withText?: boolean

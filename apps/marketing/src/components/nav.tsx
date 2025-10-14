@@ -7,6 +7,7 @@ import Logo from "@workspace/ui/components/logo"
 import Link from "next/link"
 import { cn } from "@workspace/ui/lib/utils"
 import LaunchApp from "./launch-app"
+import { ThemeToggle } from "@workspace/ui/components/theme-toggle"
 
 const navItems = [
     {
