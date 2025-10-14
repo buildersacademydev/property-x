@@ -57,7 +57,6 @@ const Nav = () => {
                 </div>
             </NavBody>
 
-            {/* Mobile Navigation */}
             <MobileNav>
                 <MobileNavHeader>
                     <Logo />

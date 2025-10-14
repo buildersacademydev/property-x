@@ -1,7 +1,7 @@
 import type React from "react"
-import { Badge } from "@workspace/ui/components/badge"
 import { Icons } from "@workspace/ui/components/icons"
 import LaunchApp from "@/components/launch-app"
+import Banner from "@/components/banner"
 
 export function HeroSection() {
   return (
@@ -47,47 +47,8 @@ export function HeroSection() {
               className="w-full animate-in space-y-8 duration-1000
                 slide-in-from-bottom-8"
             >
-              {/* <div
-                className="animate-in delay-100 duration-1000 fade-in
-                  slide-in-from-top-4"
-              >
-                <Banner
-                  show={showBanner}
-                  onHide={() => setShowBanner(false)}
-                  icon={
-                    <Icons.award className="mb-px h-4 w-4 text-green-800" />
-                  }
-                  title={
-                    <>
-                      <span className="font-semibold">
-                        $35,000 grant secured
-                      </span>{" "}
-                      — advancing Real World Assets on Stacks and Bitcoin
-                    </>
-                  }
-                  action={{
-                    label: "View Details",
-                    onClick: () => {
-                      window.scrollTo({
-                        top:
-                          document.getElementById("how-it-works")?.offsetTop ||
-                          0,
-                        behavior: "smooth",
-                      })
-                    },
-                  }}
-                />
-              </div> */}
-
               <div className="space-y-4">
-                <Badge
-                  variant="secondary"
-                  className="animate-in text-sm font-medium delay-300
-                    duration-1000 fade-in"
-                >
-                  <Icons.bitcoin className="mr-2 h-4 w-4" />
-                  Bitcoin-Secured Real Estate
-                </Badge>
+                <Banner text=" $35,000 grant secured from stacks" />
 
                 <h1
                   className="animate-in text-[clamp(2.4rem,6vw,3.75rem)]

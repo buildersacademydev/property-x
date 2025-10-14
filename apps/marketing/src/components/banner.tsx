@@ -1,102 +1,112 @@
-"use client"
+"use client";
 
-import { cn } from "@workspace/ui/lib/utils"
-import { AnimatePresence, motion } from "motion/react"
-import * as React from "react"
+import { cn } from "@workspace/ui/lib/utils";
+import { motion, type Easing } from "motion/react";
+import Link from "next/link";
+import type { Route } from "next";
+
+const ease: Easing = [0.16, 1, 0.3, 1];
 
 interface BannerProps {
-    show: boolean
-    onHide: () => void
-    icon?: React.ReactNode
-    title: React.ReactNode
-    action: {
-        label: string
-        onClick: () => void
-    }
-    announcement?: string
-    learnMoreUrl?: string
-    className?: string
+    text: string;
+    href?: string;
+    className?: string;
 }
 
-export function Banner({
-    show,
-    onHide,
-    icon,
-    title,
-    action,
-    announcement = "📣 Announcement",
-    learnMoreUrl,
-    className,
-}: BannerProps) {
-    return (
-        <AnimatePresence>
-            {show && (
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                    className={cn("relative w-full", className)}
-                >
-                    <div
-                        className={cn(
-                            "flex w-full items-center justify-between space-x-4",
-                            "rounded-full bg-primary/20 ring-1 ring-accent",
-                            "px-3 py-2 sm:px-4"
-                        )}
-                    >
-                        {/* Left side: Announcement badge + title */}
-                        <div className="flex flex-1 items-center space-x-2 overflow-hidden">
-                            <div
-                                className={cn(
-                                    `flex w-fit items-center gap-1.5 rounded-full bg-accent px-2.5
-                  py-1`,
-                                    "text-xs font-medium text-primary sm:text-sm",
-                                    "whitespace-nowrap"
-                                )}
-                            >
-                                {icon && <span className="flex-shrink-0">{icon}</span>}
-                                <span className="hidden sm:inline">{announcement}</span>
-                            </div>
-                            <p
-                                className="truncate text-xs font-medium text-primary sm:text-sm"
-                            >
-                                {title}
-                            </p>
-                        </div>
+const Sparkles = () => (
+    <svg
+        className="h-4 w-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <motion.path
+            d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+            fill="currentColor"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0, 1, 1, 0] }}
+            transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 1,
+                ease: "easeInOut",
+            }}
+        />
+        <motion.path
+            d="M19 14L19.5 16.5L22 17L19.5 17.5L19 20L18.5 17.5L16 17L18.5 16.5L19 14Z"
+            fill="currentColor"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0, 1, 1, 0] }}
+            transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 1,
+                delay: 0.5,
+                ease: "easeInOut",
+            }}
+        />
+        <motion.path
+            d="M6 14L6.5 16.5L9 17L6.5 17.5L6 20L5.5 17.5L3 17L5.5 16.5L6 14Z"
+            fill="currentColor"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0, 1, 1, 0] }}
+            transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 1,
+                delay: 0.3,
+                ease: "easeInOut",
+            }}
+        />
+    </svg>
+);
 
-                        {/* Right side: Action button + close */}
-                        <div className="flex items-center space-x-2">
-                            <button
-                                type="button"
-                                onClick={action.onClick}
-                                className={cn(
-                                    "flex items-center space-x-1 whitespace-nowrap",
-                                    "rounded-full bg-primary/10 px-3 py-1",
-                                    "text-xs font-medium text-primary sm:text-sm",
-                                    "transition-colors hover:bg-primary/20",
-                                    "ring-1 ring-primary/20"
-                                )}
-                            >
-                                <span>{action.label}</span>
-                                <svg
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 12 12"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="flex-shrink-0"
-                                >
-                                    <path
-                                        d="M8.78141 5.33312L5.20541 1.75712L6.14808 0.814453L11.3334 5.99979L6.14808 11.1851L5.20541 10.2425L8.78141 6.66645H0.666748V5.33312H8.78141Z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </motion.div>
+export default function Banner({ text, href, className }: BannerProps) {
+    const content = (
+        <motion.div
+            className={cn(
+                "group relative inline-flex items-center gap-2 rounded-full",
+                "border border-primary/20 bg-primary/5 px-4 py-1.5",
+                "backdrop-blur-sm transition-all duration-300",
+                "hover:border-primary/80 bg-primary/10 hover:bg-primary/20 shadow-lg shadow-primary/20 cursor-pointer",
+                className
             )}
-        </AnimatePresence>
-    )
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, ease }}
+            whileHover={{ scale: 1.02 }}
+        >
+            <div className="absolute inset-0 -z-10 rounded-full opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100">
+                <div className="absolute inset-0 rounded-full border-2 border-primary/60" />
+            </div>
+
+            <motion.div
+                className="text-primary"
+                animate={{
+                    rotate: [0, 5, -5, 0],
+                }}
+                transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+            >
+                <Sparkles />
+            </motion.div>
+
+            <span className="text-sm font-medium text-foreground">
+                {text}
+            </span>
+        </motion.div>
+    );
+
+    if (href) {
+        return (
+            <Link href={href as Route} className="inline-block">
+                {content}
+            </Link>
+        );
+    }
+
+    return content;
 }
