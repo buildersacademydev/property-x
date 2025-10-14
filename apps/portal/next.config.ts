@@ -1,29 +1,8 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  typedRoutes: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "pbs.twimg.com",
-        port: "",
-        pathname: "/media/**",
-      },
-      {
-        protocol: "https",
-        hostname: "raw.githubusercontent.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "pbs.twimg.com",
-        port: "",
-        pathname: "/**",
-      },
-    ],
-  },
+  transpilePackages: ["@workspace/ui"],
+  typedRoutes: true
 }
 
 export default nextConfig

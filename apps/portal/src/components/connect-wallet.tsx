@@ -6,8 +6,8 @@ import React, { useState, type ComponentPropsWithoutRef } from "react"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 
-import { Button } from "../ui/button"
-import { Icons } from "./icons"
+import { Button } from "@workspace/ui/components/button"
+import { Icons } from "@workspace/ui/components/icons"
 
 type ConnectWalletProps = ComponentPropsWithoutRef<typeof Button> & {
   isNav?: boolean

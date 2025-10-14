@@ -7,15 +7,15 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useState } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Button } from "@workspace/ui/components/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+} from "@workspace/ui/components/card"
+import { Checkbox } from "@workspace/ui/components/checkbox"
 import {
   Form,
   FormControl,
@@ -23,8 +23,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@workspace/ui/components/form"
+import { Input } from "@workspace/ui/components/input"
 import {
   Select,
   SelectContent,
@@ -32,9 +32,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Icons } from "@/components/common/icons"
+} from "@workspace/ui/components/select"
+import { Textarea } from "@workspace/ui/components/textarea"
+import { Icons } from "@workspace/ui/components/icons"
 
 const ASSET_TYPES = [
   { value: "real-estate", label: "Real Estate" },

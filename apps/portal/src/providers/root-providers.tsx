@@ -3,8 +3,8 @@
 import { QueryProvider } from "@/providers/query-provider"
 import React from "react"
 import dynamic from "next/dynamic"
+import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 
-import { ThemeProvider } from "./theme-provider"
 
 const WalletProvider = dynamic(
   () => import("@/providers/wallet-provider").then((m) => m.WalletProvider),

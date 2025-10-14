@@ -4,8 +4,7 @@ import { revalidateData } from "@/db/actions/revalidate-data"
 import { useRealtime } from "@upstash/realtime/client"
 import { toast } from "sonner"
 import { RealtimeEvents } from "@/lib/realtime/realtime"
-
-import { Icons } from "./icons"
+import { Icons } from "@workspace/ui/components/icons"
 
 export default function Notifications() {
   useRealtime<RealtimeEvents>({

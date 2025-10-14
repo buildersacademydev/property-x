@@ -4,6 +4,13 @@ import Link from "next/link"
 import * as React from "react"
 import { Separator } from "@workspace/ui/components/separator"
 
+const legalLinks = [
+    { label: "Terms and Conditions", href: "/terms" },
+    { label: "Privacy Policy", href: "/" },
+    { label: "Risk Disclosure", href: "/" },
+    { label: "Compliance", href: "/" },
+] as const
+
 const Footer: React.FC = () => {
     return (
         <footer className="border-t bg-muted/50 py-12">
@@ -73,12 +80,7 @@ const Footer: React.FC = () => {
                         <div>
                             <h4 className="mb-4 font-semibold">Legal</h4>
                             <div className="space-y-2 text-sm">
-                                {[
-                                    { label: "Terms and Conditions", href: "/terms" },
-                                    { label: "Privacy Policy", href: "/privacy" },
-                                    { label: "Risk Disclosure", href: "/risk" },
-                                    { label: "Compliance", href: "/compliance" },
-                                ].map(({ label, href }) => (
+                                {legalLinks.map(({ label, href }) => (
                                     <Link
                                         key={label}
                                         href={href}

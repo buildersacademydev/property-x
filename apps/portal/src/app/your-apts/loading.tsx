@@ -1,7 +1,7 @@
 import * as React from "react"
-import { Card } from "@/components/ui/card"
-import { Skeleton as Skel } from "@/components/ui/skeleton"
-import { Icons } from "@/components/common/icons"
+import { Card } from "@workspace/ui/components/card"
+import { Skeleton as Skel } from "@workspace/ui/components/skeleton"
+import { Icons } from "@workspace/ui/components/icons"
 
 const LoadingApt: React.FC = () => {
   const placeholders = [1, 2]

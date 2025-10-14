@@ -8,14 +8,14 @@ import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import React from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@workspace/ui/components/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@workspace/ui/components/card"
 import {
   Form,
   FormControl,
@@ -23,9 +23,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+} from "@workspace/ui/components/form"
+import { Input } from "@workspace/ui/components/input"
+import { RadioGroup, RadioGroupItem } from "@workspace/ui/components/radio-group"
 
 const Admin = () => {
   const whitelistForm = useForm<TWhitelistContractSchema>({

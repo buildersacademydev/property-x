@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import React, { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { Button } from "@workspace/ui/components/button"
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@workspace/ui/components/dialog"
 import {
   Form,
   FormControl,
@@ -26,8 +26,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@workspace/ui/components/form"
+import { Input } from "@workspace/ui/components/input"
 
 interface BuyNowDialogProps {
   listing: TMarketplaceListing

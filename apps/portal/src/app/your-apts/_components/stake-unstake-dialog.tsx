@@ -26,8 +26,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+} from "@workspace/ui/components/alert-dialog"
+import { Button } from "@workspace/ui/components/button"
 import {
   Form,
   FormControl,
@@ -35,15 +35,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@workspace/ui/components/form"
+import { Input } from "@workspace/ui/components/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@workspace/ui/components/select"
 
 type Variant = "stake" | "unstake"
 

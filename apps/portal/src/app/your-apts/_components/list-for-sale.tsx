@@ -12,7 +12,7 @@ import { toast } from "sonner"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useBlockHeight } from "@/hooks/use-block-height"
-import { Button } from "@/components/ui/button"
+import { Button } from "@workspace/ui/components/button"
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@workspace/ui/components/dialog"
 import {
   Form,
   FormControl,
@@ -28,15 +28,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@workspace/ui/components/form"
+import { Input } from "@workspace/ui/components/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@workspace/ui/components/select"
 
 type Props = {
   contract: string

@@ -3,10 +3,10 @@
 import { useWallet } from "@/providers/wallet-provider"
 import { Check, Copy, Eye, EyeOff } from "lucide-react"
 import React from "react"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Icons } from "@/components/common/icons"
+import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar"
+import { Button } from "@workspace/ui/components/button"
+import { Card, CardContent } from "@workspace/ui/components/card"
+import { Icons } from "@workspace/ui/components/icons"
 
 function maskAddress(addr: string, visible: number = 4) {
   if (!addr) return ""

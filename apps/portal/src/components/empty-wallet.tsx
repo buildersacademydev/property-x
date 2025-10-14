@@ -1,8 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Card } from "@/components/ui/card"
-import { Icons } from "@/components/common/icons"
+import { Card } from "@workspace/ui/components/card"
+import { Icons } from "@workspace/ui/components/icons"
 
 import ConnectWallet from "./connect-wallet"
 

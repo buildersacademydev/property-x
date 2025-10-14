@@ -15,8 +15,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+} from "@workspace/ui/components/alert-dialog"
+import { Button } from "@workspace/ui/components/button"
 
 interface CancelListingAlertProps {
   listing: TMarketplaceListing

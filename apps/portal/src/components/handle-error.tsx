@@ -3,10 +3,10 @@
 import type { DalError } from "@/db/type"
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Icons } from "@/components/common/icons"
-import { NextLink } from "@/components/common/next-link"
+import Link from "next/link"
+import { Button } from "@workspace/ui/components/button"
+import { Card } from "@workspace/ui/components/card"
+import { Icons } from "@workspace/ui/components/icons"
 
 import EmptyWallet from "./empty-wallet"
 
@@ -58,11 +58,11 @@ const HandleError: React.FC<HandleErrorProps> = ({ error, empty }) => {
       <Section
         icon={<Icons.building className="text-muted-foreground" size={40} />}
         title="No data found"
-        description="We couldn’t find any records to display right now. Explore the marketplace to get started."
+        description="We couldn't find any records to display right now. Explore the marketplace to get started."
         actions={
-          <NextLink href="/">
+          <Link href="/">
             <Button>Back Home</Button>
-          </NextLink>
+          </Link>
         }
       />
     )

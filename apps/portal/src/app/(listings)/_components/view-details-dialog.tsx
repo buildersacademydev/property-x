@@ -3,7 +3,7 @@
 import { TMarketplaceListing } from "@/services/type"
 import React, { useState } from "react"
 import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@workspace/ui/components/badge"
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Separator } from "@/components/ui/separator"
+} from "@workspace/ui/components/dialog"
+import { Separator } from "@workspace/ui/components/separator"
 
 interface ViewDetailsDialogProps {
   listing: TMarketplaceListing

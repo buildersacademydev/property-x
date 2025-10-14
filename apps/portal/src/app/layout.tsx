@@ -1,13 +1,11 @@
 import type { Metadata } from "next"
 import { Geist_Mono } from "next/font/google"
-
-import "./globals.css"
+import "@workspace/ui/globals.css";
 
 import RootProviders from "@/providers/root-providers"
-import { Toaster } from "@/components/ui/sonner"
-import Footer from "@/components/common/footer"
-import Nav from "@/components/common/nav"
-import Notifications from "@/components/common/notifications"
+import { Toaster } from "@workspace/ui/components/sonner"
+
+import Notifications from "@/components/notifications"
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -16,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "PropertyX Protocol",
-  description: "Tokenize Urban Real-World Assets on Stacks",
+  description: "Tokenize Urban Real-World Assets on PropertyX",
 }
 
 export default function RootLayout({
@@ -31,10 +29,7 @@ export default function RootLayout({
           text-foreground antialiased`}
       >
         <RootProviders>
-          <Nav />
           <main className="mt-12">{children}</main>
-
-          <Footer />
         </RootProviders>
         <Toaster
           position="bottom-right"

@@ -1,10 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Icons } from "@/components/common/icons"
-import { NextLink } from "@/components/common/next-link"
+import Link from "next/link"
+import { Button } from "@workspace/ui/components/button"
+import { Card } from "@workspace/ui/components/card"
+import { Icons } from "@workspace/ui/components/icons"
 
 const EmptyApt: React.FC = () => {
   return (
@@ -27,9 +27,9 @@ const EmptyApt: React.FC = () => {
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row">
-          <NextLink href="/explore" className="flex-1">
+          <Link href="/explore" className="flex-1">
             <Button className="w-full">Explore Properties</Button>
-          </NextLink>
+          </Link>
         </div>
       </Card>
     </div>

@@ -1,7 +1,7 @@
 import { getWalletAddress } from "@/db/actions/wallet"
 import React from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import EmptyWallet from "@/components/common/empty-wallet"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
+import EmptyWallet from "@/components/empty-wallet"
 
 import Admin from "./admin"
 import Assets from "./assets"
