@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Icons } from "@/components/common/icons"
+import { Button } from "@workspace/ui/components/button"
+import { Icons } from "@workspace/ui/components/icons"
 
 export function ScrollToTop() {
   const [showScrollTop, setShowScrollTop] = useState(false)

@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge"
-import ConnectWallet from "@/components/common/connect-wallet"
-import { Icons } from "@/components/common/icons"
+import LaunchApp from "@/components/launch-app";
+import { Badge } from "@workspace/ui/components/badge";
+import { Icons } from "@workspace/ui/components/icons";
 
 export function CtaSection() {
   return (
@@ -75,7 +75,7 @@ export function CtaSection() {
             ))}
           </div>
           <div className="flex flex-col items-center justify-center">
-            <ConnectWallet
+            <LaunchApp
               size={"lg"}
               className="w-full max-w-md px-10 py-7 text-lg font-medium
                 shadow-xl transition-all duration-300 hover:scale-[1.03]"

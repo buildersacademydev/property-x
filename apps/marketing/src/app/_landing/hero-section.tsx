@@ -1,16 +1,9 @@
-"use client"
-
-import { useState } from "react"
 import type React from "react"
-import { Badge } from "@/components/ui/badge"
-import { Banner } from "@/components/ui/banner"
-import { Separator } from "@/components/ui/separator"
-import ConnectWallet from "@/components/common/connect-wallet"
-import { Icons } from "@/components/common/icons"
+import { Badge } from "@workspace/ui/components/badge"
+import { Icons } from "@workspace/ui/components/icons"
+import LaunchApp from "@/components/launch-app"
 
 export function HeroSection() {
-  const [showBanner, setShowBanner] = useState(true)
-
   return (
     <section
       id="hero"
@@ -54,7 +47,7 @@ export function HeroSection() {
               className="w-full animate-in space-y-8 duration-1000
                 slide-in-from-bottom-8"
             >
-              <div
+              {/* <div
                 className="animate-in delay-100 duration-1000 fade-in
                   slide-in-from-top-4"
               >
@@ -75,7 +68,6 @@ export function HeroSection() {
                   action={{
                     label: "View Details",
                     onClick: () => {
-                      // Navigate to the relevant section or external link
                       window.scrollTo({
                         top:
                           document.getElementById("how-it-works")?.offsetTop ||
@@ -85,7 +77,7 @@ export function HeroSection() {
                     },
                   }}
                 />
-              </div>
+              </div> */}
 
               <div className="space-y-4">
                 <Badge
@@ -154,7 +146,7 @@ export function HeroSection() {
                 className="flex animate-in justify-center delay-1100
                   duration-1000 slide-in-from-bottom-2"
               >
-                <ConnectWallet
+                <LaunchApp
                   size={"lg"}
                   className="mt-6 px-10 py-6 text-lg font-medium transition-all
                     duration-300 hover:scale-[1.03]"

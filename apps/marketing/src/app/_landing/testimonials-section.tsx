@@ -1,9 +1,9 @@
 "use client"
 
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
-import { cn } from "@/lib/utils"
+import { cn } from "@workspace/ui/lib/utils"
+import { Icons } from "@workspace/ui/components/icons"
 
 const SQRT_5000 = Math.sqrt(5000)
 
@@ -267,7 +267,7 @@ export function TestimonialsSection() {
                 )}
                 aria-label="Previous testimonial"
               >
-                <ChevronLeft />
+                <Icons.chevronLeft />
               </button>
               <button
                 onClick={() => handleMove(1)}
@@ -281,7 +281,7 @@ export function TestimonialsSection() {
                 )}
                 aria-label="Next testimonial"
               >
-                <ChevronRight />
+                <Icons.chevronRight />
               </button>
             </div>
           </div>

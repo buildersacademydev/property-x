@@ -1,6 +1,6 @@
+import { cn } from "@workspace/ui/lib/utils"
 import React from "react"
 import type { SVGProps } from "react"
-import { cn } from "@/lib/utils"
 
 export function SocialProofSection() {
   const partners = [

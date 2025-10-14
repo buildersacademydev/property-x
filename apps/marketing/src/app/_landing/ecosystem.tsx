@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { Icons } from "@/components/common/icons"
+import { Badge } from "@workspace/ui/components/badge";
+import { Card } from "@workspace/ui/components/card";
+import { Icons } from "@workspace/ui/components/icons";
 
 export function EcosystemSection() {
   return (

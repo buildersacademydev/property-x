@@ -1,12 +1,29 @@
-import React from 'react'
-import { Button } from '@workspace/ui/components/button'
+import {
+  CtaSection,
+  EcosystemSection,
+  FaqSection,
+  FeaturesSection,
+  HeroSection,
+  ProblemSection,
+  ScrollToTop,
+  SocialProofSection,
+  SolutionSection,
+  TestimonialsSection,
+} from "./_landing"
 
-const Page = () => {
+export default function PropertyXLanding() {
   return (
-    <div>
-      <Button variant="destructive">Hello from Marketing App</Button>
+    <div className="min-h-screen">
+      <ScrollToTop />
+      <HeroSection />
+      <SocialProofSection />
+      <ProblemSection />
+      <SolutionSection />
+      <FeaturesSection />
+      <EcosystemSection />
+      <TestimonialsSection />
+      <FaqSection />
+      <CtaSection />
     </div>
   )
 }
-
-export default Page

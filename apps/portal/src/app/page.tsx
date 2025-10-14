@@ -1,29 +1,9 @@
-import {
-  CtaSection,
-  EcosystemSection,
-  FaqSection,
-  FeaturesSection,
-  HeroSection,
-  ProblemSection,
-  ScrollToTop,
-  SocialProofSection,
-  SolutionSection,
-  TestimonialsSection,
-} from "./_landing"
+import React from 'react'
 
-export default function PropertyXLanding() {
+const Page = () => {
   return (
-    <div className="min-h-screen">
-      <ScrollToTop />
-      <HeroSection />
-      <SocialProofSection />
-      <ProblemSection />
-      <SolutionSection />
-      <FeaturesSection />
-      <EcosystemSection />
-      <TestimonialsSection />
-      <FaqSection />
-      <CtaSection />
-    </div>
+    <div>Page</div>
   )
 }
+
+export default Page

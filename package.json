@@ -5,7 +5,8 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "cn": "cd packages/ui && pnpm dlx shadcn@canary add"
   },
   "dependencies": {
     "@workspace/ui": "workspace:*"

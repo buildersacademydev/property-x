@@ -1,9 +1,9 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { GlowCard } from "@/components/ui/glow-card"
-import { Icons } from "@/components/common/icons"
+import { GlowCard } from "@/components/glow-card"
+import { Badge } from "@workspace/ui/components/badge"
+import { Card } from "@workspace/ui/components/card"
+import { Icons } from "@workspace/ui/components/icons"
 
 export function FeaturesSection() {
   return (

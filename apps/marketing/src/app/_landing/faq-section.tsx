@@ -1,8 +1,8 @@
 "use client"
 
+import { Button } from "@workspace/ui/components/button"
+import { Card } from "@workspace/ui/components/card"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 
 export function FaqSection() {
   const [activeTab, setActiveTab] = useState("legal")
