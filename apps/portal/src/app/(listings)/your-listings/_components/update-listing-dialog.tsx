@@ -88,7 +88,9 @@ export function UpdateListingDialog({ listing }: UpdateListingDialogProps) {
       currentBlockHeight,
       listingId: listing.listingId,
       contract: listing.contract,
-      ...values,
+      price: values.price ? Number(values.price) : undefined,
+      amount: values.amount ? Number(values.amount) : undefined,
+      expiry: values.expiry,
     })
   }
 
@@ -115,7 +117,13 @@ export function UpdateListingDialog({ listing }: UpdateListingDialogProps) {
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Enter price" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="Enter price"
+                      {...field}
+                      onChange={(e) => field.onChange(e.target.value)}
+                      value={field.value as string | number}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -133,6 +141,8 @@ export function UpdateListingDialog({ listing }: UpdateListingDialogProps) {
                       type="number"
                       placeholder="Enter amount"
                       {...field}
+                      onChange={(e) => field.onChange(e.target.value)}
+                      value={field.value as string | number}
                     />
                   </FormControl>
                   <FormMessage />

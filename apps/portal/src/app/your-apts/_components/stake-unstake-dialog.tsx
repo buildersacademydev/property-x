@@ -53,8 +53,8 @@ interface Props {
   variant: Variant
 }
 
-type StakeFormValues = TStakeAptSchema & { kind: "stake" }
-type UnstakeFormValues = TUnstakeAptSchema & { kind: "unstake" }
+type StakeFormValues = z.input<typeof stakeSchema> & { kind: "stake" }
+type UnstakeFormValues = z.input<typeof unstakeSchema> & { kind: "unstake" }
 type FormValues = StakeFormValues | UnstakeFormValues
 
 export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
@@ -105,7 +105,8 @@ export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
       return toast.error("Unable to fetch current block height")
     }
 
-    if (values.amount > Number(balance)) {
+    const amount = Number(values.amount)
+    if (amount > Number(balance)) {
       form.setError("amount" as any, {
         type: "manual",
         message: `Amount cannot exceed the value ${balance}`,
@@ -117,14 +118,14 @@ export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
       const payload: TStakeApt = {
         contract,
         currentBlockHeight,
-        amount: Number(values.amount),
+        amount: amount,
         expiry: values.expiry,
       }
       stakeMutation.mutate(payload)
     } else {
       const payload: TUnstakeApt = {
         contract,
-        amount: Number(values.amount),
+        amount: amount,
       }
       unstakeMutation.mutate(payload)
     }
@@ -168,7 +169,8 @@ export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
                       type="number"
                       placeholder="Enter amount"
                       {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onChange={(e) => field.onChange(e.target.value)}
+                      value={field.value as string | number}
                     />
                   </FormControl>
                   <FormMessage />
@@ -209,8 +211,8 @@ export function StakeUnstakeDialog({ contract, balance, variant }: Props) {
             <AlertDialogFooter className="pt-2">
               <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
               <AlertDialogAction asChild>
-                <Button type="submit" loading={submitting} className="min-w-28">
-                  {isStake ? "Stake" : "Unstake"}
+                <Button type="submit" disabled={submitting} className="min-w-28">
+                  {submitting ? "Processing..." : isStake ? "Stake" : "Unstake"}
                 </Button>
               </AlertDialogAction>
             </AlertDialogFooter>

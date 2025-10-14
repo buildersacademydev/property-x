@@ -2,8 +2,6 @@
 
 import { assetRequestSchema } from "@/services/schema"
 import { TAssetRequestSchema } from "@/services/type"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useState } from "react"
 import Link from "next/link"
@@ -35,6 +33,8 @@ import {
 } from "@workspace/ui/components/select"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { Icons } from "@workspace/ui/components/icons"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 
 const ASSET_TYPES = [
   { value: "real-estate", label: "Real Estate" },
@@ -46,7 +46,7 @@ const ASSET_TYPES = [
 export default function RequestAssetPage() {
   const [submitting, setSubmitting] = useState(false)
 
-  const form = useForm<TAssetRequestSchema>({
+  const form = useForm({
     resolver: zodResolver(assetRequestSchema),
     defaultValues: {
       assetType: "",
@@ -54,8 +54,8 @@ export default function RequestAssetPage() {
       tokenSymbol: "",
       location: "",
       description: "",
-      tokenSupply: undefined as unknown as number,
-      initialOffering: undefined as unknown as number,
+      tokenSupply: "",
+      initialOffering: "",
       terms: false,
     },
     mode: "onBlur",
@@ -63,7 +63,6 @@ export default function RequestAssetPage() {
 
   function onSubmit(values: TAssetRequestSchema) {
     setSubmitting(true)
-    // Simulate API call
     setTimeout(() => {
       toast.success("Asset request submitted", {
         description: `${values.assetName} (${values.tokenSymbol}) submitted successfully.`,
@@ -373,8 +372,8 @@ export default function RequestAssetPage() {
               />
 
               <div className="flex justify-end">
-                <Button type="submit" loading={submitting} className="px-8">
-                  Submit Asset
+                <Button type="submit" disabled={submitting} className="px-8">
+                  {submitting ? "Submitting..." : "Submit Asset"}
                 </Button>
               </div>
             </CardContent>

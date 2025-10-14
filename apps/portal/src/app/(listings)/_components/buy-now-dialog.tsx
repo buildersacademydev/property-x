@@ -45,6 +45,9 @@ export function BuyNowDialog({
 
   const form = useForm<TBuyListingSchema>({
     resolver: zodResolver(buyListingSchema),
+    defaultValues: {
+      amount: "",
+    },
   })
 
   const buyListingMutation = useMutation({
@@ -61,7 +64,8 @@ export function BuyNowDialog({
 
   const onSubmit = async (values: TBuyListingSchema) => {
     if (!listing.contract) return toast.error("Missing asset contract")
-    if (values.amount > Number(listing.amount)) {
+    const amount = Number(values.amount)
+    if (amount > Number(listing.amount)) {
       form.setError("amount", {
         type: "manual",
         message: `Amount cannot exceed the value ${listing.amount}`,
@@ -71,12 +75,12 @@ export function BuyNowDialog({
     buyListingMutation.mutate({
       listingId: listing.listingId,
       contract: listing.contract,
-      amount: values.amount,
+      amount: amount,
     })
   }
 
   const watchedAmount = form.watch("amount")
-  const totalCost = (watchedAmount || 0) * listing.price
+  const totalCost = (Number(watchedAmount) || 0) * listing.price
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -106,6 +110,8 @@ export function BuyNowDialog({
                       type="number"
                       placeholder="Enter amount"
                       {...field}
+                      onChange={(e) => field.onChange(e.target.value)}
+                      value={field.value as string | number}
                     />
                   </FormControl>
                   <FormMessage />
@@ -131,8 +137,8 @@ export function BuyNowDialog({
               >
                 Cancel
               </Button>
-              <Button type="submit" loading={buyListingMutation.isPending}>
-                Buy Now
+              <Button type="submit" disabled={buyListingMutation.isPending}>
+                {buyListingMutation.isPending ? "Processing..." : "Buy Now"}
               </Button>
             </DialogFooter>
           </form>

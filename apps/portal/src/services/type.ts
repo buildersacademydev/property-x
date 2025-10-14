@@ -128,10 +128,10 @@ export type TFunctionName = keyof typeof FUNCTIONCONTRACTMAP
 
 export type TWhitelistContractSchema = z.infer<typeof whitelistContractSchema>
 export type TMarketplaceSchema = z.infer<typeof marketplaceSchema>
-export type TBuyListingSchema = z.infer<typeof buyListingSchema>
+export type TBuyListingSchema = z.input<typeof buyListingSchema>
 export type TListForSaleSchema = z.infer<typeof listForSaleSchema>
 export type TAssetRequestSchema = z.infer<typeof assetRequestSchema>
-export type TUpdateListingSchema = z.infer<typeof updateListingSchema>
+export type TUpdateListingSchema = z.input<typeof updateListingSchema>
 
 type TListingContract = {
   listingId: number
@@ -168,8 +168,8 @@ export interface TUpdateListingPayload {
   topic: string
 }
 
-export type TStakeAptSchema = z.infer<typeof stakeSchema> & { contract: string }
-export type TUnstakeAptSchema = z.infer<typeof unstakeSchema> & {
+export type TStakeAptSchema = z.input<typeof stakeSchema> & { contract: string }
+export type TUnstakeAptSchema = z.input<typeof unstakeSchema> & {
   contract: string
 }
 
