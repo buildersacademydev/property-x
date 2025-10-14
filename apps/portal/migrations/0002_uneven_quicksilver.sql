@@ -1,1 +1,0 @@
-ALTER TABLE "whitelisting" ALTER COLUMN "is_whitelisted" SET DATA TYPE boolean;
