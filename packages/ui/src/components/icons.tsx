@@ -15,7 +15,9 @@ import {
     LaptopMinimalCheck,
     Loader2,
     LucideProps,
+    Mail,
     Menu,
+    MousePointerClick,
     Play,
     PlugZap,
     Power,
@@ -62,6 +64,8 @@ export const Icons = {
     zap: (props: IconProps) => <Zap {...props} />,
     success: (props: IconProps) => <LaptopMinimalCheck {...props} />,
     error: (props: IconProps) => <CloudAlert {...props} />,
+    click: (props: IconProps) => <MousePointerClick {...props} />,
+    mail: (props: IconProps) => <Mail {...props} />,
     spinner: (props: IconProps) => (
         <Loader2 {...props} className="animate-spin" />
     ),

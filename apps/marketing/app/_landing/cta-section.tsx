@@ -74,13 +74,6 @@ export function CtaSection() {
                             </div>
                         ))}
                     </div>
-                    <div className="flex flex-col items-center justify-center">
-                        <LaunchApp
-                            size={"lg"}
-                            className="w-full max-w-md px-10 py-7 text-lg font-medium
-                shadow-xl transition-all duration-300 hover:scale-[1.03]"
-                        />
-                    </div>
                 </div>
             </div>
         </section>

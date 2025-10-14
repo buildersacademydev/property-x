@@ -1,3 +1,4 @@
+import Waitlist from "@/components/waitlist";
 import { CtaSection } from "./_landing/cta-section";
 import { EcosystemSection } from "./_landing/ecosystem";
 import { FaqSection } from "./_landing/faq-section";
@@ -22,6 +23,7 @@ export default function PropertyXLanding() {
       <TestimonialsSection />
       <FaqSection />
       <CtaSection />
+      <Waitlist />
     </div>
   )
 }

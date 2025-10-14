@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "@workspace/ui/globals.css";
-import { ThemeProvider } from "@workspace/ui/components/theme-provider";
+import RootProviders from "@/providers/root-providers";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -24,9 +24,9 @@ export default function RootLayout({
         className={`${geistMono.className} min-h-dvh bg-background
           text-foreground antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <RootProviders>
           <main className="mt-12">{children}</main>
-        </ThemeProvider>
+        </RootProviders>
       </body>
     </html>
   );
