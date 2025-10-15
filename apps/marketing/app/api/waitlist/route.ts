@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
         const body = await request.json()
         const validatedData = waitlistSchema.parse(body)
 
-        if (!process.env.DATABASE_URL) {
+        if (!process.env.DATABASE_URL_MARKETING) {
             console.log("=".repeat(60))
             console.log("📝 NEW WAITLIST SUBMISSION (NO DATABASE)")
             console.log("=".repeat(60))
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint to retrieve waitlist count (optional)
 export async function GET() {
     try {
-        if (!process.env.DATABASE_URL) {
+        if (!process.env.DATABASE_URL_MARKETING) {
             return NextResponse.json(
                 { count: 0, message: "Database not configured" },
                 { status: 200 }
