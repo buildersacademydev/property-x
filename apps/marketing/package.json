@@ -9,11 +9,16 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@workspace/ui": "workspace:*",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.40.0",
     "motion": "^12.23.24",
     "next": "^15.4.5",
     "react": "^19.1.1",
@@ -27,6 +32,7 @@
     "@types/react-dom": "^19.1.7",
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
+    "drizzle-kit": "^0.30.0",
     "typescript": "^5.9.2"
   }
 }

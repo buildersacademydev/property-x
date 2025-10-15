@@ -19,10 +19,6 @@ const waitlistSchema = z.object({
     walletAddress: z
         .string()
         .min(1, "Wallet address is required")
-        .regex(
-            /^(SP|SM)[0-9A-Z]{39}$|^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^0x[a-fA-F0-9]{40}$/,
-            "Please enter a valid wallet address"
-        ),
 })
 
 type WaitlistFormData = z.infer<typeof waitlistSchema>
@@ -47,14 +43,36 @@ export default function Waitlist({ className }: WaitlistProps) {
         setIsSubmitting(true)
 
         try {
-            // Simulate API call - replace with actual endpoint
-            await new Promise(resolve => setTimeout(resolve, 2000))
+            const response = await fetch("/api/waitlist", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
 
-            console.log("Waitlist submission:", data)
+            const result = await response.json()
+
+            if (!response.ok) {
+                if (response.status === 409) {
+                    form.setError("email", {
+                        type: "manual",
+                        message: "This email is already on the waitlist!",
+                    })
+                    return
+                }
+                throw new Error(result.message || "Failed to join waitlist")
+            }
+
+            console.log("Waitlist submission successful:", result)
             setIsSubmitted(true)
             form.reset()
         } catch (error) {
             console.error("Error submitting waitlist:", error)
+            form.setError("root", {
+                type: "manual",
+                message: error instanceof Error ? error.message : "Failed to submit. Please try again.",
+            })
         } finally {
             setIsSubmitting(false)
         }
@@ -133,7 +151,6 @@ export default function Waitlist({ className }: WaitlistProps) {
                         </p>
                     </div>
 
-                    {/* Success State */}
                     {isSubmitted && (
                         <div className="mx-auto max-w-4xl">
                             <Card className="border border-green-500/30 bg-gradient-to-br from-green-500/10 to-background/60 backdrop-blur-xl shadow-xl">
@@ -232,6 +249,14 @@ export default function Waitlist({ className }: WaitlistProps) {
                                                     )}
                                                 />
                                             </div>
+
+                                            {form.formState.errors.root && (
+                                                <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-center">
+                                                    <p className="text-sm text-red-500">
+                                                        {form.formState.errors.root.message}
+                                                    </p>
+                                                </div>
+                                            )}
 
                                             <div className="flex justify-center">
                                                 <Button

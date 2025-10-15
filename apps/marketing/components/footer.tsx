@@ -6,9 +6,9 @@ import { Separator } from "@workspace/ui/components/separator"
 
 const legalLinks = [
     { label: "Terms and Conditions", href: "/terms" },
-    { label: "Privacy Policy", href: "/" },
-    { label: "Risk Disclosure", href: "/" },
-    { label: "Compliance", href: "/" },
+    { label: "Privacy Policy", href: "/coming-soon" },
+    { label: "Risk Disclosure", href: "/coming-soon" },
+    { label: "Compliance", href: "/coming-soon" },
 ] as const
 
 const Footer: React.FC = () => {
@@ -78,13 +78,14 @@ const Footer: React.FC = () => {
                                     "PXT Governance",
                                     "Security",
                                 ].map((item) => (
-                                    <button
+                                    <Link
                                         key={item}
+                                        href="/coming-soon"
                                         className="block text-muted-foreground transition-colors
                       hover:text-foreground"
                                     >
                                         {item}
-                                    </button>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -98,13 +99,14 @@ const Footer: React.FC = () => {
                                     "Case Studies",
                                     "Blog",
                                 ].map((item) => (
-                                    <button
+                                    <Link
                                         key={item}
+                                        href="/coming-soon"
                                         className="block text-muted-foreground transition-colors
                       hover:text-foreground"
                                     >
                                         {item}
-                                    </button>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
