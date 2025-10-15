@@ -38,7 +38,7 @@ const Nav = () => {
                     </div>
 
                     {/* Desktop Navigation Links - Centered */}
-                    <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
+                    {/* <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
                         {navItems.map((item, idx) => {
                             const isActive = pathname === item.link
                             return (
@@ -56,7 +56,7 @@ const Nav = () => {
                                 </Link>
                             )
                         })}
-                    </div>
+                    </div> */}
 
                     {/* Theme Toggle on the right */}
                     <div className="hidden md:block">
@@ -81,7 +81,7 @@ const Nav = () => {
                 {isMobileMenuOpen && (
                     <div className="border-t bg-background md:hidden">
                         <div className="space-y-1 px-4 pb-3 pt-2">
-                            {navItems.map((item, idx) => {
+                            {/* {navItems.map((item, idx) => {
                                 const isActive = pathname === item.link
                                 return (
                                     <Link
@@ -98,7 +98,7 @@ const Nav = () => {
                                         {item.name}
                                     </Link>
                                 )
-                            })}
+                            })} */}
                             <div className="flex items-center justify-between rounded-lg border-t px-4 py-3">
                                 <span className="text-sm font-medium text-muted-foreground">Theme</span>
                                 <ThemeToggle />
