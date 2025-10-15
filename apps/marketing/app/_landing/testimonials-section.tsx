@@ -67,6 +67,56 @@ const testimonials = [
             "https://pbs.twimg.com/profile_images/1906414343706537984/ucj7Y_f3_400x400.jpg",
         xPostUrl: "https://x.com/PrinceTroyC/status/1974846627887124949",
     },
+
+    {
+        tempId: 6,
+        testimonial:
+            "PropertyX is an early step, not the finish line, but it points in the right direction.",
+        by: "@PrinceTroyC",
+        imgSrc:
+            "https://pbs.twimg.com/profile_images/1906414343706537984/ucj7Y_f3_400x400.jpg",
+        xPostUrl: "https://x.com/PrinceTroyC/status/1974846627887124949",
+    },
+
+    {
+        tempId: 7,
+        testimonial:
+            "PropertyX is an early step, not the finish line, but it points in the right direction.",
+        by: "@PrinceTroyC",
+        imgSrc:
+            "https://pbs.twimg.com/profile_images/1906414343706537984/ucj7Y_f3_400x400.jpg",
+        xPostUrl: "https://x.com/PrinceTroyC/status/1974846627887124949",
+    },
+
+    {
+        tempId: 8,
+        testimonial:
+            "PropertyX is an early step, not the finish line, but it points in the right direction.",
+        by: "@PrinceTroyC",
+        imgSrc:
+            "https://pbs.twimg.com/profile_images/1906414343706537984/ucj7Y_f3_400x400.jpg",
+        xPostUrl: "https://x.com/PrinceTroyC/status/1974846627887124949",
+    },
+
+    {
+        tempId: 9,
+        testimonial:
+            "PropertyX is an early step, not the finish line, but it points in the right direction.",
+        by: "@PrinceTroyC",
+        imgSrc:
+            "https://pbs.twimg.com/profile_images/1906414343706537984/ucj7Y_f3_400x400.jpg",
+        xPostUrl: "https://x.com/PrinceTroyC/status/1974846627887124949",
+    },
+
+    {
+        tempId: 10,
+        testimonial:
+            "PropertyX is an early step, not the finish line, but it points in the right direction.",
+        by: "@PrinceTroyC",
+        imgSrc:
+            "https://pbs.twimg.com/profile_images/1906414343706537984/ucj7Y_f3_400x400.jpg",
+        xPostUrl: "https://x.com/PrinceTroyC/status/1974846627887124949",
+    },
 ]
 
 interface TestimonialCardProps {
@@ -156,7 +206,6 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
                 - {testimonial.by}
             </p>
 
-            {/* X/Twitter Icon - Bottom right corner */}
             {testimonial.xPostUrl && (
                 <div
                     className={cn(
@@ -238,10 +287,9 @@ export function TestimonialsSection() {
                         style={{ height: 600 }}
                     >
                         {testimonialsList.map((testimonial, index) => {
-                            const position =
-                                testimonialsList.length % 2
-                                    ? index - (testimonialsList.length + 1) / 2
-                                    : index - testimonialsList.length / 2
+                            const position = testimonialsList.length % 2
+                                ? index - Math.floor(testimonialsList.length / 2)
+                                : index - testimonialsList.length / 2
                             return (
                                 <TestimonialCard
                                     key={testimonial.tempId}

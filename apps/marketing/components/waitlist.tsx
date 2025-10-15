@@ -21,7 +21,7 @@ const waitlistSchema = z.object({
         .min(1, "Wallet address is required")
         .regex(
             /^(SP|SM)[0-9A-Z]{39}$|^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^0x[a-fA-F0-9]{40}$/,
-            "Please enter a valid wallet address (Stacks, Bitcoin, or Ethereum)"
+            "Please enter a valid wallet address"
         ),
 })
 

@@ -19,7 +19,6 @@ export function EcosystemSection() {
 
             <div className="relative z-10 container mx-auto px-4">
                 <div className="mx-auto max-w-7xl">
-                    {/* Header */}
                     <div className="mb-16 text-center">
                         <Badge
                             variant="outline"
@@ -222,13 +221,6 @@ export function EcosystemSection() {
                                 </p>
                             </div>
                         </Card>
-                    </div>
-
-                    <div className="mt-12 text-center">
-                        <Badge variant="secondary" className="px-6 py-3 text-base">
-                            <Icons.award className="mr-2 h-5 w-5" />
-                            Stacks Foundation Grant Recipient
-                        </Badge>
                     </div>
                 </div>
             </div>

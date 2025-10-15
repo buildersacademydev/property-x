@@ -24,16 +24,48 @@ const Footer: React.FC = () => {
                                 without selling your property.
                             </p>
                             <div className="flex gap-4">
-                                {["Twitter", "LinkedIn", "Discord"].map((social) => (
-                                    <Button
-                                        key={social}
-                                        variant="ghost"
-                                        size="sm"
-                                        className="p-2"
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="p-2"
+                                    asChild
+                                >
+                                    <Link
+                                        href="https://x.com/BuildersAcadHQ"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                     >
-                                        <span className="text-xs">{social}</span>
-                                    </Button>
-                                ))}
+                                        <span className="text-xs">Twitter (X)</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="p-2"
+                                    asChild
+                                >
+                                    <Link
+                                        href="https://www.linkedin.com/company/buildersacademy/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <span className="text-xs">LinkedIn</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="p-2"
+                                    asChild
+                                >
+                                    <Link
+                                        href="https://discord.gg/HNhfAugqjb"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <span className="text-xs">Discord</span>
+                                    </Link>
+                                </Button>
                             </div>
                         </div>
 
@@ -101,9 +133,16 @@ const Footer: React.FC = () => {
               text-muted-foreground md:flex-row"
                     >
                         <p>© {new Date().getFullYear()} PropertyX. All rights reserved.</p>
-                        <p>
-                            Securities offered through PropertyX Securities, LLC. Member
-                            FINRA/SIPC.
+                        <p className="text-center md:text-right">
+                            Made with ❤️ by{" "}
+                            <Link
+                                href="https://www.buildersacademy.ai/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-medium text-foreground/80 transition-colors hover:text-foreground hover:underline"
+                            >
+                                Builders Academy
+                            </Link>
                         </p>
                     </div>
                 </div>
