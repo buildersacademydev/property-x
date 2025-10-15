@@ -1,30 +1,79 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@workspace/ui/components/form'
+import { Input } from '@workspace/ui/components/input'
+import { Textarea } from '@workspace/ui/components/textarea'
+import { Button } from '@workspace/ui/components/button'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@workspace/ui/components/select'
+import { Icons } from '@workspace/ui/components/icons'
+
+const contactSchema = z.object({
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().email('Invalid email address'),
+    subject: z.string().min(1, 'Please select a subject'),
+    message: z.string().min(10, 'Message must be at least 10 characters'),
+})
+
+type ContactFormData = z.infer<typeof contactSchema>
 
 const Page = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-    })
     const [submitted, setSubmitted] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        setSubmitted(true)
-        setTimeout(() => {
-            setSubmitted(false)
-            setFormData({ name: '', email: '', subject: '', message: '' })
-        }, 3000)
-    }
+    const form = useForm<ContactFormData>({
+        resolver: zodResolver(contactSchema),
+        defaultValues: {
+            name: '',
+            email: '',
+            subject: '',
+            message: '',
+        },
+    })
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        })
+    const onSubmit = async (data: ContactFormData) => {
+        setIsLoading(true)
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+            if (!response.ok) {
+                throw new Error('Failed to send message')
+            }
+
+            setSubmitted(true)
+            form.reset()
+
+            setTimeout(() => {
+                setSubmitted(false)
+            }, 10000)
+        } catch (error) {
+            console.error('Error sending message:', error)
+            alert('Failed to send message. Please try again.')
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -46,8 +95,8 @@ const Page = () => {
 
                         {submitted ? (
                             <div className="flex flex-col items-center justify-center py-12 text-center">
-                                <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mb-4">
-                                    <svg className="w-8 h-8 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                                    <svg className="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                     </svg>
                                 </div>
@@ -55,89 +104,108 @@ const Page = () => {
                                 <p className="text-muted-foreground">We&apos;ll get back to you soon.</p>
                             </div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                                        Name *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="name"
+                            <Form {...form}>
+                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                                    <FormField
+                                        control={form.control}
                                         name="name"
-                                        required
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder:text-muted-foreground transition-all"
-                                        placeholder="Your name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Name *</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Your name"
+                                                        {...field}
+                                                        disabled={isLoading}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
-                                </div>
 
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                                        Email *
-                                    </label>
-                                    <input
-                                        type="email"
-                                        id="email"
+                                    <FormField
+                                        control={form.control}
                                         name="email"
-                                        required
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder:text-muted-foreground transition-all"
-                                        placeholder="your.email@example.com"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Email *</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="email"
+                                                        placeholder="your.email@example.com"
+                                                        {...field}
+                                                        disabled={isLoading}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
-                                </div>
 
-                                <div>
-                                    <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
-                                        Subject *
-                                    </label>
-                                    <select
-                                        id="subject"
+                                    <FormField
+                                        control={form.control}
                                         name="subject"
-                                        required
-                                        value={formData.subject}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground transition-all"
-                                    >
-                                        <option value="">Select a subject</option>
-                                        <option value="general">General Inquiry</option>
-                                        <option value="feedback">Feedback</option>
-                                        <option value="partnership">Partnership</option>
-                                        <option value="technical">Technical Support</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                                        Message *
-                                    </label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        required
-                                        value={formData.message}
-                                        onChange={handleChange}
-                                        rows={6}
-                                        className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder:text-muted-foreground resize-none transition-all"
-                                        placeholder="Tell us what's on your mind..."
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Subject *</FormLabel>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+                                                    disabled={isLoading}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className='w-full'>
+                                                            <SelectValue placeholder="Select a subject" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="general">General Inquiry</SelectItem>
+                                                        <SelectItem value="feedback">Feedback</SelectItem>
+                                                        <SelectItem value="partnership">Partnership</SelectItem>
+                                                        <SelectItem value="technical">Technical Support</SelectItem>
+                                                        <SelectItem value="other">Other</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
-                                </div>
 
-                                <button
-                                    type="submit"
-                                    className="w-full bg-primary text-primary-foreground py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition-all shadow-lg hover:shadow-xl"
-                                >
-                                    Send Message
-                                </button>
-                            </form>
+                                    <FormField
+                                        control={form.control}
+                                        name="message"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Message *</FormLabel>
+                                                <FormControl>
+                                                    <Textarea
+                                                        placeholder="Tell us what's on your mind..."
+                                                        rows={6}
+                                                        className="resize-none"
+                                                        {...field}
+                                                        disabled={isLoading}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <Button
+                                        type="submit"
+                                        size={'lg'}
+                                        className="w-full"
+                                        loading={isLoading}
+                                    >
+                                        Send Message
+                                    </Button>
+                                </form>
+                            </Form>
                         )}
                     </div>
 
-                    {/* Contact Information */}
                     <div className="space-y-6">
-                        {/* Why Contact Us */}
                         <div className="bg-card border border-border rounded-2xl p-8 shadow-xl">
                             <h2 className="text-2xl font-semibold mb-6 text-foreground">Why reach out?</h2>
                             <div className="space-y-4">

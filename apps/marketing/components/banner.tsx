@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
+import { Icons } from "@workspace/ui/components/icons";
 import { motion, type Easing } from "motion/react";
 import Link from "next/link";
 import type { Route } from "next";
@@ -97,14 +98,23 @@ export default function Banner({ text, href, className }: BannerProps) {
             <span className="text-sm font-medium text-foreground">
                 {text}
             </span>
+
+            {href && (
+                <Icons.externalLink className="h-3.5 w-3.5 text-primary transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            )}
         </motion.div>
     );
 
     if (href) {
         return (
-            <Link href={href as Route} className="inline-block">
+            <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block"
+            >
                 {content}
-            </Link>
+            </a>
         );
     }
 

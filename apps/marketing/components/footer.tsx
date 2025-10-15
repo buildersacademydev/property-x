@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
                                     asChild
                                 >
                                     <Link
-                                        href="https://x.com/BuildersAcadHQ"
+                                        href="https://x.com/propertyx_fi"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >

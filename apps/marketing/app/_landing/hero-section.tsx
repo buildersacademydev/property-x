@@ -48,7 +48,10 @@ export function HeroSection() {
                 slide-in-from-bottom-8"
                         >
                             <div className="space-y-4">
-                                <Banner text=" $35,000 grant secured from stacks" />
+                                <Banner
+                                    text="$35,000 grant secured from stacks"
+                                    href="https://github.com/stacksgov/sip31-interim-grants/issues/28#issuecomment-3359659243"
+                                />
 
                                 <h1
                                     className="animate-in text-[clamp(2.4rem,6vw,3.75rem)]
