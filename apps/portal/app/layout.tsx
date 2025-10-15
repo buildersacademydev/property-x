@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "@workspace/ui/globals.css";
 import RootProviders from "@/providers/root-providers";
+import Nav from "@/components/nav";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -25,6 +26,7 @@ export default function RootLayout({
           text-foreground antialiased`}
       >
         <RootProviders>
+          <Nav />
           <main className="mt-12">{children}</main>
         </RootProviders>
       </body>
