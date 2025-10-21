@@ -1,12 +1,7 @@
-import ComingSoon from '@/components/coming-soon'
-import React from 'react'
+import { redirect } from 'next/navigation'
 
 const Page = () => {
-  return (
-    <div className='min-h-full mx-auto flex justify-center items-center'>
-      <ComingSoon />
-    </div>
-  )
+  redirect('/explore')
 }
 
 export default Page

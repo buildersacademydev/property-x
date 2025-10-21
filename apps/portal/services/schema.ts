@@ -1,11 +1,11 @@
 import { z } from "zod"
 
 const amountSchema = z.object({
-    amount: z.coerce.number<string>().min(1, "Amount must be at least 1")
+    amount: z.coerce.number<number>().min(1, "Amount must be at least 1")
 })
 
 export const listForSaleSchema = amountSchema.extend({
-    listingPrice: z.coerce.number<string>().min(1, "Listing price must be at least 1"),
+    listingPrice: z.coerce.number<number>().min(1, "Listing price must be at least 1"),
     paymentAsset: z.string(),
     listingDuration: z.enum(["20927", "41855", "89689", "179377", "269066"]),
     targetBuyer: z.string().optional(),

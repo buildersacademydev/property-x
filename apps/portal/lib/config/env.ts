@@ -2,8 +2,7 @@ import { z } from "zod"
 
 const serverSchema = z.object({
     DATABASE_URL: z
-        .string()
-        .url("DATABASE_URL must be a valid URL")
+        .string("DATABASE_URL must be a valid URL")
         .includes("postgresql", {
             message: "DATABASE_URL must be a PostgreSQL connection string",
         }),
@@ -11,8 +10,7 @@ const serverSchema = z.object({
     NODE_ENV: z.enum(["development", "production", "test"]),
 
     UPSTASH_REDIS: z
-        .string()
-        .url("UPSTASH_REDIS must be a valid URL")
+        .string("UPSTASH_REDIS must be a valid URL")
         .includes("upstash.io", {
             message: "UPSTASH_REDIS must be an Upstash Redis endpoint",
         }),
@@ -34,7 +32,7 @@ const clientSchema = z.object({
 const validateServerEnv = () => {
     const serverEnv = {
         DATABASE_URL: process.env.DATABASE_URL,
-        NODE_ENV: process.env.NODE_ENV,
+        NODE_ENV: process.env.NODE_ENV || "development",
         UPSTASH_REDIS: process.env.UPSTASH_REDIS_REST_URL,
         UPSTASH_REDIS_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     }
@@ -45,6 +43,7 @@ const validateServerEnv = () => {
         console.error("❌ Invalid server environment variables:")
         result.error.issues.forEach((issue) => {
             console.error(`  - ${issue.path.join(".")}: ${issue.message}`)
+            console.error(`  - Current value:`, serverEnv[issue.path[0] as keyof typeof serverEnv])
         })
         throw new Error("Invalid server environment variables")
     }

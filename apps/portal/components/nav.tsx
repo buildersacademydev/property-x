@@ -7,6 +7,7 @@ import Link from "next/link"
 import { cn } from "@workspace/ui/lib/utils"
 import { Icons } from "@workspace/ui/components/icons"
 import { ThemeToggle } from "@workspace/ui/components/theme-toggle"
+import ConnectWallet from "./connect-wallet"
 
 const navItems = [
     {
@@ -29,16 +30,13 @@ const Nav = () => {
 
     return (
         <>
-            {/* Desktop Navigation */}
             <nav className="fixed inset-x-0 top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                    {/* Logo on the left */}
                     <div className="flex items-center">
                         <Logo />
                     </div>
 
-                    {/* Desktop Navigation Links - Centered */}
-                    {/* <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
+                    <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
                         {navItems.map((item, idx) => {
                             const isActive = pathname === item.link
                             return (
@@ -56,14 +54,13 @@ const Nav = () => {
                                 </Link>
                             )
                         })}
-                    </div> */}
-
-                    {/* Theme Toggle on the right */}
-                    <div className="hidden md:block">
-                        <ThemeToggle />
                     </div>
 
-                    {/* Mobile Menu Toggle */}
+                    <div className="hidden items-center gap-2 md:flex">
+                        <ThemeToggle />
+                        <ConnectWallet isNav />
+                    </div>
+
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:hidden"
@@ -77,11 +74,10 @@ const Nav = () => {
                     </button>
                 </div>
 
-                {/* Mobile Navigation Menu */}
                 {isMobileMenuOpen && (
                     <div className="border-t bg-background md:hidden">
                         <div className="space-y-1 px-4 pb-3 pt-2">
-                            {/* {navItems.map((item, idx) => {
+                            {navItems.map((item, idx) => {
                                 const isActive = pathname === item.link
                                 return (
                                     <Link
@@ -98,10 +94,15 @@ const Nav = () => {
                                         {item.name}
                                     </Link>
                                 )
-                            })} */}
-                            <div className="flex items-center justify-between rounded-lg border-t px-4 py-3">
-                                <span className="text-sm font-medium text-muted-foreground">Theme</span>
-                                <ThemeToggle />
+                            })}
+                            <div className="space-y-3 border-t pt-3">
+                                <div className="flex items-center justify-between px-4">
+                                    <span className="text-sm font-medium text-muted-foreground">Theme</span>
+                                    <ThemeToggle />
+                                </div>
+                                <div className="px-4">
+                                    <ConnectWallet className="w-full" />
+                                </div>
                             </div>
                         </div>
                     </div>
