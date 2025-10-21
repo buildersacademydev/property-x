@@ -46,7 +46,7 @@ const Nav = () => {
                                     className={cn(
                                         "relative rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200",
                                         isActive
-                                            ? "bg-primary text-primary-foreground shadow-sm"
+                                            ? "bg-accent text-accent-foreground shadow-sm"
                                             : "text-muted-foreground hover:bg-accent hover:text-foreground"
                                     )}
                                 >
