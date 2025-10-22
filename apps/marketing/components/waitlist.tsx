@@ -1,13 +1,18 @@
 "use client"
 
 import React, { useState } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Card, CardContent } from "@workspace/ui/components/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@workspace/ui/components/form"
+import {
+    Field,
+    FieldError,
+    FieldGroup,
+    FieldLabel,
+} from "@workspace/ui/components/field"
 import { Icons } from "@workspace/ui/components/icons"
 import { Badge } from "@workspace/ui/components/badge"
 import { cn } from "@workspace/ui/lib/utils"
@@ -197,55 +202,55 @@ export default function Waitlist({ className }: WaitlistProps) {
                         <div className="mx-auto max-w-4xl">
                             <Card className="border border-primary/20 bg-gradient-to-br from-background/90 to-background/60 backdrop-blur-xl shadow-xl">
                                 <CardContent className="pt-8 pb-8">
-                                    <Form {...form}>
-                                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                                        <FieldGroup className="space-y-8">
                                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                                <FormField
-                                                    control={form.control}
+                                                <Controller
                                                     name="email"
-                                                    render={({ field }) => (
-                                                        <FormItem className="space-y-3">
-                                                            <FormLabel className="text-base font-medium text-foreground">
+                                                    control={form.control}
+                                                    render={({ field, fieldState }) => (
+                                                        <Field data-invalid={fieldState.invalid} className="space-y-3">
+                                                            <FieldLabel htmlFor={field.name} className="text-base font-medium text-foreground">
                                                                 Email Address
-                                                            </FormLabel>
-                                                            <FormControl>
-                                                                <div className="relative">
-                                                                    <Icons.mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                                                                    <Input
-                                                                        {...field}
-                                                                        type="email"
-                                                                        placeholder="your@email.com"
-                                                                        className="pl-12 h-14 text-base bg-background/60 border-border/50 focus:border-primary/50 focus:bg-background/80 transition-all duration-200"
-                                                                        disabled={isSubmitting}
-                                                                    />
-                                                                </div>
-                                                            </FormControl>
-                                                            <FormMessage className="text-sm" />
-                                                        </FormItem>
+                                                            </FieldLabel>
+                                                            <div className="relative">
+                                                                <Icons.mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                                                                <Input
+                                                                    {...field}
+                                                                    id={field.name}
+                                                                    type="email"
+                                                                    placeholder="your@email.com"
+                                                                    className="pl-12 h-14 text-base bg-background/60 border-border/50 focus:border-primary/50 focus:bg-background/80 transition-all duration-200"
+                                                                    disabled={isSubmitting}
+                                                                    aria-invalid={fieldState.invalid}
+                                                                />
+                                                            </div>
+                                                            {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-sm" />}
+                                                        </Field>
                                                     )}
                                                 />
 
-                                                <FormField
-                                                    control={form.control}
+                                                <Controller
                                                     name="walletAddress"
-                                                    render={({ field }) => (
-                                                        <FormItem className="space-y-3">
-                                                            <FormLabel className="text-base font-medium text-foreground">
+                                                    control={form.control}
+                                                    render={({ field, fieldState }) => (
+                                                        <Field data-invalid={fieldState.invalid} className="space-y-3">
+                                                            <FieldLabel htmlFor={field.name} className="text-base font-medium text-foreground">
                                                                 Wallet Address
-                                                            </FormLabel>
-                                                            <FormControl>
-                                                                <div className="relative">
-                                                                    <Icons.wallet className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                                                                    <Input
-                                                                        {...field}
-                                                                        placeholder="SP...."
-                                                                        className="pl-12 h-14 text-base bg-background/60 border-border/50 focus:border-primary/50 focus:bg-background/80 transition-all duration-200"
-                                                                        disabled={isSubmitting}
-                                                                    />
-                                                                </div>
-                                                            </FormControl>
-                                                            <FormMessage className="text-sm" />
-                                                        </FormItem>
+                                                            </FieldLabel>
+                                                            <div className="relative">
+                                                                <Icons.wallet className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                                                                <Input
+                                                                    {...field}
+                                                                    id={field.name}
+                                                                    placeholder="SP...."
+                                                                    className="pl-12 h-14 text-base bg-background/60 border-border/50 focus:border-primary/50 focus:bg-background/80 transition-all duration-200"
+                                                                    disabled={isSubmitting}
+                                                                    aria-invalid={fieldState.invalid}
+                                                                />
+                                                            </div>
+                                                            {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-sm" />}
+                                                        </Field>
                                                     )}
                                                 />
                                             </div>
@@ -272,8 +277,8 @@ export default function Waitlist({ className }: WaitlistProps) {
                                                     </span>
                                                 </Button>
                                             </div>
-                                        </form>
-                                    </Form>
+                                        </FieldGroup>
+                                    </form>
                                 </CardContent>
                             </Card>
                         </div>

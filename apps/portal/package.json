@@ -11,7 +11,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:clear": "pnpm dlx dotenv-cli -e .env.local -- pnpm exec tsx src/db/clear-db.ts"
+    "db:clear": "pnpm dlx dotenv-cli -e .env.local -- pnpm exec tsx db/clear-db.ts"
   },
   "dependencies": {
     "@hirosystems/chainhook-client": "^2.4.0",
@@ -45,6 +45,7 @@
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
     "drizzle-kit": "^0.31.5",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }

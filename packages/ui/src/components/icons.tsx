@@ -26,6 +26,10 @@ import {
     Target,
     TrendingUp,
     Unplug,
+    Eye,
+    EyeOff,
+    Check,
+    Copy,
     Users,
     Wallet,
     X,
@@ -66,6 +70,11 @@ export const Icons = {
     error: (props: IconProps) => <CloudAlert {...props} />,
     click: (props: IconProps) => <MousePointerClick {...props} />,
     mail: (props: IconProps) => <Mail {...props} />,
+    check: (props: IconProps) => <Check {...props} />,
+    copy: (props: IconProps) => <Copy {...props} />,
+    eye: (props: IconProps) => <Eye {...props} />,
+    eyeOff: (props: IconProps) => <EyeOff {...props} />,
+
     spinner: (props: IconProps) => (
         <Loader2 {...props} className="animate-spin" />
     ),

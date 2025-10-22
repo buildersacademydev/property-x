@@ -106,6 +106,7 @@ export async function POST(request: Request) {
         request,
         route: "white-listing",
         dbOperation: async (processedValues) => {
+            console.log("Processing white-listing data:", processedValues)
             const whitelistedAddresses = processedValues.map((v) => v.whitelisted)
             const existingRecords = await db
                 .select()

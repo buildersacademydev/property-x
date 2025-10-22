@@ -1,17 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '@workspace/ui/components/form'
+    Field,
+    FieldError,
+    FieldGroup,
+    FieldLabel,
+} from '@workspace/ui/components/field'
 import { Input } from '@workspace/ui/components/input'
 import { Textarea } from '@workspace/ui/components/textarea'
 import { Button } from '@workspace/ui/components/button'
@@ -104,61 +102,64 @@ const Page = () => {
                                 <p className="text-muted-foreground">We&apos;ll get back to you soon.</p>
                             </div>
                         ) : (
-                            <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                                    <FormField
-                                        control={form.control}
+                            <form onSubmit={form.handleSubmit(onSubmit)}>
+                                <FieldGroup className="space-y-8">
+                                    <Controller
                                         name="name"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Name *</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder="Your name"
-                                                        {...field}
-                                                        disabled={isLoading}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
+                                        control={form.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid}>
+                                                <FieldLabel htmlFor={field.name}>Name *</FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    id={field.name}
+                                                    placeholder="Your name"
+                                                    disabled={isLoading}
+                                                    aria-invalid={fieldState.invalid}
+                                                />
+                                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                            </Field>
                                         )}
                                     />
 
-                                    <FormField
-                                        control={form.control}
+                                    <Controller
                                         name="email"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Email *</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="email"
-                                                        placeholder="your.email@example.com"
-                                                        {...field}
-                                                        disabled={isLoading}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
+                                        control={form.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid}>
+                                                <FieldLabel htmlFor={field.name}>Email *</FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    id={field.name}
+                                                    type="email"
+                                                    placeholder="your.email@example.com"
+                                                    disabled={isLoading}
+                                                    aria-invalid={fieldState.invalid}
+                                                />
+                                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                            </Field>
                                         )}
                                     />
 
-                                    <FormField
-                                        control={form.control}
+                                    <Controller
                                         name="subject"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Subject *</FormLabel>
+                                        control={form.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid}>
+                                                <FieldLabel htmlFor="subject">Subject *</FieldLabel>
                                                 <Select
+                                                    name={field.name}
+                                                    value={field.value}
                                                     onValueChange={field.onChange}
-                                                    defaultValue={field.value}
                                                     disabled={isLoading}
                                                 >
-                                                    <FormControl>
-                                                        <SelectTrigger className='w-full'>
-                                                            <SelectValue placeholder="Select a subject" />
-                                                        </SelectTrigger>
-                                                    </FormControl>
+                                                    <SelectTrigger
+                                                        id="subject"
+                                                        className='w-full'
+                                                        aria-invalid={fieldState.invalid}
+                                                    >
+                                                        <SelectValue placeholder="Select a subject" />
+                                                    </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value="general">General Inquiry</SelectItem>
                                                         <SelectItem value="feedback">Feedback</SelectItem>
@@ -167,28 +168,28 @@ const Page = () => {
                                                         <SelectItem value="other">Other</SelectItem>
                                                     </SelectContent>
                                                 </Select>
-                                                <FormMessage />
-                                            </FormItem>
+                                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                            </Field>
                                         )}
                                     />
 
-                                    <FormField
-                                        control={form.control}
+                                    <Controller
                                         name="message"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Message *</FormLabel>
-                                                <FormControl>
-                                                    <Textarea
-                                                        placeholder="Tell us what's on your mind..."
-                                                        rows={6}
-                                                        className="resize-none"
-                                                        {...field}
-                                                        disabled={isLoading}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
+                                        control={form.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid}>
+                                                <FieldLabel htmlFor={field.name}>Message *</FieldLabel>
+                                                <Textarea
+                                                    {...field}
+                                                    id={field.name}
+                                                    placeholder="Tell us what's on your mind..."
+                                                    rows={6}
+                                                    className="resize-none"
+                                                    disabled={isLoading}
+                                                    aria-invalid={fieldState.invalid}
+                                                />
+                                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                            </Field>
                                         )}
                                     />
 
@@ -200,8 +201,8 @@ const Page = () => {
                                     >
                                         Send Message
                                     </Button>
-                                </form>
-                            </Form>
+                                </FieldGroup>
+                            </form>
                         )}
                     </div>
 
