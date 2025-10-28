@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { cva, type VariantProps } from "class-variance-authority"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Card, CardContent } from "@workspace/ui/components/card"
@@ -28,11 +29,131 @@ const waitlistSchema = z.object({
 
 type WaitlistFormData = z.infer<typeof waitlistSchema>
 
-interface WaitlistProps {
+const waitlistVariants = cva("relative overflow-hidden bg-gradient-to-b from-background via-muted/30 to-background", {
+    variants: {
+        size: {
+            default: "py-20 lg:py-28",
+            medium: "py-12 lg:py-16",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const headingVariants = cva("mb-6 leading-tight font-bold tracking-tight text-balance", {
+    variants: {
+        size: {
+            default: "text-4xl lg:text-5xl",
+            medium: "text-2xl lg:text-3xl",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const descriptionVariants = cva("mx-auto max-w-2xl text-muted-foreground text-balance", {
+    variants: {
+        size: {
+            default: "text-xl",
+            medium: "text-base",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const badgeVariants = cva("border-primary/30 bg-primary/10 font-semibold text-primary backdrop-blur-sm", {
+    variants: {
+        size: {
+            default: "mb-6 px-4 py-2 text-sm",
+            medium: "mb-4 px-3 py-1.5 text-xs",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const cardPaddingVariants = cva("", {
+    variants: {
+        size: {
+            default: "pt-8 pb-8",
+            medium: "pt-6 pb-6",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const inputVariants = cva("bg-background/60 border-border/50 focus:border-primary/50 focus:bg-background/80 transition-all duration-200", {
+    variants: {
+        size: {
+            default: "h-14 text-base pl-12",
+            medium: "h-11 text-sm pl-10",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const iconVariants = cva("absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground", {
+    variants: {
+        size: {
+            default: "w-5 h-5",
+            medium: "w-4 h-4",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const buttonVariants = cva("w-full cursor-pointer max-w-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold", {
+    variants: {
+        size: {
+            default: "px-12 h-14 text-lg mt-4",
+            medium: "px-8 h-11 text-base mt-3",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const labelVariants = cva("font-medium text-foreground", {
+    variants: {
+        size: {
+            default: "text-base",
+            medium: "text-sm",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+const containerVariants = cva("mx-auto", {
+    variants: {
+        size: {
+            default: "max-w-4xl",
+            medium: "max-w-6xl w-full",
+        },
+    },
+    defaultVariants: {
+        size: "default",
+    },
+})
+
+interface WaitlistProps extends VariantProps<typeof waitlistVariants> {
     className?: string
 }
 
-export default function Waitlist({ className }: WaitlistProps) {
+export default function Waitlist({ className, size }: WaitlistProps) {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -86,9 +207,8 @@ export default function Waitlist({ className }: WaitlistProps) {
     return (
         <section
             id="waitlist"
-            className={cn("relative overflow-hidden py-20 lg:py-28 bg-gradient-to-b from-background via-muted/30 to-background", className)}
+            className={cn(waitlistVariants({ size }), className)}
         >
-            {/* Background Elements */}
             <div className="pointer-events-none absolute inset-0">
                 <div
                     className="absolute top-1/2 left-1/2 h-[600px] w-[600px]
@@ -114,21 +234,18 @@ export default function Waitlist({ className }: WaitlistProps) {
             </div>
 
             <div className="relative z-10 container mx-auto px-4">
-                <div className="mx-auto max-w-4xl">
-                    {/* Header */}
+                <div className={cn(containerVariants({ size }))}>
                     <div className="mb-12 text-center">
                         <Badge
                             variant="outline"
-                            className="mb-6 border-primary/30 bg-primary/10 px-4 py-2 text-sm
-                            font-semibold text-primary backdrop-blur-sm"
+                            className={cn(badgeVariants({ size }))}
                         >
-                            <Icons.zap className="mr-2 h-4 w-4" />
+                            <Icons.zap />
                             Early Access
                         </Badge>
 
                         <h2
-                            className="mb-6 text-4xl leading-tight font-bold tracking-tight
-                            text-balance lg:text-5xl"
+                            className={cn(headingVariants({ size }))}
                         >
                             {isSubmitted ? (
                                 <>
@@ -147,7 +264,7 @@ export default function Waitlist({ className }: WaitlistProps) {
                             )}
                         </h2>
 
-                        <p className="mx-auto max-w-2xl text-xl text-muted-foreground text-balance">
+                        <p className={cn(descriptionVariants({ size }))}>
                             {isSubmitted ? (
                                 "Thanks for joining our waitlist! We'll notify you as soon as PropertyX launches with exclusive early access benefits."
                             ) : (
@@ -157,9 +274,9 @@ export default function Waitlist({ className }: WaitlistProps) {
                     </div>
 
                     {isSubmitted && (
-                        <div className="mx-auto max-w-4xl">
+                        <div className={cn(containerVariants({ size }))}>
                             <Card className="border border-green-500/30 bg-gradient-to-br from-green-500/10 to-background/60 backdrop-blur-xl shadow-xl">
-                                <CardContent className="pt-8 pb-8">
+                                <CardContent className={cn(cardPaddingVariants({ size }))}>
                                     <div className="text-center space-y-6">
                                         <div className="flex justify-center">
                                             <div className="rounded-full bg-green-500/20 p-4">
@@ -197,11 +314,10 @@ export default function Waitlist({ className }: WaitlistProps) {
                         </div>
                     )}
 
-                    {/* Form State */}
                     {!isSubmitted && (
-                        <div className="mx-auto max-w-4xl">
+                        <div className={cn(containerVariants({ size }))}>
                             <Card className="border border-primary/20 bg-gradient-to-br from-background/90 to-background/60 backdrop-blur-xl shadow-xl">
-                                <CardContent className="pt-8 pb-8">
+                                <CardContent className={cn(cardPaddingVariants({ size }))}>
                                     <form onSubmit={form.handleSubmit(onSubmit)}>
                                         <FieldGroup className="space-y-8">
                                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -210,17 +326,17 @@ export default function Waitlist({ className }: WaitlistProps) {
                                                     control={form.control}
                                                     render={({ field, fieldState }) => (
                                                         <Field data-invalid={fieldState.invalid} className="space-y-3">
-                                                            <FieldLabel htmlFor={field.name} className="text-base font-medium text-foreground">
+                                                            <FieldLabel htmlFor={field.name} className={cn(labelVariants({ size }))}>
                                                                 Email Address
                                                             </FieldLabel>
                                                             <div className="relative">
-                                                                <Icons.mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                                                                <Icons.mail className={cn(iconVariants({ size }))} />
                                                                 <Input
                                                                     {...field}
                                                                     id={field.name}
                                                                     type="email"
                                                                     placeholder="your@email.com"
-                                                                    className="pl-12 h-14 text-base bg-background/60 border-border/50 focus:border-primary/50 focus:bg-background/80 transition-all duration-200"
+                                                                    className={cn(inputVariants({ size }))}
                                                                     disabled={isSubmitting}
                                                                     aria-invalid={fieldState.invalid}
                                                                 />
@@ -235,16 +351,16 @@ export default function Waitlist({ className }: WaitlistProps) {
                                                     control={form.control}
                                                     render={({ field, fieldState }) => (
                                                         <Field data-invalid={fieldState.invalid} className="space-y-3">
-                                                            <FieldLabel htmlFor={field.name} className="text-base font-medium text-foreground">
+                                                            <FieldLabel htmlFor={field.name} className={cn(labelVariants({ size }))}>
                                                                 Wallet Address
                                                             </FieldLabel>
                                                             <div className="relative">
-                                                                <Icons.wallet className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                                                                <Icons.wallet className={cn(iconVariants({ size }))} />
                                                                 <Input
                                                                     {...field}
                                                                     id={field.name}
-                                                                    placeholder="SP...."
-                                                                    className="pl-12 h-14 text-base bg-background/60 border-border/50 focus:border-primary/50 focus:bg-background/80 transition-all duration-200"
+                                                                    placeholder="binaya.btc"
+                                                                    className={cn(inputVariants({ size }))}
                                                                     disabled={isSubmitting}
                                                                     aria-invalid={fieldState.invalid}
                                                                 />
@@ -267,11 +383,11 @@ export default function Waitlist({ className }: WaitlistProps) {
                                                 <Button
                                                     type="submit"
                                                     size="sm"
-                                                    className="px-12 h-14 text-lg bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold w-full cursor-pointer max-w-2xl mt-4"
+                                                    className={cn(buttonVariants({ size }))}
                                                     disabled={isSubmitting}
                                                     loading={isSubmitting}
                                                 >
-                                                    <Icons.click size={24} />
+                                                    <Icons.click size={size === "medium" ? 20 : 24} />
                                                     <span>
                                                         Secure Your Spot
                                                     </span>

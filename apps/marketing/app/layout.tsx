@@ -4,6 +4,7 @@ import "@workspace/ui/globals.css";
 import Nav from "@/components/nav";
 import { ThemeProvider } from "@workspace/ui/components/theme-provider";
 import Footer from "@/components/footer";
+import WaitlistDialog from "@/components/waitlist-dialog";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -30,6 +31,7 @@ export default function RootLayout({
           <Nav />
           <main className="mt-12">{children}</main>
           <Footer />
+          <WaitlistDialog />
         </ThemeProvider>
       </body>
     </html>

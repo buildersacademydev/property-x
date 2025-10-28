@@ -1,13 +1,12 @@
 "use client"
 
-import React, { useState } from "react"
+import React from "react"
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTrigger,
 } from "@workspace/ui/components/dialog"
-import { Button } from "@workspace/ui/components/button"
 import { Icons } from "@workspace/ui/components/icons"
 import Waitlist from "./waitlist"
 
@@ -16,17 +15,25 @@ export default function WaitlistDialog() {
         <>
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button
-                        size="lg"
-                        className="fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full shadow-2xl hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 cursor-pointer text-white [&>svg]:h-8 [&>svg]:w-8"
-                        aria-label="Join Waitlist"
+                    <button
+                        className="group fixed bottom-6 right-6 z-50 rounded-full border border-accent bg-accent p-2 text-sm font-semibold cursor-pointer"
                     >
-                        <Icons.click />
-                    </Button>
+                        <div
+                            className="absolute left-0 top-0 flex h-full w-11 items-center justify-end rounded-full transition-all duration-200 ease-in-out group-hover:w-full bg-primary"
+                        >
+                            <span className="mr-3 text-white transition-all duration-200 ease-in-out">
+                                <Icons.arrowRight size={20} />
+                            </span>
+                        </div>
+                        <span className="relative left-4 z-10 whitespace-nowrap px-8 font-semibold text-accent-foreground transition-all duration-200 ease-in-out group-hover:-left-3 group-hover:text-white uppercase tracking-wider">
+                            Join Waitlist
+                        </span>
+                    </button>
+
+
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-6/12 max-h-[80vh] overflow-y-auto p-0 border-primary/20">
-                    <DialogHeader />
-                    <Waitlist className="py-3 lg:py-6" />
+                <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto p-0 border-primary/20">
+                    <Waitlist size="medium" className="py-4" />
                 </DialogContent>
             </Dialog>
         </>
