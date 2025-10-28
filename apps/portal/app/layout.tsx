@@ -26,6 +26,7 @@ export default function RootLayout({
       <body
         className={`${geistMono.className} min-h-dvh bg-background
           text-foreground antialiased`}
+        suppressHydrationWarning
       >
         <RootProviders>
           <Nav />

@@ -4,6 +4,7 @@ import {
     Bitcoin,
     Building,
     CheckCircle,
+    ChevronDown,
     ChevronLeft,
     ChevronRight,
     ChevronUp,
@@ -12,7 +13,9 @@ import {
     DollarSign,
     Download,
     ExternalLink,
+    Home,
     LaptopMinimalCheck,
+    List,
     Loader2,
     LucideProps,
     Mail,
@@ -26,6 +29,7 @@ import {
     Target,
     TrendingUp,
     Unplug,
+    User,
     Eye,
     EyeOff,
     Check,
@@ -34,6 +38,7 @@ import {
     Wallet,
     X,
     Zap,
+    MoveRight,
 } from "lucide-react"
 
 type IconSize = { size?: number }
@@ -47,6 +52,7 @@ export const Icons = {
     bitcoin: (props: IconProps) => <Bitcoin {...props} />,
     building: (props: IconProps) => <Building {...props} />,
     users: (props: IconProps) => <Users {...props} />,
+    user: (props: IconProps) => <User {...props} />,
     trendingUp: (props: IconProps) => <TrendingUp {...props} />,
     clock: (props: IconProps) => <Clock {...props} />,
     checkCircle: (props: IconProps) => <CheckCircle {...props} />,
@@ -57,6 +63,7 @@ export const Icons = {
     dollarSign: (props: IconProps) => <DollarSign {...props} />,
     menu: (props: IconProps) => <Menu {...props} />,
     chevronUp: (props: IconProps) => <ChevronUp {...props} />,
+    chevronDown: (props: IconProps) => <ChevronDown {...props} />,
     chevronLeft: (props: IconProps) => <ChevronLeft {...props} />,
     chevronRight: (props: IconProps) => <ChevronRight {...props} />,
     externalLink: (props: IconProps) => <ExternalLink {...props} />,
@@ -74,6 +81,9 @@ export const Icons = {
     copy: (props: IconProps) => <Copy {...props} />,
     eye: (props: IconProps) => <Eye {...props} />,
     eyeOff: (props: IconProps) => <EyeOff {...props} />,
+    home: (props: IconProps) => <Home {...props} />,
+    list: (props: IconProps) => <List {...props} />,
+    moveRight: (props: IconProps) => <MoveRight {...props} />,
 
     spinner: (props: IconProps) => (
         <Loader2 {...props} className="animate-spin" />

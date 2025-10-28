@@ -11,14 +11,6 @@ import ConnectWallet from "./connect-wallet"
 
 const navItems = [
     {
-        name: "Your Apts",
-        link: "/your-apts",
-    },
-    {
-        name: "Your Listings",
-        link: "/your-listings",
-    },
-    {
         name: "Explore",
         link: "/explore",
     },
