@@ -17,6 +17,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@workspace/ui": "workspace:*",
+    "@workspace/font": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.40.0",

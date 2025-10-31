@@ -29,6 +29,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.65.0(react@19.2.0))
+      '@workspace/font':
+        specifier: workspace:*
+        version: link:../../packages/font
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -120,6 +123,9 @@ importers:
       '@upstash/redis':
         specifier: ^1.35.6
         version: 1.35.6
+      '@workspace/font':
+        specifier: workspace:*
+        version: link:../../packages/font
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -218,6 +224,19 @@ importers:
         specifier: ^8.39.0
         version: 8.46.1(eslint@9.37.0(jiti@2.6.1))(typescript@5.9.3)
 
+  packages/font:
+    dependencies:
+      next:
+        specifier: 15.4.5
+        version: 15.4.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+    devDependencies:
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
   packages/typescript-config: {}
 
   packages/ui:
@@ -258,6 +277,9 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.13
         version: 1.1.13(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@workspace/font':
+        specifier: workspace:*
+        version: link:../font
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

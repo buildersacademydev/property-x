@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
 import "@workspace/ui/globals.css";
 import RootProviders from "@/providers/root-providers";
 import Nav from "@/components/nav";
 import Notifications from "@/components/notifications";
 import { Toaster } from "sonner";
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-})
+import { mainFont } from "@workspace/font";
 
 export const metadata: Metadata = {
   title: "PropertyX Protocol",
@@ -24,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistMono.className} min-h-dvh bg-background
+        className={`${mainFont.className} min-h-dvh bg-background
           text-foreground antialiased`}
         suppressHydrationWarning
       >

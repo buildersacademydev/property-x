@@ -27,6 +27,7 @@
     "@upstash/realtime": "^0.2.4",
     "@upstash/redis": "^1.35.6",
     "@workspace/ui": "workspace:*",
+    "@workspace/font": "workspace:*",
     "axios": "^1.12.2",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.6",
