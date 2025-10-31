@@ -66,6 +66,7 @@ export class ContractService {
         whitelisted,
         isWhitelisted,
     }: TWhitelistContractSchema) {
+        console.log("Whitelisting contract:", { whitelisted, isWhitelisted })
         const { contractAddress, contractName } =
             getContractNameAddress(whitelisted)
         const args = [
