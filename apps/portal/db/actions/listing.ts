@@ -18,7 +18,7 @@ export async function getListingsCore(
                 whiteListing,
                 eq(listings.assetContract, whiteListing.whitelisted)
             )
-            .innerJoin(tcoins, eq(listings.assetContract, tcoins.contract))
+            .innerJoin(tcoins, eq(whiteListing.whitelisted, tcoins.contract))
             .innerJoin(assets, eq(tcoins.assetId, assets.id))
 
         if (listingsData.length === 0) {
