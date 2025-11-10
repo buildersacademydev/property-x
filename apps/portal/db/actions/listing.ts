@@ -53,6 +53,7 @@ export async function getListingsCore(
         })
 
         const exploreListings = finalListings.filter((l) => {
+            if (!stxAddress) return true;
             return l.maker !== stxAddress
         })
 

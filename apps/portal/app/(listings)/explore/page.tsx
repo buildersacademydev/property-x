@@ -5,17 +5,14 @@ import React from "react"
 import { BuyNowDialog } from "../_components/buy-now-dialog"
 import ListingCard from "../_components/listing-card"
 import { ViewDetailsDialog } from "../_components/view-details-dialog"
-import EmptyWallet from "@/components/empty-wallet"
 import EmptyListing from "../_components/empty-listings"
 import { getListings } from "@/db/actions/listing"
 import { Button } from "@workspace/ui/components/button"
 
 const Page = async () => {
     const stxAddress = await getWalletAddress()
-    if (!stxAddress) {
-        return <EmptyWallet />
-    }
-    const res = await getListings("explore", stxAddress)
+
+    const res = await getListings("explore", stxAddress || '')
 
     if (!res.success) {
         if (res.error?.type === "no-data")
