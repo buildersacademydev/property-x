@@ -200,3 +200,5 @@ export type TTypeSchema = {
         optional?: boolean
     }
 }
+
+export type TGroupedListing = Pick<TMarketplaceListing, 'name' | 'image' | 'assetImage' | 'assetName' | 'assetLocation' | 'contract'>

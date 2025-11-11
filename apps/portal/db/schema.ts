@@ -1,11 +1,9 @@
 import {
     boolean,
     integer,
-    bigint as pgBigInt,
     pgTable,
     serial,
     text,
-    timestamp,
 } from "drizzle-orm/pg-core"
 
 export const whiteListing = pgTable("whitelisting", {

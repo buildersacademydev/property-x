@@ -5,6 +5,7 @@ import { db } from "../drizzle"
 import { dalDbOperation } from "../helpers"
 import { assets, listings, tcoins, whiteListing } from "../schema"
 import { ThrowableDalError } from "../type"
+import { TGroupedListing } from "@/services/type"
 
 export async function getListingsCore(
     type: "your-listings" | "explore",
@@ -12,7 +13,16 @@ export async function getListingsCore(
 ) {
     return dalDbOperation(async () => {
         const listingsData = await db
-            .select()
+            .select({
+                contract: listings.assetContract,
+                assetLocation: assets.location,
+                name: tcoins.name,
+                image: tcoins.image,
+                assetName: assets.name,
+                assetImage: assets.image,
+                price: listings.price,
+                maker: listings.maker
+            })
             .from(listings)
             .innerJoin(
                 whiteListing,
@@ -25,34 +35,12 @@ export async function getListingsCore(
             throw new ThrowableDalError({ type: "no-data" })
         }
 
-        const finalListings = listingsData.map((listing) => ({
-            listingId: listing.listings.listingId,
-            amount: listing.listings.amount,
-            expiry: listing.listings.expiry,
-            maker: listing.listings.maker,
-            paymentAssetContract: listing.listings.paymentAssetContract,
-            price: listing.listings.price,
-            taker: listing.listings.taker,
-            topic: listing.listings.topic,
-            contract: listing.listings.assetContract,
-            name: listing.tcoins.name,
-            description: listing.tcoins.description,
-            image: listing.tcoins.image,
-            assetName: listing.assets.name,
-            assetImage: listing.assets.image,
-            assetLocation: listing.assets.location,
-            assetValuation: listing.assets.valuation,
-            assetTokens: listing.assets.tokens,
-            assetApr: listing.assets.apr,
-            assetDescription: listing.assets.description,
-            assetStaking: listing.assets.staking,
-        }))
 
-        const yourListings = finalListings.filter((l) => {
+        const yourListings = listingsData.filter((l) => {
             return l.maker === stxAddress
         })
 
-        const exploreListings = finalListings.filter((l) => {
+        const exploreListings = listingsData.filter((l) => {
             if (!stxAddress) return true;
             return l.maker !== stxAddress
         })
@@ -64,7 +52,7 @@ export async function getListingsCore(
             throw new ThrowableDalError({ type: "no-data" })
         }
 
-        return type === "your-listings" ? yourListings : exploreListings
+        return type === "your-listings" ? groupToCards(yourListings) : groupToCards(exploreListings)
     })
 }
 
@@ -72,3 +60,22 @@ export const getListings = unstable_cache(getListingsCore, ["listing-data"], {
     tags: ["listings"],
     revalidate: 3600,
 })
+
+function groupToCards(list: TGroupedListing[]): TGroupedListing[] {
+    const map = new Map()
+
+    list.forEach(item => {
+        if (!map.has(item.contract)) {
+            map.set(item.contract, {
+                contract: item.contract,
+                assetLocation: item.assetLocation,
+                name: item.name,
+                image: item.image,
+                assetName: item.assetName,
+                assetImage: item.assetImage,
+            })
+        }
+    })
+
+    return Array.from(map.values())
+}

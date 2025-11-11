@@ -2,12 +2,9 @@ import { getWalletAddress } from "@/db/actions/wallet"
 import { dalFormatErrorMessage, dalVerifySuccess } from "@/db/helpers"
 import React from "react"
 
-import { BuyNowDialog } from "../_components/buy-now-dialog"
-import ListingCard from "../_components/listing-card"
-import { ViewDetailsDialog } from "../_components/view-details-dialog"
 import EmptyListing from "../_components/empty-listings"
 import { getListings } from "@/db/actions/listing"
-import { Button } from "@workspace/ui/components/button"
+import { ListingCard } from "../_components/listing-card"
 
 const Page = async () => {
     const stxAddress = await getWalletAddress()
@@ -40,16 +37,11 @@ const Page = async () => {
             <h1 className="mb-8 text-3xl font-bold">Marketplace Listings</h1>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {listings.map((listing) => (
-                    <ListingCard key={listing.listingId} listing={listing}>
-                        <BuyNowDialog listing={listing}>
-                            <Button className="flex-1">Buy Now</Button>
-                        </BuyNowDialog>
-                        <ViewDetailsDialog listing={listing}>
-                            <Button variant="outline" className="flex-1">
-                                View Details
-                            </Button>
-                        </ViewDetailsDialog>
-                    </ListingCard>
+                    <ListingCard
+                        key={listing.contract}
+                        listing={listing}
+                        href={`/explore/${listing.contract}`}
+                    />
                 ))}
             </div>
         </div>
