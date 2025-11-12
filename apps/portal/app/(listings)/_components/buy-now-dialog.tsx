@@ -41,22 +41,6 @@ export function BuyNowDialog({
     const [open, setOpen] = useState(false)
     const router = useRouter()
 
-    useEffect(() => {
-        // Log mount/unmount of each dialog instance so we can see if any fail to mount
-        try {
-            console.debug(`[BuyNowDialog] mount listingId=${listing.listingId}`)
-        } catch (err) {
-            console.debug(`[BuyNowDialog] mount error`, err)
-        }
-        return () => {
-            try {
-                console.debug(`[BuyNowDialog] unmount listingId=${listing.listingId}`)
-            } catch (err) {
-                console.debug(`[BuyNowDialog] unmount error`, err)
-            }
-        }
-    }, [listing.listingId])
-
     const form = useForm<TBuyListingSchema>({
         resolver: zodResolver(buyListingSchema),
     })

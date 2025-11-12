@@ -1,4 +1,4 @@
-import { TGroupedListing, TSingleTokenListing, TMarketplaceListing } from "@/services/type"
+import { TGroupedListing, TSingleTokenListing } from "@/services/type"
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -137,7 +137,6 @@ function ListingCardBuyCta({ listing }: { listing: TSingleTokenListing }) {
             </div>
             <BuyNowDialog listing={listing}>
                 <Button
-                    data-debug={`buy-trigger-${listing.listingId}`}
                     className="w-full cursor-pointer hover:scale-105 hover:mt-2"
                     size='lg'
                 >

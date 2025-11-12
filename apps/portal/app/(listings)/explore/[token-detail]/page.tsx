@@ -7,6 +7,7 @@ import { Separator } from '@workspace/ui/components/separator'
 import { formatNumber } from '@/lib/utils'
 import { ListingCard } from '../../_components/listing-card'
 import { getWalletAddress } from '@/db/actions/wallet'
+import { Card, CardContent, CardHeader } from '@workspace/ui/components/card'
 
 interface PageProps {
     params: Promise<{
@@ -94,6 +95,12 @@ const Page = async ({ params }: PageProps) => {
                 </h2>
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <Card>
+                        <CardHeader></CardHeader>
+                        <CardContent>
+                            Coming Soon
+                        </CardContent>
+                    </Card>
                     {listings.map((listing, index) => (
                         <ListingCard
                             key={`listing-${listing.listingId}-${index}`}
