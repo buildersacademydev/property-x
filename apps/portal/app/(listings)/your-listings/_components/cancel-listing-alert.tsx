@@ -1,25 +1,23 @@
 "use client"
 
 import { cancelListing } from "@/services/mutation-options"
-import { TMarketplaceListing } from "@/services/type"
+import { TMarketplaceListing, TSingleTokenListing } from "@/services/type"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useState } from "react"
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@workspace/ui/components/alert-dialog"
+    SmartDialog,
+    SmartDialogContent,
+    SmartDialogDescription,
+    SmartDialogFooter,
+    SmartDialogHeader,
+    SmartDialogTitle,
+    SmartDialogTrigger,
+} from "@workspace/ui/components/smart-dialog"
 import { Button } from "@workspace/ui/components/button"
 
 interface CancelListingAlertProps {
-    listing: TMarketplaceListing
+    listing: TSingleTokenListing
 }
 
 export function CancelListingAlert({ listing }: CancelListingAlertProps) {
@@ -43,31 +41,37 @@ export function CancelListingAlert({ listing }: CancelListingAlertProps) {
     }
 
     return (
-        <AlertDialog open={open} onOpenChange={setOpen}>
-            <AlertDialogTrigger asChild>
+        <SmartDialog open={open} onOpenChange={setOpen}>
+            <SmartDialogTrigger asChild>
                 <Button className="flex-1" variant="destructive">
                     Cancel Listing
                 </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Cancel Listing</AlertDialogTitle>
-                    <AlertDialogDescription>
+            </SmartDialogTrigger>
+            <SmartDialogContent>
+                <SmartDialogHeader>
+                    <SmartDialogTitle>Cancel Listing</SmartDialogTitle>
+                    <SmartDialogDescription>
                         Are you sure you want to cancel this listing? This action cannot be
                         undone.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel disabled={mutation.status === "pending"}>
+                    </SmartDialogDescription>
+                </SmartDialogHeader>
+                <SmartDialogFooter>
+                    <Button
+                        variant="outline"
+                        onClick={() => setOpen(false)}
+                        disabled={mutation.status === "pending"}
+                    >
                         Close
-                    </AlertDialogCancel>
-                    <AlertDialogAction onClick={onConfirm} asChild>
-                        <Button variant={"secondary"} loading={mutation.isPending}>
-                            Confirm
-                        </Button>
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        onClick={onConfirm}
+                        loading={mutation.isPending}
+                    >
+                        Confirm
+                    </Button>
+                </SmartDialogFooter>
+            </SmartDialogContent>
+        </SmartDialog>
     )
 }

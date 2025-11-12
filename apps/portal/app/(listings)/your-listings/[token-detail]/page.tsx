@@ -18,7 +18,7 @@ const Page = async ({ params }: PageProps) => {
     const stxAddress = await getWalletAddress()
     const contractAddress = params['token-detail']
 
-    const res = await getListingsByToken({ contract: contractAddress, type: 'explore', stxAddress: stxAddress || '' })
+    const res = await getListingsByToken({ contract: contractAddress, type: 'your-listings', stxAddress: stxAddress || '' })
 
     if (!res.success) {
         if (res.error?.type === 'no-data') {
@@ -97,7 +97,7 @@ const Page = async ({ params }: PageProps) => {
                     {listings.map((listing) => (
                         <ListingCard
                             key={listing.listingId}
-                            variant='buy-now'
+                            variant='your-listing'
                             contractAddress={listing.maker}
                             listing={{
                                 contract: contractAddress,

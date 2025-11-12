@@ -37,6 +37,7 @@ interface RootSmartDialogProps extends BaseProps {
 interface SmartDialogProps extends BaseProps {
     className?: string
     asChild?: true
+    [key: string]: any
 }
 
 const SmartDialogContext = React.createContext<{ isDesktop: boolean }>({

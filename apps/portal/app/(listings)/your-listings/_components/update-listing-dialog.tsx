@@ -2,7 +2,7 @@
 
 import { updateListing } from "@/services/mutation-options"
 import { updateListingSchema } from "@/services/schema"
-import { TMarketplaceListing, TUpdateListingSchema } from "@/services/type"
+import { TSingleTokenListing, TUpdateListingSchema } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
@@ -11,13 +11,13 @@ import { useMemo, useState } from "react"
 import { useBlockHeight } from "@/hooks/use-block-height"
 import { Button } from "@workspace/ui/components/button"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@workspace/ui/components/dialog"
+    SmartDialog,
+    SmartDialogContent,
+    SmartDialogDescription,
+    SmartDialogHeader,
+    SmartDialogTitle,
+    SmartDialogTrigger,
+} from "@workspace/ui/components/smart-dialog"
 import {
     Field,
     FieldError,
@@ -34,7 +34,7 @@ import {
 } from "@workspace/ui/components/select"
 
 interface UpdateListingDialogProps {
-    listing: TMarketplaceListing
+    listing: TSingleTokenListing
 }
 
 export function UpdateListingDialog({ listing }: UpdateListingDialogProps) {
@@ -91,109 +91,111 @@ export function UpdateListingDialog({ listing }: UpdateListingDialogProps) {
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <SmartDialog open={open} onOpenChange={setOpen}>
+            <SmartDialogTrigger asChild>
                 <Button className="flex-1" variant="secondary">
                     Update Listing
                 </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Update Listing</DialogTitle>
-                    <DialogDescription>
+            </SmartDialogTrigger>
+            <SmartDialogContent>
+                <SmartDialogHeader>
+                    <SmartDialogTitle>Update Listing</SmartDialogTitle>
+                    <SmartDialogDescription>
                         Modify the selected fields to update your listing.
-                    </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FieldGroup>
-                        <Controller
-                            name="price"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor={field.name}>Price</FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id={field.name}
-                                        type="number"
-                                        placeholder="Enter price"
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )}
-                        />
-
-                        <Controller
-                            name="amount"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor={field.name}>Amount</FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id={field.name}
-                                        type="number"
-                                        placeholder="Enter amount"
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )}
-                        />
-
-                        <Controller
-                            name="expiry"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="expiry">Expiry</FieldLabel>
-                                    <Select
-                                        name={field.name}
-                                        value={field.value}
-                                        onValueChange={field.onChange}
-                                    >
-                                        <SelectTrigger
-                                            id="expiry"
-                                            className="w-full"
+                    </SmartDialogDescription>
+                </SmartDialogHeader>
+                <div className="px-4 mt-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <FieldGroup>
+                            <Controller
+                                name="price"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor={field.name}>Price</FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id={field.name}
+                                            type="number"
+                                            placeholder="Enter price"
                                             aria-invalid={fieldState.invalid}
-                                        >
-                                            <SelectValue placeholder="Select a duration" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="20927">7 Days</SelectItem>
-                                            <SelectItem value="41855">14 Days</SelectItem>
-                                            <SelectItem value="89689">30 Days</SelectItem>
-                                            <SelectItem value="179377">60 Days</SelectItem>
-                                            <SelectItem value="269066">90 Days</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )}
-                        />
+                                        />
+                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                    </Field>
+                                )}
+                            />
 
-                        <div className="flex gap-3 pt-2">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                className="flex-1"
-                                onClick={() => setOpen(false)}
-                                disabled={mutation.status === "pending"}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                type="submit"
-                                className="flex-1"
-                                disabled={mutation.status === "pending"}
-                            >
-                                {mutation.status === "pending" ? "Updating..." : "Update"}
-                            </Button>
-                        </div>
-                    </FieldGroup>
-                </form>
-            </DialogContent>
-        </Dialog>
+                            <Controller
+                                name="amount"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor={field.name}>Amount</FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id={field.name}
+                                            type="number"
+                                            placeholder="Enter amount"
+                                            aria-invalid={fieldState.invalid}
+                                        />
+                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                    </Field>
+                                )}
+                            />
+
+                            <Controller
+                                name="expiry"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="expiry">Expiry</FieldLabel>
+                                        <Select
+                                            name={field.name}
+                                            value={field.value}
+                                            onValueChange={field.onChange}
+                                        >
+                                            <SelectTrigger
+                                                id="expiry"
+                                                className="w-full"
+                                                aria-invalid={fieldState.invalid}
+                                            >
+                                                <SelectValue placeholder="Select a duration" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="20927">7 Days</SelectItem>
+                                                <SelectItem value="41855">14 Days</SelectItem>
+                                                <SelectItem value="89689">30 Days</SelectItem>
+                                                <SelectItem value="179377">60 Days</SelectItem>
+                                                <SelectItem value="269066">90 Days</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                    </Field>
+                                )}
+                            />
+
+                            <div className="flex gap-3 pt-2">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="flex-1"
+                                    onClick={() => setOpen(false)}
+                                    disabled={mutation.status === "pending"}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    className="flex-1"
+                                    disabled={mutation.status === "pending"}
+                                >
+                                    {mutation.status === "pending" ? "Updating..." : "Update"}
+                                </Button>
+                            </div>
+                        </FieldGroup>
+                    </form>
+                </div>
+            </SmartDialogContent>
+        </SmartDialog>
     )
 }

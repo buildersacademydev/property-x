@@ -10,7 +10,7 @@ import { getContractNameAddress } from "@/lib/utils"
 const Page = async () => {
     const stxAddress = await getWalletAddress()
 
-    const res = await getListings("explore", stxAddress || '')
+    const res = await getListings({ type: "explore", stxAddress: stxAddress || "" })
 
     if (!res.success) {
         if (res.error?.type === "no-data")
@@ -39,8 +39,15 @@ const Page = async () => {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {listings.map((listing) => (
                     <ListingCard
+                        variant="default"
                         key={listing.contract}
-                        listing={listing}
+                        listing={{
+                            assetName: listing.assetName,
+                            image: listing.image,
+                            assetLocation: listing.assetLocation,
+                            contract: listing.contract,
+                        }}
+                        contractAddress={getContractNameAddress(listing.contract).contractAddress}
                         href={`/explore/${(listing.contract)}`}
                     />
                 ))}

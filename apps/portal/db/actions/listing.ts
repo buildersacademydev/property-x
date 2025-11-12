@@ -6,11 +6,18 @@ import { dalDbOperation } from "../helpers"
 import { assets, listings, tcoins, whiteListing } from "../schema"
 import { ThrowableDalError } from "../type"
 import { TGroupedListing } from "@/services/type"
+import { fi } from "zod/v4/locales"
 
-export async function getListingsCore(
-    type: "your-listings" | "explore",
+interface ListingType {
+    type: "your-listings" | "explore"
     stxAddress: string
-) {
+}
+
+interface ListingTokenType extends ListingType {
+    contract: string
+}
+
+export async function getListingsCore({ type, stxAddress }: ListingType) {
     return dalDbOperation(async () => {
         const listingsData = await db
             .select({
@@ -69,10 +76,8 @@ function groupToCards(list: TGroupedListing[]): TGroupedListing[] {
             map.set(item.contract, {
                 contract: item.contract,
                 assetLocation: item.assetLocation,
-                name: item.name,
-                image: item.image,
                 assetName: item.assetName,
-                assetImage: item.assetImage,
+                image: item.image,
             })
         }
     })
@@ -80,7 +85,7 @@ function groupToCards(list: TGroupedListing[]): TGroupedListing[] {
     return Array.from(map.values())
 }
 
-export async function getListingsByToken(contract: string) {
+export async function getListingsByToken({ contract, type, stxAddress }: ListingTokenType) {
     return dalDbOperation(async () => {
         const data = await db
             .select()
@@ -113,6 +118,15 @@ export async function getListingsByToken(contract: string) {
             }
         }))
 
-        return finalListings
+        const yourTokens = finalListings.filter((l) => {
+            return l.maker === stxAddress
+        })
+
+        const exploreTokens = finalListings.filter((l) => {
+            if (!stxAddress) return true;
+            return l.maker !== stxAddress
+        })
+
+        return type === "your-listings" ? yourTokens : exploreTokens
     })
 }

@@ -1,26 +1,42 @@
-import { getListings } from "@/db/actions/listing"
+import { getListings, getListingsByToken } from "@/db/actions/listing"
 import { getWalletAddress } from "@/db/actions/wallet"
-import { dalVerifySuccess } from "@/db/helpers"
+import { dalFormatErrorMessage, dalVerifySuccess } from "@/db/helpers"
 import React from "react"
 
 import EmptyWallet from "@/components/empty-wallet"
 import HandleError from "@/components/handle-error"
 import EmptyListing from "../_components/empty-listings"
 import { ListingCard } from "../_components/listing-card"
+import { getContractNameAddress } from "@/lib/utils"
 
-async function ListingsContent() {
+
+
+const Page = async () => {
     const stxAddress = await getWalletAddress()
+
     if (!stxAddress) {
         return <EmptyWallet />
     }
-    const res = await getListings("your-listings", stxAddress)
 
-    if (!res.success && res.error?.type) {
+    const res = await getListings({ type: "your-listings", stxAddress: stxAddress || "" })
+
+
+    if (!res.success) {
+        if (res.error?.type === "no-data")
+            return (
+                <div className="container mx-auto px-4 py-8">
+                    <h1 className="mb-8 text-3xl font-bold">Marketplace Listings</h1>
+                    <EmptyListing href="/your-apts" label="Explore Apts" />
+                </div>
+            )
+
         return (
-            <HandleError
-                error={res.error.type}
-                empty={<EmptyListing href="/explore" label="Explore Marketplace" />}
-            />
+            <div className="container mx-auto px-4 py-8">
+                <h1 className="mb-8 text-3xl font-bold">Marketplace Listings</h1>
+                <p className="text-sm text-destructive">
+                    {dalFormatErrorMessage(res.error)}
+                </p>
+            </div>
         )
     }
 
@@ -32,9 +48,16 @@ async function ListingsContent() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {listings.map((listing) => (
                     <ListingCard
+                        variant="default"
                         key={listing.contract}
-                        listing={listing}
-                        href={`/explore/${listing.contract}`}
+                        listing={{
+                            assetName: listing.assetName,
+                            image: listing.image,
+                            assetLocation: listing.assetLocation,
+                            contract: listing.contract,
+                        }}
+                        contractAddress={getContractNameAddress(listing.contract).contractAddress}
+                        href={`/your-listings/${(listing.contract)}`}
                     />
                 ))}
             </div>
@@ -42,6 +65,4 @@ async function ListingsContent() {
     )
 }
 
-export default function Page() {
-    return <ListingsContent />
-}
+export default Page

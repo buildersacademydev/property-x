@@ -2,7 +2,7 @@
 
 import { fulfillStx } from "@/services/mutation-options"
 import { buyListingSchema } from "@/services/schema"
-import { TBuyListingSchema, TListingCardBuy, TMarketplaceListing } from "@/services/type"
+import { TBuyListingSchema, TSingleTokenListing } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
@@ -11,14 +11,14 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@workspace/ui/components/button"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@workspace/ui/components/dialog"
+    SmartDialog,
+    SmartDialogContent,
+    SmartDialogDescription,
+    SmartDialogFooter,
+    SmartDialogHeader,
+    SmartDialogTitle,
+    SmartDialogTrigger,
+} from "@workspace/ui/components/smart-dialog"
 import {
     Field,
     FieldError,
@@ -28,7 +28,7 @@ import {
 import { Input } from "@workspace/ui/components/input"
 
 interface BuyNowDialogProps {
-    listing: TListingCardBuy
+    listing: TSingleTokenListing
     children: React.ReactNode
     disabled?: boolean
 }
@@ -77,65 +77,70 @@ export function BuyNowDialog({
     const totalCost = (watchedAmount || 0) * listing.price
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild disabled={disabled}>
+        <SmartDialog open={open} onOpenChange={setOpen}>
+            <SmartDialogTrigger asChild disabled={disabled}>
                 {children}
-            </DialogTrigger>
+            </SmartDialogTrigger>
 
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Buy {listing.assetName}</DialogTitle>
-                    <DialogDescription>
+            <SmartDialogContent>
+                <SmartDialogHeader>
+                    <SmartDialogTitle>Buy {listing.assetName}</SmartDialogTitle>
+                    <SmartDialogDescription>
                         Enter the amount of tokens you want to purchase. Current price:{" "}
                         {listing.price} tokens each.
-                    </DialogDescription>
-                </DialogHeader>
+                    </SmartDialogDescription>
+                </SmartDialogHeader>
+                <div className="px-4 mt-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <FieldGroup>
+                            <Controller
+                                name="amount"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}
+                                        className="max-w-md mx-auto"
 
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FieldGroup>
-                        <Controller
-                            name="amount"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor={field.name}>Amount</FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id={field.name}
-                                        type="number"
-                                        placeholder="Enter amount"
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )}
-                        />
+                                    >
+                                        <FieldLabel htmlFor={field.name}>Amount</FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id={field.name}
+                                            type="number"
+                                            placeholder="Enter amount"
+                                            aria-invalid={fieldState.invalid}
+                                        />
+                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                    </Field>
+                                )}
+                            />
 
-                        {totalCost > 0 && (
-                            <div className="rounded-lg bg-muted p-3">
-                                <div className="flex justify-between text-sm">
-                                    <span>Total Cost:</span>
-                                    <span className="font-semibold">{totalCost} tokens</span>
+                            {totalCost > 0 && (
+                                <div className="rounded-lg bg-muted p-3">
+                                    <div className="flex justify-between text-sm">
+                                        <span>Total Cost:</span>
+                                        <span className="font-semibold">{totalCost} tokens</span>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
 
-                        <DialogFooter>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setOpen(false)}
-                                disabled={buyListingMutation.isPending}
-                            >
-                                Cancel
-                            </Button>
-                            <Button type="submit" loading={buyListingMutation.isPending}>
-                                Buy Now
-                            </Button>
-                        </DialogFooter>
-                    </FieldGroup>
-                </form>
-            </DialogContent>
-        </Dialog>
+                            <SmartDialogFooter>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setOpen(false)}
+                                    disabled={buyListingMutation.isPending}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button type="submit" loading={buyListingMutation.isPending}>
+                                    Buy Now
+                                </Button>
+                            </SmartDialogFooter>
+                        </FieldGroup>
+                    </form>
+                </div>
+
+            </SmartDialogContent>
+        </SmartDialog>
     )
 }
