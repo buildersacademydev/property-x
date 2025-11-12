@@ -202,3 +202,5 @@ export type TTypeSchema = {
 }
 
 export type TGroupedListing = Pick<TMarketplaceListing, 'name' | 'image' | 'assetImage' | 'assetName' | 'assetLocation' | 'contract'>
+
+export type TListingCardBuy = Pick<TMarketplaceListing, 'assetName' | 'image' | 'price' | 'amount' | 'maker' | 'expiry' | 'contract' | 'listingId'>

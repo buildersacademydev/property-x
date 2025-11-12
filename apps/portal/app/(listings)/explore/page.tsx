@@ -5,6 +5,7 @@ import React from "react"
 import EmptyListing from "../_components/empty-listings"
 import { getListings } from "@/db/actions/listing"
 import { ListingCard } from "../_components/listing-card"
+import { getContractNameAddress } from "@/lib/utils"
 
 const Page = async () => {
     const stxAddress = await getWalletAddress()
@@ -40,7 +41,7 @@ const Page = async () => {
                     <ListingCard
                         key={listing.contract}
                         listing={listing}
-                        href={`/explore/${listing.contract}`}
+                        href={`/explore/${(listing.contract)}`}
                     />
                 ))}
             </div>

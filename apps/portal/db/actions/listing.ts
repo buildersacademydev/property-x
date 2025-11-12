@@ -79,3 +79,40 @@ function groupToCards(list: TGroupedListing[]): TGroupedListing[] {
 
     return Array.from(map.values())
 }
+
+export async function getListingsByToken(contract: string) {
+    return dalDbOperation(async () => {
+        const data = await db
+            .select()
+            .from(listings)
+            .innerJoin(whiteListing, eq(listings.assetContract, whiteListing.whitelisted))
+            .innerJoin(tcoins, eq(whiteListing.whitelisted, tcoins.contract))
+            .innerJoin(assets, eq(tcoins.assetId, assets.id))
+            .where(eq(listings.assetContract, contract))
+
+        if (data.length === 0) {
+            throw new ThrowableDalError({ type: "no-data" })
+        }
+
+        const finalListings = data.map(l => ({
+            listingId: l.listings.listingId,
+            price: l.listings.price,
+            maker: l.listings.maker,
+            amount: l.listings.amount,
+            expiry: l.listings.expiry,
+            tokenInfo: {
+                name: l.tcoins.name,
+                image: l.tcoins.image,
+                description: l.tcoins.description,
+            },
+            assetInfo: {
+                assetName: l.assets.name,
+                assetImage: l.assets.image,
+                assetValuation: l.assets.valuation,
+                assetLocation: l.assets.location,
+            }
+        }))
+
+        return finalListings
+    })
+}

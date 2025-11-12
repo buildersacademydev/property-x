@@ -2,7 +2,7 @@
 
 import { fulfillStx } from "@/services/mutation-options"
 import { buyListingSchema } from "@/services/schema"
-import { TBuyListingSchema, TMarketplaceListing } from "@/services/type"
+import { TBuyListingSchema, TListingCardBuy, TMarketplaceListing } from "@/services/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
@@ -28,7 +28,7 @@ import {
 import { Input } from "@workspace/ui/components/input"
 
 interface BuyNowDialogProps {
-    listing: TMarketplaceListing
+    listing: TListingCardBuy
     children: React.ReactNode
     disabled?: boolean
 }
