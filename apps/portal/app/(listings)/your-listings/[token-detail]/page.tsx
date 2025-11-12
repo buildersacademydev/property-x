@@ -9,14 +9,14 @@ import { ListingCard } from '../../_components/listing-card'
 import { getWalletAddress } from '@/db/actions/wallet'
 
 interface PageProps {
-    params: {
+    params: Promise<{
         'token-detail': string
-    }
+    }>
 }
 
 const Page = async ({ params }: PageProps) => {
     const stxAddress = await getWalletAddress()
-    const contractAddress = params['token-detail']
+    const { "token-detail": contractAddress } = await params
 
     const res = await getListingsByToken({ contract: contractAddress, type: 'your-listings', stxAddress: stxAddress || '' })
 
