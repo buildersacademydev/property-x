@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -40,6 +40,22 @@ export function BuyNowDialog({
 }: BuyNowDialogProps) {
     const [open, setOpen] = useState(false)
     const router = useRouter()
+
+    useEffect(() => {
+        // Log mount/unmount of each dialog instance so we can see if any fail to mount
+        try {
+            console.debug(`[BuyNowDialog] mount listingId=${listing.listingId}`)
+        } catch (err) {
+            console.debug(`[BuyNowDialog] mount error`, err)
+        }
+        return () => {
+            try {
+                console.debug(`[BuyNowDialog] unmount listingId=${listing.listingId}`)
+            } catch (err) {
+                console.debug(`[BuyNowDialog] unmount error`, err)
+            }
+        }
+    }, [listing.listingId])
 
     const form = useForm<TBuyListingSchema>({
         resolver: zodResolver(buyListingSchema),

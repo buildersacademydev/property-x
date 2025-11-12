@@ -94,9 +94,9 @@ const Page = async ({ params }: PageProps) => {
                 </h2>
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {listings.map((listing) => (
+                    {listings.map((listing, index) => (
                         <ListingCard
-                            key={listing.listingId}
+                            key={`listing-${listing.listingId}-${index}`}
                             variant='buy-now'
                             contractAddress={listing.maker}
                             listing={{

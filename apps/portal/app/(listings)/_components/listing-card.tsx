@@ -137,6 +137,7 @@ function ListingCardBuyCta({ listing }: { listing: TSingleTokenListing }) {
             </div>
             <BuyNowDialog listing={listing}>
                 <Button
+                    data-debug={`buy-trigger-${listing.listingId}`}
                     className="w-full cursor-pointer hover:scale-105 hover:mt-2"
                     size='lg'
                 >
@@ -167,27 +168,3 @@ function ListingCardYourListingCta({ listing }: { listing: TSingleTokenListing }
         </div>
     )
 }
-
-// Usage examples:
-// 
-// Default variant (link to details):
-// <ListingCard 
-//     variant="default" 
-//     href="/listing/123"
-//     listing={listing} 
-//     contractAddress={address}
-// />
-//
-// Buy now variant:
-// <ListingCard 
-//     variant="buy-now" 
-//     listing={listing} 
-//     contractAddress={address}
-// />
-//
-// Your listing variant (with update and cancel actions):
-// <ListingCard 
-//     variant="your-listing" 
-//     listing={listing} 
-//     contractAddress={address}
-// />
