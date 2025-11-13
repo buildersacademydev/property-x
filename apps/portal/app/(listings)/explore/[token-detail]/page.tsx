@@ -95,12 +95,7 @@ const Page = async ({ params }: PageProps) => {
                 </h2>
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    <Card>
-                        <CardHeader></CardHeader>
-                        <CardContent>
-                            Coming Soon
-                        </CardContent>
-                    </Card>
+                    <div className='hidden' />
                     {listings.map((listing, index) => (
                         <ListingCard
                             key={`listing-${listing.listingId}-${index}`}
