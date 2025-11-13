@@ -145,7 +145,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         } catch (e) {
             console.error("Initialization error:", e)
         }
-    }, [])
+    }, [stxAddress])
 
     const fetchBalance = async (address: string): Promise<void> => {
         if (!address) return

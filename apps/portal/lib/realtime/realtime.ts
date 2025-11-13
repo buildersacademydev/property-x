@@ -32,3 +32,4 @@ const schema = {
 
 export const realtime = new Realtime({ schema, redis })
 export type RealtimeEvents = InferRealtimeEvents<typeof realtime>
+export type RealtimeNotification = z.infer<typeof schema.notification>

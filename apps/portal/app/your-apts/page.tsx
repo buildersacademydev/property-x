@@ -58,32 +58,33 @@ const Apts = async () => {
                                 key={item?.contract}
                                 className="group w-full rounded-lg p-0 hover:shadow-lg"
                             >
-                                <div className="grid grid-cols-1 md:grid-cols-6">
-                                    <div className="col-span-3 col-start-1 border-r bg-accent/30">
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-6 md:gap-0">
+                                    <div
+                                        className="relative aspect-[16/10] overflow-hidden bg-accent/30 md:col-span-3 md:col-start-1 md:aspect-auto md:h-full md:border-r"
+                                    >
                                         {item?.asset?.image ? (
                                             <Image
                                                 width={800}
                                                 height={450}
                                                 src={item.asset.image}
                                                 alt={name}
-                                                className="h-full w-full object-cover"
+                                                className="h-full w-full object-contain md:object-cover"
                                             />
                                         ) : (
                                             <div
                                                 className="absolute inset-0 flex items-center
                           justify-center"
                                             >
-                                                <Icons.building
+                                                <Icons.logoPropertyX
                                                     className="text-muted-foreground"
-                                                    size={32}
                                                 />
                                             </div>
                                         )}
                                     </div>
 
                                     <div
-                                        className="col-span-3 col-start-4 flex flex-col
-                      justify-between px-4 py-6"
+                                        className="flex flex-col
+                      justify-between px-4 py-6 md:col-span-3 md:col-start-4"
                                     >
                                         <div>
                                             <div className="text-sm text-muted-foreground">
@@ -96,14 +97,6 @@ const Apts = async () => {
                                                 >
                                                     {name}
                                                 </div>
-                                                {/* <NextLink
-                          href={`/your-apts/${encodeURIComponent(item?.contract as string)}`}
-                          className="flex items-center gap-1 text-primary
-                            transition-colors hover:text-foreground"
-                          prefetch={false}
-                        >
-                          <Icons.externalLink size={16} />
-                        </NextLink> */}
                                             </div>
 
                                             <div className="mt-4 grid grid-cols-2 gap-3 text-sm">

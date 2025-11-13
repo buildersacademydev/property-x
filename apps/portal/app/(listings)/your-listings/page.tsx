@@ -25,14 +25,14 @@ const Page = async () => {
         if (res.error?.type === "no-data")
             return (
                 <div className="container mx-auto px-4 py-8">
-                    <h1 className="mb-8 text-3xl font-bold">Marketplace Listings</h1>
+                    <h1 className="mb-8 text-3xl font-bold">Your Listings</h1>
                     <EmptyListing href="/your-apts" label="Explore Apts" />
                 </div>
             )
 
         return (
             <div className="container mx-auto px-4 py-8">
-                <h1 className="mb-8 text-3xl font-bold">Marketplace Listings</h1>
+                <h1 className="mb-8 text-3xl font-bold">Your Listings</h1>
                 <p className="text-sm text-destructive">
                     {dalFormatErrorMessage(res.error)}
                 </p>

@@ -7,33 +7,33 @@ import { Icons } from "@workspace/ui/components/icons"
 import { revalidateData } from "@/db/actions/revalidate-data"
 
 export default function Notifications({ wallet }: { wallet: string | null }) {
+    console.log('wallet in notifications', wallet)
     useRealtime<RealtimeEvents>({
-        channel: wallet || 'default',
-        events: {
-            notification: {
-                data: (data) => {
-                    if (data.status === "pending") {
-                        realtimeToast.pending(data.title, {
-                            id: data.id,
-                            description: data.message,
-                        })
-                    } else if (data.status === "success") {
-                        realtimeToast.success(data.title, {
-                            id: data.id,
-                            description: data.message,
-                        })
-                        if (data.tag) {
-                            console.log("tag from notification:", data.tag)
-                            revalidateData(data.tag)
-                        }
-                    } else if (data.status === "error") {
-                        realtimeToast.error(data.title, {
-                            id: data.id,
-                            description: data.message,
-                        })
-                    }
-                },
-            },
+        channels: [wallet || 'default'],
+        event: 'notification',
+        onData(data, channel) {
+            console.log('notification received', data, channel)
+            const finalData = data.data  
+            if(finalData.status === "pending") {
+                realtimeToast.pending(finalData.title, {
+                    id: finalData.id,
+                    description: finalData.message,
+                })
+            } else if(finalData.status === "success") {
+                realtimeToast.success(finalData.title, {
+                    id: finalData.id,
+                    description: finalData.message,
+                })
+                if(finalData.tag) {
+                    console.log("tag from notification:", finalData.tag)
+                    revalidateData(finalData.tag)
+                }
+            } else if(finalData.status === "error") {
+                realtimeToast.error(finalData.title, {
+                    id: finalData.id,
+                    description: finalData.message,
+                })
+            }
         },
     })
 
