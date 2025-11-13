@@ -1,8 +1,8 @@
 import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
+import { webhookHandler } from "@/lib/realtime/realtime-handler"
 import { TCancelListingPayload } from "@/services/type"
 import { and, eq } from "drizzle-orm"
-import { webhookHandler } from "@/lib/utils"
 
 export async function POST(request: Request) {
     return webhookHandler<TCancelListingPayload>({

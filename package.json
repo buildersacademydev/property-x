@@ -5,6 +5,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "portal": "turbo run dev --filter=portal",
     "lint": "turbo lint",
     "cn": "cd packages/ui && pnpm dlx shadcn@canary add",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""

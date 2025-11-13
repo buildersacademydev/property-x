@@ -1,7 +1,8 @@
 import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
 import { TListingSchema } from "@/services/type"
-import { convertAmount, webhookHandler } from "@/lib/utils"
+import { convertAmount } from "@/lib/utils"
+import { webhookHandler } from "@/lib/realtime/realtime-handler"
 
 export async function POST(request: Request) {
     return webhookHandler<TListingSchema>({

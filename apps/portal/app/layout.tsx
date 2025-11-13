@@ -5,17 +5,19 @@ import Nav from "@/components/nav";
 import Notifications from "@/components/notifications";
 import { Toaster } from "sonner";
 import { mainFont } from "@workspace/font";
+import { getWalletAddress } from "@/db/actions/wallet";
 
 export const metadata: Metadata = {
   title: "PropertyX Protocol",
   description: "Tokenize Urban Real-World Assets on PropertyX",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const wallet = await getWalletAddress();
   return (
     <html lang="en">
       <body
@@ -33,7 +35,7 @@ export default function RootLayout({
           closeButton
           duration={3000}
         />
-        <Notifications />
+        <Notifications wallet={wallet} />
       </body>
     </html>
   );

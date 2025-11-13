@@ -118,8 +118,8 @@ importers:
         specifier: ^5.90.2
         version: 5.90.2(@tanstack/react-query@5.90.3(react@19.2.0))(react@19.2.0)
       '@upstash/realtime':
-        specifier: ^0.2.4
-        version: 0.2.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(zod@4.1.12)
+        specifier: ^0.3.0
+        version: 0.3.0(@upstash/redis@1.35.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(zod@4.1.12)
       '@upstash/redis':
         specifier: ^1.35.6
         version: 1.35.6
@@ -213,7 +213,7 @@ importers:
         version: 5.2.0(eslint@9.37.0(jiti@2.6.1))
       eslint-plugin-turbo:
         specifier: ^2.5.5
-        version: 2.5.8(eslint@9.37.0(jiti@2.6.1))(turbo@2.5.8)
+        version: 2.5.8(eslint@9.37.0(jiti@2.6.1))(turbo@2.6.1)
       globals:
         specifier: ^15.15.0
         version: 15.15.0
@@ -1993,9 +1993,10 @@ packages:
     resolution: {integrity: sha512-ptkmIf2iDkNUjdeu2bQqhFPV1m6qTnFFjg7PPDjxKWaMaP0Z6I9l30Jr3g5QqbZGdw8YdYvLp+XnqnWWZOg/NA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@upstash/realtime@0.2.5':
-    resolution: {integrity: sha512-TAP5I89iDyE/OPkbWVZAv0r5bV9ZzQTWc6sEnwNkWKVJr7TIJCz6eEsFdmohQ2nP8RXYmy9ANxqwe1UG7qwhIQ==}
+  '@upstash/realtime@0.3.0':
+    resolution: {integrity: sha512-0WvY01b5gL85QqWBsHim4nIXYPYea+78qZvWWfKQgUKBvK2GTRLdnjyvLDWvmaNa/I6kGbhKFG5G4rU/on+XNw==}
     peerDependencies:
+      '@upstash/redis': '>=1.35.4'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
       zod: ^3.25.0 || ^4.0.0
@@ -4716,8 +4717,18 @@ packages:
     cpu: [x64]
     os: [darwin]
 
+  turbo-darwin-64@2.6.1:
+    resolution: {integrity: sha512-Dm0HwhyZF4J0uLqkhUyCVJvKM9Rw7M03v3J9A7drHDQW0qAbIGBrUijQ8g4Q9Cciw/BXRRd8Uzkc3oue+qn+ZQ==}
+    cpu: [x64]
+    os: [darwin]
+
   turbo-darwin-arm64@2.5.8:
     resolution: {integrity: sha512-f1H/tQC9px7+hmXn6Kx/w8Jd/FneIUnvLlcI/7RGHunxfOkKJKvsoiNzySkoHQ8uq1pJnhJ0xNGTlYM48ZaJOQ==}
+    cpu: [arm64]
+    os: [darwin]
+
+  turbo-darwin-arm64@2.6.1:
+    resolution: {integrity: sha512-U0PIPTPyxdLsrC3jN7jaJUwgzX5sVUBsKLO7+6AL+OASaa1NbT1pPdiZoTkblBAALLP76FM0LlnsVQOnmjYhyw==}
     cpu: [arm64]
     os: [darwin]
 
@@ -4726,8 +4737,18 @@ packages:
     cpu: [x64]
     os: [linux]
 
+  turbo-linux-64@2.6.1:
+    resolution: {integrity: sha512-eM1uLWgzv89bxlK29qwQEr9xYWBhmO/EGiH22UGfq+uXr+QW1OvNKKMogSN65Ry8lElMH4LZh0aX2DEc7eC0Mw==}
+    cpu: [x64]
+    os: [linux]
+
   turbo-linux-arm64@2.5.8:
     resolution: {integrity: sha512-LQELGa7bAqV2f+3rTMRPnj5G/OHAe2U+0N9BwsZvfMvHSUbsQ3bBMWdSQaYNicok7wOZcHjz2TkESn1hYK6xIQ==}
+    cpu: [arm64]
+    os: [linux]
+
+  turbo-linux-arm64@2.6.1:
+    resolution: {integrity: sha512-MFFh7AxAQAycXKuZDrbeutfWM5Ep0CEZ9u7zs4Hn2FvOViTCzIfEhmuJou3/a5+q5VX1zTxQrKGy+4Lf5cdpsA==}
     cpu: [arm64]
     os: [linux]
 
@@ -4736,13 +4757,27 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  turbo-windows-64@2.6.1:
+    resolution: {integrity: sha512-buq7/VAN7KOjMYi4tSZT5m+jpqyhbRU2EUTTvp6V0Ii8dAkY2tAAjQN1q5q2ByflYWKecbQNTqxmVploE0LVwQ==}
+    cpu: [x64]
+    os: [win32]
+
   turbo-windows-arm64@2.5.8:
     resolution: {integrity: sha512-eFC5XzLmgXJfnAK3UMTmVECCwuBcORrWdewoiXBnUm934DY6QN8YowC/srhNnROMpaKaqNeRpoB5FxCww3eteQ==}
     cpu: [arm64]
     os: [win32]
 
+  turbo-windows-arm64@2.6.1:
+    resolution: {integrity: sha512-7w+AD5vJp3R+FB0YOj1YJcNcOOvBior7bcHTodqp90S3x3bLgpr7tE6xOea1e8JkP7GK6ciKVUpQvV7psiwU5Q==}
+    cpu: [arm64]
+    os: [win32]
+
   turbo@2.5.8:
     resolution: {integrity: sha512-5c9Fdsr9qfpT3hA0EyYSFRZj1dVVsb6KIWubA9JBYZ/9ZEAijgUEae0BBR/Xl/wekt4w65/lYLTFaP3JmwSO8w==}
+    hasBin: true
+
+  turbo@2.6.1:
+    resolution: {integrity: sha512-qBwXXuDT3rA53kbNafGbT5r++BrhRgx3sAo0cHoDAeG9g1ItTmUMgltz3Hy7Hazy1ODqNpR+C7QwqL6DYB52yA==}
     hasBin: true
 
   tw-animate-css@1.4.0:
@@ -6928,8 +6963,9 @@ snapshots:
       '@typescript-eslint/types': 8.46.1
       eslint-visitor-keys: 4.2.1
 
-  '@upstash/realtime@0.2.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(zod@4.1.12)':
+  '@upstash/realtime@0.3.0(@upstash/redis@1.35.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(zod@4.1.12)':
     dependencies:
+      '@upstash/redis': 1.35.6
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
       zod: 4.1.12
@@ -8207,11 +8243,11 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-turbo@2.5.8(eslint@9.37.0(jiti@2.6.1))(turbo@2.5.8):
+  eslint-plugin-turbo@2.5.8(eslint@9.37.0(jiti@2.6.1))(turbo@2.6.1):
     dependencies:
       dotenv: 16.0.3
       eslint: 9.37.0(jiti@2.6.1)
-      turbo: 2.5.8
+      turbo: 2.6.1
 
   eslint-scope@8.4.0:
     dependencies:
@@ -10227,19 +10263,37 @@ snapshots:
   turbo-darwin-64@2.5.8:
     optional: true
 
+  turbo-darwin-64@2.6.1:
+    optional: true
+
   turbo-darwin-arm64@2.5.8:
+    optional: true
+
+  turbo-darwin-arm64@2.6.1:
     optional: true
 
   turbo-linux-64@2.5.8:
     optional: true
 
+  turbo-linux-64@2.6.1:
+    optional: true
+
   turbo-linux-arm64@2.5.8:
+    optional: true
+
+  turbo-linux-arm64@2.6.1:
     optional: true
 
   turbo-windows-64@2.5.8:
     optional: true
 
+  turbo-windows-64@2.6.1:
+    optional: true
+
   turbo-windows-arm64@2.5.8:
+    optional: true
+
+  turbo-windows-arm64@2.6.1:
     optional: true
 
   turbo@2.5.8:
@@ -10250,6 +10304,15 @@ snapshots:
       turbo-linux-arm64: 2.5.8
       turbo-windows-64: 2.5.8
       turbo-windows-arm64: 2.5.8
+
+  turbo@2.6.1:
+    optionalDependencies:
+      turbo-darwin-64: 2.6.1
+      turbo-darwin-arm64: 2.6.1
+      turbo-linux-64: 2.6.1
+      turbo-linux-arm64: 2.6.1
+      turbo-windows-64: 2.6.1
+      turbo-windows-arm64: 2.6.1
 
   tw-animate-css@1.4.0: {}
 

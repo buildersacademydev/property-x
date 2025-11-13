@@ -2,7 +2,8 @@ import { db } from "@/db/drizzle"
 import { listings } from "@/db/schema"
 import { TUpdateListingPayload } from "@/services/type"
 import { and, eq } from "drizzle-orm"
-import { convertAmount, webhookHandler } from "@/lib/utils"
+import { convertAmount } from "@/lib/utils"
+import { webhookHandler } from "@/lib/realtime/realtime-handler"
 
 export async function POST(request: Request) {
     return webhookHandler<TUpdateListingPayload>({

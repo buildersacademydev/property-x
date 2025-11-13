@@ -1,6 +1,6 @@
 import { TStakePayload } from "@/services/type"
-import { webhookHandler } from "@/lib/utils"
 import { applyStakeEvent } from "@/db/actions/staking"
+import { webhookHandler } from "@/lib/realtime/realtime-handler"
 
 export async function POST(request: Request) {
     return webhookHandler<TStakePayload>({

@@ -6,8 +6,9 @@ import { RealtimeEvents } from "@/lib/realtime/realtime"
 import { Icons } from "@workspace/ui/components/icons"
 import { revalidateData } from "@/db/actions/revalidate-data"
 
-export default function Notifications() {
+export default function Notifications({ wallet }: { wallet: string | null }) {
     useRealtime<RealtimeEvents>({
+        channel: wallet || 'default',
         events: {
             notification: {
                 data: (data) => {

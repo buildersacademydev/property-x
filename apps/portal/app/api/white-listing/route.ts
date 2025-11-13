@@ -5,7 +5,7 @@ import { TCoinSchema, TWhitelistContractSchema } from "@/services/type"
 import { fetchCallReadOnlyFunction } from "@stacks/transactions"
 import { eq, inArray } from "drizzle-orm"
 import { env } from "@/lib/config/env"
-import { webhookHandler } from "@/lib/utils"
+import { webhookHandler } from "@/lib/realtime/realtime-handler"
 
 async function saveTokenAndAssetData(contract: string, tokenData: TCoinSchema) {
     try {
