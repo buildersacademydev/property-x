@@ -2,7 +2,6 @@ import { TGroupedListing, TSingleTokenListing } from "@/services/type"
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import SpotlightCard from "@workspace/ui/components/spotlight-card"
 import { Icons } from "@workspace/ui/components/icons"
 import { Badge } from "@workspace/ui/components/badge"
 import { cn } from "@workspace/ui/lib/utils"
@@ -10,6 +9,7 @@ import { BuyNowDialog } from "./buy-now-dialog"
 import { UpdateListingDialog } from "../your-listings/_components/update-listing-dialog"
 import { CancelListingAlert } from "../your-listings/_components/cancel-listing-alert"
 import { Button } from "@workspace/ui/components/button"
+import SpotlightCard from "@workspace/ui/components/spotlight-card"
 
 type BaseListingCardProps = {
     listing: TGroupedListing
@@ -135,14 +135,7 @@ function ListingCardBuyCta({ listing }: { listing: TSingleTokenListing }) {
                     {listing.amount} Amount
                 </Badge>
             </div>
-            <BuyNowDialog listing={listing}>
-                <Button
-                    className="w-full cursor-pointer hover:scale-105 hover:mt-2"
-                    size='lg'
-                >
-                    Buy Now
-                </Button>
-            </BuyNowDialog>
+            <BuyNowDialog listing={listing} />
         </div>
     )
 }

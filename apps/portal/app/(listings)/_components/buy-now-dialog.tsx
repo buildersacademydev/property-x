@@ -29,14 +29,10 @@ import { Input } from "@workspace/ui/components/input"
 
 interface BuyNowDialogProps {
     listing: TSingleTokenListing
-    children: React.ReactNode
-    disabled?: boolean
 }
 
 export function BuyNowDialog({
     listing,
-    children,
-    disabled,
 }: BuyNowDialogProps) {
     const [open, setOpen] = useState(false)
     const router = useRouter()
@@ -78,8 +74,13 @@ export function BuyNowDialog({
 
     return (
         <SmartDialog open={open} onOpenChange={setOpen}>
-            <SmartDialogTrigger asChild disabled={disabled}>
-                {children}
+            <SmartDialogTrigger asChild>
+                <Button
+                    className="w-full cursor-pointer hover:scale-105 hover:mt-2"
+                    size='lg'
+                >
+                    Buy Now
+                </Button>
             </SmartDialogTrigger>
 
             <SmartDialogContent>

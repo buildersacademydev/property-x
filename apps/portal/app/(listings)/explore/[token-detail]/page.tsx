@@ -7,7 +7,6 @@ import { Separator } from '@workspace/ui/components/separator'
 import { formatNumber } from '@/lib/utils'
 import { ListingCard } from '../../_components/listing-card'
 import { getWalletAddress } from '@/db/actions/wallet'
-import { Card, CardContent, CardHeader } from '@workspace/ui/components/card'
 
 interface PageProps {
     params: Promise<{

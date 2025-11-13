@@ -56,6 +56,7 @@ const useSmartDialogContext = () => {
 
 const SmartDialog = ({ children, ...props }: RootSmartDialogProps) => {
     const isDesktop = useMediaQuery("(min-width: 768px)");
+
     const SmartDialog = isDesktop ? Dialog : Drawer;
 
     return (
